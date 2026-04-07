@@ -20,12 +20,14 @@ public class QuestManager: MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        _questStates = new Dictionary<QuestData, QuestState>();
+        AddQuestToDictionary(_firstQuest);
     }
 
     void Start()
     {
-        _questStates = new Dictionary<QuestData, QuestState>();
-        AddQuestToDictionary(_firstQuest);
+
     }
 
     public QuestState? GetQuestState(QuestData quest) => _questStates.ContainsKey(quest) ? _questStates[quest] : null;

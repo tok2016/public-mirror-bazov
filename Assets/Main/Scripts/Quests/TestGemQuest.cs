@@ -6,7 +6,6 @@ public class TestGemQuest : Quest<QuestData>
 {
     [SerializeField] private XRGrabInteractable _targetGrabItem;
 
-    public override void Check() {}
 
     public override void Complete()
     {
