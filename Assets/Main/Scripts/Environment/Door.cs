@@ -25,8 +25,6 @@ public class Door : MonoBehaviour
         var target = Quaternion.Euler(0, _startRotation.eulerAngles.y - _rotationAngle * (_isOpening ? 1 : 0), 0);
         var speed = _rotationSpeed * Time.deltaTime;
 
-        Debug.Log(Mathf.Abs(transform.rotation.eulerAngles.y - target.eulerAngles.y));
-
         while (Mathf.Abs(transform.rotation.eulerAngles.y - target.eulerAngles.y) > _rotationAngle * 2 * Time.deltaTime)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, target, speed);

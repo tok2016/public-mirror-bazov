@@ -2,16 +2,15 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public abstract class Quest<T> : MonoBehaviour where T : QuestData
+public abstract class Quest : MonoBehaviour
 {
-    [SerializeField] private T _data;
+    [SerializeField] protected QuestData _data;
     public UnityEvent onFirstEnter;
     public UnityEvent onEnterRepeat;
     public UnityEvent onExit;
     public UnityEvent onComplete;
-
-    [SerializeField] private TextMeshProUGUI _title;
 
     protected virtual void Start()
     {
@@ -36,8 +35,6 @@ public abstract class Quest<T> : MonoBehaviour where T : QuestData
         else
             onEnterRepeat.Invoke();
 
-        _title.text = _data.Name;
-        _title.fontStyle = FontStyles.Normal;
         Debug.Log("Enter");
     }
 
@@ -47,17 +44,12 @@ public abstract class Quest<T> : MonoBehaviour where T : QuestData
         Debug.Log("Exit");
     }
 
+    public abstract void Check(SelectEnterEventArgs args);
+
     public virtual void Complete()
     {
-        if (_data.Next.Length == 0)
-        {
-            _title.text = " вест завершен";
-            _title.color = Color.green;
-        }
-        else
-            _title.fontStyle = FontStyles.Strikethrough;
-
         onComplete.Invoke();
         Debug.Log("Complete");
+        enabled = false;
     }
 }

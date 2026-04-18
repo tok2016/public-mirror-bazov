@@ -12,7 +12,7 @@ struct ItemLabel
     public TextMeshProUGUI label;
 }
 
-public class PrototypeCollectingQuest : Quest<QuestData>
+public class PrototypeCollectingQuest : ProtoQuest
 {
     [SerializeField] private ItemLabel[] _objectsToCollect;
     private Dictionary<IXRSelectInteractable, ItemLabel> _itemsLabels;
@@ -38,7 +38,7 @@ public class PrototypeCollectingQuest : Quest<QuestData>
             itemLabel.label.text = itemLabel.name;
     }
 
-    public void Check(SelectEnterEventArgs args)
+    public override void Check(SelectEnterEventArgs args)
     {
         if(_itemsLabels.ContainsKey(args.interactableObject) && _objectsCount.ContainsKey(args.interactableObject)) 
         {
