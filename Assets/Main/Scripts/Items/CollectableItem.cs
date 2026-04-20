@@ -22,11 +22,12 @@ public class CollectableItem: MonoBehaviour
 
     private void OnEnable()
     {
-        _interactable.selectEntered.AddListener(onSelect);
+        _interactable.selectEntered.AddListener(OnSelect);
+        _interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
         _interactable.selectExited.AddListener(onLettingGo);
     }
 
-    private void onSelect(SelectEnterEventArgs args)
+    public void OnSelect(SelectEnterEventArgs args)
     {
         if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
             Debug.Log(Data.Commentary);
@@ -42,13 +43,13 @@ public class CollectableItem: MonoBehaviour
     private void onLettingGo(SelectExitEventArgs args)
     {
         if(gameObject.activeInHierarchy)
-            StartCoroutine(CommentLettingGo());
+            StartCoroutine(CommentLettingGo(args));
     }
 
-    private IEnumerator CommentLettingGo()
+    private IEnumerator CommentLettingGo(SelectExitEventArgs args)
     {
         yield return new WaitForSeconds(_commentaryTimeOffset);
-        Debug.Log("Положи в суму, так надёжнее будет");
+        QuestManager.Instance.OnItemLettingGo(args);
     }
 
     public void TransformSocketedItem()
@@ -61,7 +62,7 @@ public class CollectableItem: MonoBehaviour
 
     private void OnDisable()
     {
-        _interactable.selectEntered.RemoveListener(onSelect);
-        _interactable.selectExited.RemoveListener(onLettingGo);
+        _interactable.selectEntered.RemoveAllListeners();
+        _interactable.selectExited.RemoveAllListeners();
     }
 }

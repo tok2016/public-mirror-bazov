@@ -4,14 +4,6 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[System.Serializable]
-struct ItemLabel
-{
-    public string name;
-    public XRGrabInteractable item;
-    public TextMeshProUGUI label;
-}
-
 public class PrototypeCollectingQuest : ProtoQuest
 {
     [SerializeField] private ItemLabel[] _objectsToCollect;

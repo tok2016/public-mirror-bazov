@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class QuestManager: MonoBehaviour
+public class QuestManager : MonoBehaviour
 {
-    [SerializeField] private QuestData _firstQuest;
-    private Dictionary<QuestData, QuestState> _questStates;
-    public event Action onQuestComplete;
-    public event Action onQuestStart;
+    public QuestBase Current {  get; private set; }
+    [SerializeField] private QuestBase _firstQuest;
+    public UnityEvent onQuestComplete;
+    public UnityEvent onQuestStart;
 
-    public static QuestManager Instance {  get; private set; }
+    public static QuestManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -21,41 +21,37 @@ public class QuestManager: MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        _questStates = new Dictionary<QuestData, QuestState>();
-        AddQuestToDictionary(_firstQuest);
+        Current = _firstQuest;
     }
 
-    void Start()
+    private void Update()
     {
-
+        Current?.Update();
     }
 
-    public QuestState? GetQuestState(QuestData quest) => _questStates.ContainsKey(quest) ? _questStates[quest] : null;
-
-    public void StartQuest(QuestData quest)
+    public void StartQuest()
     {
-        ChangeQuestState(quest, QuestState.InProgress);
         onQuestStart?.Invoke();
     }
 
-    public void CompleteQuest(QuestData quest)
+    public void OnCheckQuest(SelectEnterEventArgs args)
     {
-        ChangeQuestState(quest, QuestState.Completed);
+        Current?.Check(args);
+    }
+
+    public void OnItemGrab(SelectEnterEventArgs args)
+    {
+        Current?.OnGrab(args);
+    }
+
+    public void OnItemLettingGo(SelectExitEventArgs args)
+    {
+        Current?.OnLettingGo(args);
+    }
+
+    public void CompleteQuest()
+    {
+        Current = Current.Next;
         onQuestComplete?.Invoke();
-    }
-
-    private void ChangeQuestState(QuestData quest, QuestState state)
-    {
-        if (_questStates.ContainsKey(quest))
-            _questStates[quest] = state;
-        else
-            _questStates.Add(quest, state);
-    }
-
-    private void AddQuestToDictionary(QuestData quest, bool first = false)
-    {
-        _questStates.Add(quest, first ? QuestState.Available : QuestState.Locked);
-        foreach(var nextQuest in quest.Next) 
-            AddQuestToDictionary(nextQuest);
     }
 }
