@@ -18,6 +18,12 @@ public class Bag : MonoBehaviour
         _sockets = GetComponentsInChildren<XRSocketInteractor>();
     }
 
+    private void OnEnable()
+    {
+        foreach (var socket in _sockets)
+            socket.selectEntered.AddListener(QuestManager.Instance.Check);
+    }
+
     private void Start()
     {
         _interactable.enabled = true;
@@ -60,5 +66,11 @@ public class Bag : MonoBehaviour
 
         transform.localRotation = target;
         gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        foreach (var socket in _sockets)
+            socket.selectEntered.RemoveAllListeners();
     }
 }

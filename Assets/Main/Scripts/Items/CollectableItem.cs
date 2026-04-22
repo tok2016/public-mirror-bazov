@@ -12,6 +12,8 @@ public class CollectableItem: MonoBehaviour
     private XRGrabInteractable _interactable;
     private float _commentaryTimeOffset = 0.8f;
 
+    public bool IsCollected {get; private set;}
+
     //temporary
     private bool _wasWritten;
 
@@ -33,7 +35,7 @@ public class CollectableItem: MonoBehaviour
             Debug.Log(Data.Commentary);
         StopAllCoroutines();
 
-        if(!_wasWritten)
+        if(!_wasWritten && Data.Word)
         {
             _wasWritten = true;
             Debug.Log($"Новое слово: {Data.Word.Title} - {Data.Word.Description}");
@@ -58,6 +60,7 @@ public class CollectableItem: MonoBehaviour
             col.transform.localScale /= 4;
 
         _interactable.interactionLayers = _socketedLayers;
+        IsCollected = true;
     }
 
     private void OnDisable()

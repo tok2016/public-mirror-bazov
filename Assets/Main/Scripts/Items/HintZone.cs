@@ -27,7 +27,7 @@ public class HintZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var item = other.GetComponent<CollectableItem>() ?? other.transform.parent?.GetComponent<CollectableItem>();
-        if(item)
+        if(item && !item.IsCollected)
             Items.Add(other, item);
     }
 

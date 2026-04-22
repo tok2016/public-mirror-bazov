@@ -2754,7 +2754,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1684298920}
         m_TargetAssemblyTypeName: QuestManager, Assembly-CSharp
-        m_MethodName: OnCheckQuest
+        m_MethodName: Check
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14589,7 +14589,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1684298920}
         m_TargetAssemblyTypeName: QuestManager, Assembly-CSharp
-        m_MethodName: OnCheckQuest
+        m_MethodName: Check
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14748,10 +14748,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 675200330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39cba653a32e3e8488dfdf0a81ae306c, type: 3}
+  m_Script: {fileID: 11500000, guid: 1043f5564cd16b546a8ad699cc253206, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProtoCollectingQuestZone
-  _quest: {fileID: 11400000, guid: 6fb3068374a36ce4c9c904b704091e23, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::PrototypeCollectingQuest
+  _data: {fileID: 11400000, guid: 4a02962e3a492324cbdb22d93cc4573f, type: 2}
+  <Next>k__BackingField: {fileID: 1591360914}
   onFirstEnter:
     m_PersistentCalls:
       m_Calls: []
@@ -14776,27 +14777,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _props:
-    title: {fileID: 1147740238}
-    objectsToCollect:
-    - name: "\u0417\u0435\u043B\u0451\u043D\u044B\u0439 \u043A\u0443\u0431"
-      item: {fileID: 1736563319}
-      label: {fileID: 1741775099}
-    - name: "\u0416\u0451\u043B\u0442\u044B\u0439 \u0446\u0438\u043B\u0438\u043D\u0434\u0440"
-      item: {fileID: 1094130511}
-      label: {fileID: 747457226}
-    - name: "\u0413\u043E\u043B\u0443\u0431\u043E\u0439 \u0434\u0438\u0441\u043A"
-      item: {fileID: 388634428}
-      label: {fileID: 1664119885}
-    - name: "\u0424\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u0430\u044F \u0437\u0432\u0435\u0437\u0434\u0430"
-      item: {fileID: 135853329}
-      label: {fileID: 1067685658}
-    - name: "\u0420\u043E\u0437\u043E\u0432\u044B\u0439 \u0448\u0430\u0440"
-      item: {fileID: 1879752539}
-      label: {fileID: 1423177882}
-    - name: "\u041E\u0440\u0430\u043D\u0436\u0435\u0432\u044B\u0439 \u043A\u0430\u043C\u0435\u043D\u044C"
-      item: {fileID: 1585687227}
-      label: {fileID: 1353967655}
+  _title: {fileID: 1147740238}
+  _objectsToCollect:
+  - name: "\u0413\u043E\u043B\u0443\u0431\u043E\u0439 \u0434\u0438\u0441\u043A"
+    item: {fileID: 388634428}
+    label: {fileID: 1664119885}
 --- !u!1 &719496695
 GameObject:
   m_ObjectHideFlags: 0
@@ -18794,6 +18779,96 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &942544138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 942544140}
+  - component: {fileID: 942544139}
+  m_Layer: 0
+  m_Name: ProtoQuest 1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &942544139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942544138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1043f5564cd16b546a8ad699cc253206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PrototypeCollectingQuest
+  _data: {fileID: 11400000, guid: 4a02962e3a492324cbdb22d93cc4573f, type: 2}
+  <Next>k__BackingField: {fileID: 1591360914}
+  onFirstEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnterRepeat:
+    m_PersistentCalls:
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7373694182168594396}
+        m_TargetAssemblyTypeName: Door, Assembly-CSharp
+        m_MethodName: Toggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _title: {fileID: 1147740238}
+  _objectsToCollect:
+  - name: "\u0417\u0435\u043B\u0451\u043D\u044B\u0439 \u043A\u0443\u0431"
+    item: {fileID: 1736563319}
+    label: {fileID: 1741775099}
+  - name: "\u0416\u0451\u043B\u0442\u044B\u0439 \u0446\u0438\u043B\u0438\u043D\u0434\u0440"
+    item: {fileID: 1094130511}
+    label: {fileID: 747457226}
+  - name: "\u0413\u043E\u043B\u0443\u0431\u043E\u0439 \u0434\u0438\u0441\u043A"
+    item: {fileID: 388634428}
+    label: {fileID: 1664119885}
+  - name: "\u0424\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u0430\u044F \u0437\u0432\u0435\u0437\u0434\u0430"
+    item: {fileID: 135853329}
+    label: {fileID: 1067685658}
+  - name: "\u0420\u043E\u0437\u043E\u0432\u044B\u0439 \u0448\u0430\u0440"
+    item: {fileID: 1879752539}
+    label: {fileID: 1423177882}
+  - name: "\u041E\u0440\u0430\u043D\u0436\u0435\u0432\u044B\u0439 \u043A\u0430\u043C\u0435\u043D\u044C"
+    item: {fileID: 1585687227}
+    label: {fileID: 1353967655}
+--- !u!4 &942544140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942544138}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &970647080
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30559,10 +30634,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1591360910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10f3efd18dc2abb4791a140c12f37f8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a269ea7d892da743b463e76d3f13453, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProtoGemQuestZone
-  _quest: {fileID: 11400000, guid: df52b34e5c285174bbb50f2ae1d889c1, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::PrototypeGemQuest
+  _data: {fileID: 11400000, guid: 7fb6a1c1ec7158344a04c8a46669821f, type: 2}
+  <Next>k__BackingField: {fileID: 0}
   onFirstEnter:
     m_PersistentCalls:
       m_Calls: []
@@ -30575,9 +30651,8 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls: []
-  _props:
-    title: {fileID: 1147740238}
-    correctGem: {fileID: 623652041}
+  _title: {fileID: 1147740238}
+  _correctGem: {fileID: 623652041}
 --- !u!43 &1610154834
 Mesh:
   m_ObjectHideFlags: 0
@@ -31015,7 +31090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b764ef6540bd04d479e23ee0c5873983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestManager
-  _firstQuest: {fileID: 11400000, guid: 6fb3068374a36ce4c9c904b704091e23, type: 2}
+  _firstQuest: {fileID: 675200333}
   onQuestComplete:
     m_PersistentCalls:
       m_Calls: []
@@ -38503,6 +38578,7 @@ SceneRoots:
   - {fileID: 611717732}
   - {fileID: 1870543512}
   - {fileID: 675200332}
+  - {fileID: 942544140}
   - {fileID: 1684298919}
   - {fileID: 355920449}
   - {fileID: 614805452}

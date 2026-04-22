@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class QuestManager : MonoBehaviour
 {
-    public QuestBase Current {  get; private set; }
-    [SerializeField] private QuestBase _firstQuest;
+    public Quest Current {  get; private set; }
+    [SerializeField] private Quest _firstQuest;
     public UnityEvent onQuestComplete;
     public UnityEvent onQuestStart;
 
@@ -24,9 +25,9 @@ public class QuestManager : MonoBehaviour
         Current = _firstQuest;
     }
 
-    private void Update()
+    private void Start()
     {
-        Current?.Update();
+        Current?.Enter();
     }
 
     public void StartQuest()
@@ -34,24 +35,45 @@ public class QuestManager : MonoBehaviour
         onQuestStart?.Invoke();
     }
 
-    public void OnCheckQuest(SelectEnterEventArgs args)
+    public void CompleteQuest()
+    {
+        Current = Current?.Next;
+        Current?.Unlock();
+        onQuestComplete?.Invoke();
+    }
+
+    public void Check(SelectEnterEventArgs args)
     {
         Current?.Check(args);
     }
 
+    public void Check(SelectExitEventArgs args)
+    {
+        Current?.Check(args);
+    }
+
+    public void Check(TeleportingEventArgs args)
+    {
+        Current?.Check(args);
+    }
+
+    public void Check()
+    {
+        Current?.Check();
+    }
+
     public void OnItemGrab(SelectEnterEventArgs args)
     {
-        Current?.OnGrab(args);
+        Current?.OnItemGrab(args);
     }
 
     public void OnItemLettingGo(SelectExitEventArgs args)
     {
-        Current?.OnLettingGo(args);
+        Current?.OnItemLettingGo(args);
     }
 
-    public void CompleteQuest()
+    public void OnTeleport(TeleportingEventArgs args)
     {
-        Current = Current.Next;
-        onQuestComplete?.Invoke();
+        Current?.OnTeleport(args);
     }
 }
