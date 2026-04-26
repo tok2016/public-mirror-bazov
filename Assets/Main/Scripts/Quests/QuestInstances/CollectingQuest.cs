@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class CollectingQuest : Quest
 {
     [SerializeField] private CollectableItem[] _items;
     [SerializeField] private HintZone[] _hintZones;
+    [SerializeField] private Transform _bag;
     private Dictionary<IXRSelectInteractable, CollectableItem> _objectsCount;
 
     [SerializeField] private float _timeBetweenHints = 30;
     private float _hintTimer;
+
+    public UnityEvent<Transform> onItemsCollected;
 
     public override void Enter()
     {
@@ -73,6 +76,9 @@ public class CollectingQuest : Quest
             item.gameObject.SetActive(false);
         foreach (var zone in _hintZones)
             zone.gameObject.SetActive(false);
+
+        onItemsCollected.Invoke(_bag);
+
         base.Complete();
     }
 }

@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 2077341151657236726}
   - component: {fileID: 2958500128487554666}
   - component: {fileID: 1697263303347653332}
+  - component: {fileID: 2565472530471837514}
   m_Layer: 0
   m_Name: Hut Door
   m_TagString: Untagged
@@ -158,6 +159,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &2565472530471837514
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344637462731182193}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7581636091835556378
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1080,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 988
+  m_VersionIndex: 1078
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
