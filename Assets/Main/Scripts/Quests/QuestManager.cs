@@ -27,6 +27,7 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
+        Current?.Unlock();
         Current?.Enter();
     }
 

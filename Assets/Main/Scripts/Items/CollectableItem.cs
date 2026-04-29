@@ -1,16 +1,13 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 [RequireComponent(typeof(XRGrabInteractable))]
 public class CollectableItem: MonoBehaviour
 {
     [field: SerializeField] public CollectableItemData Data {get; private set;}
-    [SerializeField] private InteractionLayerMask _socketedLayers;
+    private Rigidbody _rigidbody;
     private XRGrabInteractable _interactable;
-    private float _commentaryTimeOffset = 0.8f;
 
     public bool IsCollected {get; private set;}
 
@@ -20,47 +17,48 @@ public class CollectableItem: MonoBehaviour
     private void Awake()
     {
         _interactable = GetComponent<XRGrabInteractable>();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
     {
-        _interactable.selectEntered.AddListener(OnSelect);
         _interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
-        _interactable.selectExited.AddListener(onLettingGo);
+        _interactable.selectExited.AddListener(QuestManager.Instance.OnItemLettingGo);
+        _interactable.selectExited.AddListener(OnLettingGo);
     }
 
-    public void OnSelect(SelectEnterEventArgs args)
+    public void OnLettingGo(SelectExitEventArgs args)
     {
-        if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
-            Debug.Log(Data.Commentary);
-        StopAllCoroutines();
-
-        if(!_wasWritten && Data.Word)
-        {
-            _wasWritten = true;
-            Debug.Log($"Новое слово: {Data.Word.Title} - {Data.Word.Description}");
-        }
-    }
-
-    private void onLettingGo(SelectExitEventArgs args)
-    {
-        if(gameObject.activeInHierarchy)
-            StartCoroutine(CommentLettingGo(args));
-    }
-
-    private IEnumerator CommentLettingGo(SelectExitEventArgs args)
-    {
-        yield return new WaitForSeconds(_commentaryTimeOffset);
-        QuestManager.Instance.OnItemLettingGo(args);
+        ToggleGravity(true);
     }
 
     public void TransformSocketedItem()
     {
-        foreach (var col in _interactable.colliders)
-            col.transform.localScale /= 4;
-
-        _interactable.interactionLayers = _socketedLayers;
         IsCollected = true;
+        gameObject.SetActive(false);
+    }
+
+    public void RestoreSocketedItem(Transform attachPoint)
+    {
+        transform.position = attachPoint.position;
+        IsCollected = false;
+        gameObject.SetActive(true);
+        ToggleGravity(false);
+    }
+
+    public void ToggleGravity(bool enableGravity)
+    {
+        _rigidbody.useGravity = enableGravity;
+        _rigidbody.isKinematic = !enableGravity;
+    }
+
+    public void CommentWord()
+    {
+        if (!_wasWritten && Data.Word)
+        {
+            _wasWritten = true;
+            Debug.Log($"Новое слово: {Data.Word.Title} - {Data.Word.Description}");
+        }
     }
 
     private void OnDisable()
