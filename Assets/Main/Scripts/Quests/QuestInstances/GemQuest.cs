@@ -33,10 +33,4 @@ public class GemQuest : Quest
         if (gem && _gemsInHands.Contains(gem))
             _gemsInHands.Remove(gem);
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Player")
-            Enter();
-    }
 }
