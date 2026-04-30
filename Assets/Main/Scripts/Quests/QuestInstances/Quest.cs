@@ -7,7 +7,7 @@ public abstract class Quest : MonoBehaviour
 {
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    private QuestState _state = QuestState.Locked;
+    protected QuestState _state = QuestState.Locked;
 
     public UnityEvent onFirstEnter;
     public UnityEvent onEnterRepeat;
@@ -36,8 +36,11 @@ public abstract class Quest : MonoBehaviour
             onFirstEnter.Invoke();
         else
             onEnterRepeat.Invoke();
+
+        if(_state == QuestState.Locked || _state == QuestState.Available)
+            Debug.Log(_data.StartPhraseText);
+
         _state = QuestState.InProgress;
-        Debug.Log(_data.StartPhraseText);
     }
 
     public virtual void Exit()

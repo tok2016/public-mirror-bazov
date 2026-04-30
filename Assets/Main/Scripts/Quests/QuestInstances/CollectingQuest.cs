@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class CollectingQuest : Quest
 {
@@ -12,6 +14,7 @@ public class CollectingQuest : Quest
     [SerializeField] private Transform _bag;
     private Dictionary<IXRSelectInteractable, CollectableItem> _objectsCount;
 
+    [SerializeField] private float _commentaryTimeOffset = 0.8f;
     [SerializeField] private float _timeBetweenHints = 30;
     private float _hintTimer;
 
@@ -49,11 +52,26 @@ public class CollectingQuest : Quest
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
+        var item = args.interactableObject.transform.GetComponent<CollectableItem>();
+        if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
+            Debug.Log(item.Data.Commentary);
+
+        item.CommentWord();
+
+        StopAllCoroutines();
+
         _hintTimer = _timeBetweenHints;
     }
 
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
+        if (args.interactableObject.transform.gameObject.activeInHierarchy)
+            StartCoroutine(CommentLettingGo(args));
+    }
+
+    private IEnumerator CommentLettingGo(SelectExitEventArgs args)
+    {
+        yield return new WaitForSeconds(_commentaryTimeOffset);
         Debug.Log("Положи в суму, так надёжнее будет");
     }
 
@@ -72,8 +90,6 @@ public class CollectingQuest : Quest
 
     public override void Complete()
     {
-        foreach (var item in _items)
-            item.gameObject.SetActive(false);
         foreach (var zone in _hintZones)
             zone.gameObject.SetActive(false);
 
