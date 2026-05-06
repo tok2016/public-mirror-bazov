@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -10,9 +11,6 @@ public class CollectableItem: MonoBehaviour
     private XRGrabInteractable _interactable;
 
     public bool IsCollected {get; private set;}
-
-    //temporary
-    private bool _wasWritten;
 
     private void Awake()
     {
@@ -54,11 +52,8 @@ public class CollectableItem: MonoBehaviour
 
     public void CommentWord()
     {
-        if (!_wasWritten && Data.Word)
-        {
-            _wasWritten = true;
-            Debug.Log($"Новое слово: {Data.Word.Title} - {Data.Word.Description}");
-        }
+        if (Data.Word && !DictionaryManager.IsWordStored(Data.Word))
+            DictionaryManager.WriteWord(Data.Word);
     }
 
     private void OnDisable()
