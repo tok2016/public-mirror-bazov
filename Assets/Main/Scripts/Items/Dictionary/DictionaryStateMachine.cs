@@ -4,32 +4,34 @@ public class DictionaryStateMachine
 {
     public DictionaryLyingState LyingState {  get; private set; }
     public DictionaryCloseState CloseState { get; private set; }
+    public DictionaryGrabState GrabState { get; private set; }
     public DictionaryOpenState OpenState { get; private set; }
 
-    private DictionaryState _current;
+    public DictionaryState Current {  get; private set; }
 
     public DictionaryStateMachine(DictionaryBook book)
     {
-        LyingState = new DictionaryLyingState(book);
-        CloseState = new DictionaryCloseState(book);
-        OpenState = new DictionaryOpenState(book);
+        LyingState = new DictionaryLyingState(book, this);
+        CloseState = new DictionaryCloseState(book, this);
+        GrabState = new DictionaryGrabState(book, this);
+        OpenState = new DictionaryOpenState(book, this);
 
-        _current = LyingState;
-        _current.Enter(null);
+        Current = LyingState;
+        Current.Enter();
     }
 
-    public void ChangeState(DictionaryState nextState, Transform parent)
+    public void ChangeState(DictionaryState nextState)
     {
-        if (_current.GetType() == nextState.GetType())
+        if (Current.GetType() == nextState.GetType())
             return;
 
-        _current.Exit();
-        _current = nextState;
-        _current.Enter(parent);
+        Current.Exit();
+        Current = nextState;
+        Current.Enter();
     }
 
     public void Update()
     {
-        _current.Update();
+        Current.Update();
     }
 }

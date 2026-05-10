@@ -11,11 +11,17 @@ public class DictionaryBook : MonoBehaviour
     private DictionaryStateMachine _stateMachine;
 
     [Header("Transform")]
-    [SerializeField] private Transform _openedAttach;
-    [SerializeField] private Transform _scaleWrapper;
+    [SerializeField] private Transform _attachPoint;
+    [field: SerializeField] public Transform ScaleWrapper {  get; private set; }
     [field: SerializeField] public Transform Camera { get; private set; }
+    [SerializeField] private float _minDistanceToOpen = 1;
+    [SerializeField] private Renderer _renderer;
+
     public Vector3 DefaultScale { get; private set; }
-    private bool _isOpenable = true;
+    private Coroutine _returning;
+    private bool _added = false;
+    private float _returingMoveSpeed = 10;
+    private float _returingRotationSpeed = 700;
 
     [Header("Book UI")]
     [SerializeField] private Canvas _pagesCanvas;
@@ -39,7 +45,7 @@ public class DictionaryBook : MonoBehaviour
 
     void Start()
     {
-        DefaultScale = _scaleWrapper.localScale;
+        DefaultScale = ScaleWrapper.localScale;
 
         var pagesCount = (int)Mathf.Ceil(_words.Length / 2f);
         for (int i = 0; i < pagesCount; i++)
@@ -93,40 +99,69 @@ public class DictionaryBook : MonoBehaviour
         _pagesCanvas.gameObject.SetActive(enable);
     }
 
-    public void Resize(Vector3 scale)
+    public void Close(SelectExitEventArgs args)
     {
-        _scaleWrapper.localScale = scale;
+        if (_added && _stateMachine.Current != _stateMachine.OpenState)
+            StartReturing();
+
+        _stateMachine.ChangeState(_stateMachine.CloseState);
     }
 
-    public void LockOpening(HoverEnterEventArgs args)
+    private System.Collections.IEnumerator ReturnToAttach()
     {
-        _isOpenable = false;
-    }
-
-    public void UnlockOpening(HoverExitEventArgs args)
-    {
-        _isOpenable = true;
-    }
-
-    public void Close(SelectEnterEventArgs args)
-    {
-        if(args.interactorObject.GetType() != typeof(XRSocketInteractor))
+        var distance = 1f;
+        while (distance > 0.01f
+            || Quaternion.Angle(transform.rotation, _attachPoint.rotation) > 1f)
         {
-            Debug.Log("Closed");
-            _stateMachine.ChangeState(_stateMachine.CloseState, _openedAttach);
-        } else
-        {
-            Debug.Log("Attached");
-            transform.SetParent(_openedAttach);
+            distance = Mathf.Clamp((transform.position - _attachPoint.position).magnitude, 0, 5);
+
+            transform.localPosition = Vector3.MoveTowards(
+                transform.localPosition, Vector3.zero, 
+                _returingMoveSpeed * Time.deltaTime);
+
+            transform.localRotation = Quaternion.RotateTowards(
+                transform.localRotation, Quaternion.identity,
+                _returingRotationSpeed * Time.deltaTime / distance);
+
+            yield return null;
         }
+
+        transform.localPosition = Vector3.zero;
+        FinishTransform();
     }
 
-    public void Open(SelectExitEventArgs args)
+    public void StartReturing()
     {
-        if(args.interactorObject.GetType() != typeof(XRSocketInteractor) && _isOpenable)
+        _returning = StartCoroutine(ReturnToAttach());
+    }
+
+    public void StopReturing()
+    {
+        if(_returning != null)
         {
-            Debug.Log("Opened");
-            _stateMachine.ChangeState(_stateMachine.OpenState, _openedAttach);
+            StopCoroutine(_returning);
+            FinishTransform();
+        }    
+    }
+
+    private void FinishTransform()
+    {
+        transform.localRotation = Quaternion.identity;
+        //transform.rotation = _attachPoint.rotation;
+    }
+
+    public void Open(SelectEnterEventArgs args)
+    {
+        if (_added && args.interactorObject.GetType() == typeof(NearFarInteractor))
+            _stateMachine.ChangeState(_stateMachine.GrabState);
+        else if(args.interactorObject.GetType() == typeof(XRSocketInteractor))
+        {
+            _stateMachine.ChangeState(_stateMachine.CloseState);
+            transform.SetParent(_attachPoint);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            args.interactorObject.transform.gameObject.SetActive(false);
+            _added = true;
         }
     }
 
@@ -134,4 +169,7 @@ public class DictionaryBook : MonoBehaviour
     {
         DictionaryManager.OnWordWrite -= AddWord;
     }
+
+    public bool IsInFrontOfCamera() => 
+        (Camera.position - transform.position).magnitude >= _minDistanceToOpen && _renderer.isVisible;
 }
