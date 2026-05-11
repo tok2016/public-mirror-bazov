@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 class TranscribeData
@@ -46,6 +47,7 @@ public class SpeechController : MonoBehaviour
     void Start()
     {
         _deviceName = Microphone.devices[0];
+        StartCoroutine(RequestPermission());
     }
 
     public void CheckItemSpeech()
@@ -82,6 +84,15 @@ public class SpeechController : MonoBehaviour
             else
                 _recordingTimer -= Time.deltaTime;
         }
+    }
+
+    private System.Collections.IEnumerator RequestPermission()
+    {
+        if(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+            Permission.RequestUserPermission(Permission.Microphone);
+
+        while(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+            yield return 0;
     }
 
     private async void TranscribeRecord()
