@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8664550813755191688}
   - component: {fileID: 6464438946691901728}
   - component: {fileID: 4302188772856509557}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Snow Teleport Pad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

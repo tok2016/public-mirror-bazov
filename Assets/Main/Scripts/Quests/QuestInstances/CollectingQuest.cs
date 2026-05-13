@@ -56,7 +56,7 @@ public class CollectingQuest : Quest
         if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
             Debug.Log(item.Data.Commentary);
 
-        item.CommentWord();
+        item.WriteWord();
 
         StopAllCoroutines();
 

@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 [RequireComponent(typeof(XRGrabInteractable))]
-public class CollectableItem: MonoBehaviour
+public class CollectableItem: MonoBehaviour, ICommentable
 {
     [field: SerializeField] public CollectableItemData Data {get; private set;}
     private Rigidbody _rigidbody;
@@ -50,7 +49,7 @@ public class CollectableItem: MonoBehaviour
         _rigidbody.isKinematic = !enableGravity;
     }
 
-    public void CommentWord()
+    public void WriteWord()
     {
         if (Data.Word && !DictionaryManager.IsWordStored(Data.Word))
             DictionaryManager.WriteWord(Data.Word);
@@ -60,5 +59,15 @@ public class CollectableItem: MonoBehaviour
     {
         _interactable.selectEntered.RemoveAllListeners();
         _interactable.selectExited.RemoveAllListeners();
+    }
+
+    public void CommentGrab(string text)
+    {
+        Debug.Log(text);
+    }
+
+    public void CommentLettingGo(string text)
+    {
+        Debug.Log(text);
     }
 }
