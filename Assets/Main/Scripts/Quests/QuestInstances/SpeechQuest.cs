@@ -4,7 +4,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class SpeechQuest : Quest
 {
     [SerializeField] private CollectableItem _correctItem;
-    [SerializeField] private WordData _word;
     [SerializeField] private SpeechController _controller;
 
     protected override void Update()

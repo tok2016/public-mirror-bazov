@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8811255852054744940
 Transform:
@@ -59,5 +59,4 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _correctItem: {fileID: 0}
-  _word: {fileID: 0}
-  _controller: {fileID: 2512984454195402510, guid: 7986f58d0e0eeea488070f1ff96ae498, type: 3}
+  _controller: {fileID: 0}
