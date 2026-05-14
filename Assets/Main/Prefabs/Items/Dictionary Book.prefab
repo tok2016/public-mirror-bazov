@@ -564,16 +564,23 @@ MonoBehaviour:
   _words:
   - {fileID: 11400000, guid: d5e304ebeec685547bb668c1bf2360ec, type: 2}
   - {fileID: 11400000, guid: 1333647afdbad9742b146224ecbe38a4, type: 2}
-  - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
   - {fileID: 11400000, guid: ce9b797ddb3d95446acb7f7df5ebd523, type: 2}
   - {fileID: 11400000, guid: 1a3bedc5f1afbdb449d89613b85e5971, type: 2}
   - {fileID: 11400000, guid: a7e781ccb70f5364fbdaa837a84e6ba6, type: 2}
   - {fileID: 11400000, guid: 9b99abd0fc8eb764a885272dfc8985ba, type: 2}
+  - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
+  - {fileID: 11400000, guid: c402cc0faeda0124a893106c753c5db4, type: 2}
+  - {fileID: 11400000, guid: 2abeede1f59e5aa448d64a71e18806e6, type: 2}
+  - {fileID: 11400000, guid: 785d72d98f370b846a39150ab72a02b0, type: 2}
+  - {fileID: 11400000, guid: 14aeccb561739aa438d97e9dcefa1c4e, type: 2}
+  - {fileID: 11400000, guid: 685992a14f757f6438dfa613fe42a483, type: 2}
+  - {fileID: 11400000, guid: 2f08db487167c9143a45a731a04f2c59, type: 2}
+  - {fileID: 11400000, guid: 4c7fde8ee984bb841bb8c6c3fda3f656, type: 2}
   <FrontBinding>k__BackingField: {fileID: 1914329810443711572}
   _attachPoint: {fileID: 0}
   <ScaleWrapper>k__BackingField: {fileID: 6694254089544912746}
   <Camera>k__BackingField: {fileID: 0}
-  _minDistanceToOpen: 1
+  _minDistanceToOpen: 0.7
   _renderer: {fileID: 5608808663166474129}
   _pagesCanvas: {fileID: 2666206497969044497}
   _pagesGroup: {fileID: 887961561333147445}

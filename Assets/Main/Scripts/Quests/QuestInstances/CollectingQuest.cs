@@ -83,6 +83,10 @@ public class CollectingQuest : Quest
             a.TransformSocketedItem();
             _objectsCount.Remove(args.interactableObject);
         }
+        else
+        {
+            Debug.Log("Я думаю, это нам не нужно с собой");
+        }
 
         if (_objectsCount.Count == 0)
             Complete();
