@@ -77,10 +77,10 @@ public class DictionaryOpenState : DictionaryState
 
     private IEnumerator CloseFrontBinding()
     {
+        _book.EnableCanvas(false);
         yield return RotateFrontBinding(false);
         if(_stateMachine.Current == _stateMachine.CloseState)
             _book.StartReturing();
-        _book.EnableCanvas(false);
         _book.FrontBinding.localRotation = Quaternion.identity;
         yield return RescaleBook(false);
         _book.ScaleWrapper.localScale = _book.DefaultScale;

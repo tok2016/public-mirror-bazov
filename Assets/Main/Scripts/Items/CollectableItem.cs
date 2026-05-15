@@ -19,8 +19,8 @@ public class CollectableItem: MonoBehaviour, ICommentable
 
     private void OnEnable()
     {
-        _interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
-        _interactable.selectExited.AddListener(QuestManager.Instance.OnItemLettingGo);
+        //_interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
+        //_interactable.selectExited.AddListener(QuestManager.Instance.OnItemLettingGo);
         _interactable.selectExited.AddListener(OnLettingGo);
     }
 
@@ -57,7 +57,7 @@ public class CollectableItem: MonoBehaviour, ICommentable
 
     private void OnDisable()
     {
-        _interactable.selectEntered.RemoveAllListeners();
+        //_interactable.selectEntered.RemoveAllListeners();
         _interactable.selectExited.RemoveAllListeners();
     }
 

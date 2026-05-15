@@ -92,11 +92,15 @@ public class DictionaryBook : MonoBehaviour
 
     public void EnableCanvas(bool enable)
     {
-        if(!enable)
+        _pagesCanvas.gameObject.SetActive(enable);
+        if (!enable)
+        {
             for (int i = _pages.Count - 1; i >= 0; i--)
                 _pages[i].Close();
 
-        _pagesCanvas.gameObject.SetActive(enable);
+            _currentPage = 0;
+            _leftButton.gameObject.SetActive(false);
+        }    
     }
 
     public void Close(SelectExitEventArgs args)
