@@ -106,15 +106,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Tryapitsa",
-                    "type": "Button",
-                    "id": "58756e7e-b414-4eb0-981d-1d723e6324dc",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Solonina",
                     "type": "Button",
                     "id": "1ca42d3b-d73d-4f8a-8c45-d1f4c76ad44e",
@@ -522,7 +513,7 @@
                 {
                     "name": "",
                     "id": "d22c67d3-68d1-472c-80bd-fee0d2a09cc7",
-                    "path": "<XRController>{RightHand}/primaryButton",
+                    "path": "<XRController>{LeftHand}/primaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -533,7 +524,7 @@
                 {
                     "name": "",
                     "id": "b9be071b-db91-4669-b884-1036259d7e16",
-                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -543,19 +534,8 @@
                 },
                 {
                     "name": "",
-                    "id": "e10812db-784e-4115-90f1-29c0b9528014",
-                    "path": "<XRController>{LeftHand}/primaryButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Tryapitsa",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "c7f4fd02-e06b-46c5-a60f-1bea824b17c3",
-                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "path": "<XRController>{RightHand}/secondaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

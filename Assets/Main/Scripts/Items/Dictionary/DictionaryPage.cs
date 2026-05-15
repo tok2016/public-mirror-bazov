@@ -24,6 +24,9 @@ public class DictionaryPage : MonoBehaviour
     {
         transform.SetAsLastSibling();
         transform.localRotation = Quaternion.identity;
+        _isFront = true;
+        Front.gameObject.SetActive(true);
+        Back.gameObject.SetActive(false);
     }
 
     private IEnumerator Rotate()

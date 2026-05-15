@@ -29,6 +29,12 @@ public class TeleportPad : MonoBehaviour
         _snapVolume.gameObject.SetActive(true);
     }
 
+    public void Deactivate()
+    {
+        _renderer.material = _deactivated;
+        _snapVolume.gameObject.SetActive(false);
+    }
+
     public void EnterThePad()
     {
         _next?.Activate();

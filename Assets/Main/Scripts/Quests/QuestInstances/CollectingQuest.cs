@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -14,11 +15,16 @@ public class CollectingQuest : Quest
     [SerializeField] private Transform _bag;
     private Dictionary<IXRSelectInteractable, CollectableItem> _objectsCount;
 
-    [SerializeField] private float _commentaryTimeOffset = 0.8f;
+    [SerializeField] private float _commentaryTimeOffset = 1.5f;
     [SerializeField] private float _timeBetweenHints = 30;
     private float _hintTimer;
+    private Coroutine _commentCoroutine;
 
     public UnityEvent<Transform> onItemsCollected;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI _textCounter;
+    [SerializeField] private TextMeshProUGUI _textCount;
 
     public override void Enter()
     {
@@ -33,6 +39,9 @@ public class CollectingQuest : Quest
             if (intractable)
                 _objectsCount.Add(intractable, item);
         }
+
+        _textCount.text = _items.Length.ToString();
+        _textCounter.text = "0";
     }
 
     protected override void Update()
@@ -56,9 +65,10 @@ public class CollectingQuest : Quest
         if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
             Debug.Log(item.Data.Commentary);
 
-        item.CommentWord();
+        item.WriteWord();
 
-        StopAllCoroutines();
+        if (_commentCoroutine != null)
+            StopCoroutine(_commentCoroutine);
 
         _hintTimer = _timeBetweenHints;
     }
@@ -66,7 +76,7 @@ public class CollectingQuest : Quest
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
         if (args.interactableObject.transform.gameObject.activeInHierarchy)
-            StartCoroutine(CommentLettingGo(args));
+            _commentCoroutine = StartCoroutine(CommentLettingGo(args));
     }
 
     private IEnumerator CommentLettingGo(SelectExitEventArgs args)
@@ -82,6 +92,12 @@ public class CollectingQuest : Quest
             var a = _objectsCount[args.interactableObject];
             a.TransformSocketedItem();
             _objectsCount.Remove(args.interactableObject);
+
+            _textCounter.text = (_items.Length - _objectsCount.Count).ToString();
+        }
+        else
+        {
+            Debug.Log("Я думаю, это нам не нужно с собой");
         }
 
         if (_objectsCount.Count == 0)

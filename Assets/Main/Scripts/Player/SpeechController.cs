@@ -144,6 +144,11 @@ public class SpeechController : MonoBehaviour
             Debug.Log("Ничего нет. Может, повторишь снова?");
     }
 
+    public void AddItem(CollectableItem item)
+    {
+        _items.Add(item);
+    }
+
     public void RemoveItem(CollectableItem item)
     {
         _items.Remove(item);

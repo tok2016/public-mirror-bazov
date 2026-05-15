@@ -8,6 +8,11 @@ public class Door : MonoBehaviour
     private bool _isOpening = false;
     private Quaternion _startRotation;
 
+    [Header("Axis")]
+    [SerializeField] private bool _x;
+    [SerializeField] private bool _y = true;
+    [SerializeField] private bool _z;
+
     void Start()
     {
         _startRotation = transform.rotation;
@@ -22,12 +27,13 @@ public class Door : MonoBehaviour
     private IEnumerator Rotate()
     {
         _isOpening = !_isOpening;
-        var target = Quaternion.Euler(0, _startRotation.eulerAngles.y - _rotationAngle * (_isOpening ? 1 : 0), 0);
-        var speed = _rotationSpeed * Time.deltaTime;
+        var angleDiff = _rotationAngle * (_isOpening ? 1 : 0);
+        var angle = _startRotation.eulerAngles - new Vector3(_x ? angleDiff : 0, _y ? angleDiff : 0, _z ? angleDiff : 0);
+        var target = Quaternion.Euler(angle);
 
         while (Mathf.Abs(transform.rotation.eulerAngles.y - target.eulerAngles.y) > _rotationAngle * 2 * Time.deltaTime)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, speed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, _rotationSpeed * Time.deltaTime);
             yield return null;
         }
 

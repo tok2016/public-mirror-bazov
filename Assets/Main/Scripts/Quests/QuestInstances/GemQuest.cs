@@ -22,7 +22,11 @@ public class GemQuest : Quest
     {
         var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
         if (gem)
+        {
             _gemsInHands.Add(gem);
+            gem.WriteWord();
+        }
+            
         if (_gemsInHands.Count > 1)
             Debug.Log("Один камешек - хорошо, а два - уж лишнее будет. Выбери самый заветный");
     }
