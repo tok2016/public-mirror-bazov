@@ -10,13 +10,15 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class CollectingQuest : Quest
 {
+    [Header("Items")]
     [SerializeField] private CollectableItem[] _items;
-    [SerializeField] private HintZone[] _hintZones;
     [SerializeField] private Transform _bag;
     private Dictionary<IXRSelectInteractable, CollectableItem> _objectsCount;
 
+    [Header("Hints")]
     [SerializeField] private float _commentaryTimeOffset = 1.5f;
     [SerializeField] private float _timeBetweenHints = 30;
+    [SerializeField] private HintZone[] _hintZones;
     private float _hintTimer;
     private Coroutine _commentCoroutine;
 

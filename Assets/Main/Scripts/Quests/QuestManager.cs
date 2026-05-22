@@ -31,8 +31,11 @@ public class QuestManager : MonoBehaviour
         Current?.Enter();
     }
 
-    public void StartQuest()
+    public void StartQuest(Quest quest)
     {
+        if(Current != quest)
+            Current = quest;
+
         onQuestStart?.Invoke();
     }
 

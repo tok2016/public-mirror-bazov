@@ -31,21 +31,24 @@ public abstract class Quest : MonoBehaviour
 
     public virtual void Enter()
     {
-        QuestManager.Instance.StartQuest();
+        QuestManager.Instance.StartQuest(this);
         if (_state == QuestState.Locked)
+            Unlock();
+        
+        if (_state == QuestState.Available)
+        {
             onFirstEnter.Invoke();
+            Debug.Log(_data.StartPhraseText);
+        } 
         else
             onEnterRepeat.Invoke();
-
-        if(_state == QuestState.Locked || _state == QuestState.Available)
-            Debug.Log(_data.StartPhraseText);
 
         _state = QuestState.InProgress;
     }
 
     public virtual void Exit()
     {
-        _state = QuestState.Available;
+        _state = QuestState.Visited;
         onExit.Invoke();
     }
 

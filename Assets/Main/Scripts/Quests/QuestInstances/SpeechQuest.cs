@@ -28,7 +28,7 @@ public class SpeechQuest : Quest
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (item && item.GetEntityId() == _correctItem.GetEntityId())
+        if (_state == QuestState.InProgress && item && item.GetEntityId() == _correctItem.GetEntityId())
         {
             _controller.RemoveItem(item);
             OnCorrectItemGrab.Invoke();
@@ -38,7 +38,7 @@ public class SpeechQuest : Quest
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (item)
+        if (_state == QuestState.InProgress && item)
         {
             _controller.AddItem(item);
             if(item.GetEntityId() == _correctItem.GetEntityId())
