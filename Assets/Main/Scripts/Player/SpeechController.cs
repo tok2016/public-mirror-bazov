@@ -52,6 +52,9 @@ public class SpeechController : MonoBehaviour
 
     public void CheckItemSpeech()
     {
+        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone) 
+            || _deviceName == null || _deviceName == "") return;
+
         if (_recordAction.action.IsPressed() && !_isPressing && !Microphone.IsRecording(_deviceName))
         {
             _audioClip = Microphone.Start(_deviceName, false, _recordingTime, _frequency);

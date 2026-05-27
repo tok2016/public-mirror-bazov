@@ -6,14 +6,14 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class CollectableItem: MonoBehaviour, ICommentable
 {
     [field: SerializeField] public CollectableItemData Data {get; private set;}
+    public XRGrabInteractable Interactable { get; private set; }
     private Rigidbody _rigidbody;
-    private XRGrabInteractable _interactable;
 
     public bool IsCollected {get; private set;}
 
     private void Awake()
     {
-        _interactable = GetComponent<XRGrabInteractable>();
+        Interactable = GetComponent<XRGrabInteractable>();
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -21,7 +21,7 @@ public class CollectableItem: MonoBehaviour, ICommentable
     {
         //_interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
         //_interactable.selectExited.AddListener(QuestManager.Instance.OnItemLettingGo);
-        _interactable.selectExited.AddListener(OnLettingGo);
+        Interactable.selectExited.AddListener(OnLettingGo);
     }
 
     public void OnLettingGo(SelectExitEventArgs args)
@@ -58,7 +58,7 @@ public class CollectableItem: MonoBehaviour, ICommentable
     private void OnDisable()
     {
         //_interactable.selectEntered.RemoveAllListeners();
-        _interactable.selectExited.RemoveAllListeners();
+        Interactable.selectExited.RemoveAllListeners();
     }
 
     public void CommentGrab(string text)

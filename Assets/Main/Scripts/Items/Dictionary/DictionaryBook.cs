@@ -28,6 +28,7 @@ public class DictionaryBook : MonoBehaviour
     [SerializeField] private Transform _pagesGroup;
     [SerializeField] private DictionaryPage _page;
     private List<DictionaryPage> _pages;
+    private Dictionary<WordData, DictionaryPageSide> _pagesSides;
     private int _currentPage = 0; //current page is the page on the right side of book
 
     [SerializeField] private Button _leftButton, _rightButton;
@@ -35,6 +36,7 @@ public class DictionaryBook : MonoBehaviour
     private void Awake()
     {
         _pages = new List<DictionaryPage>();
+        _pagesSides = new Dictionary<WordData, DictionaryPageSide>();
         _stateMachine = new DictionaryStateMachine(this);
     }
 
@@ -47,12 +49,15 @@ public class DictionaryBook : MonoBehaviour
     {
         DefaultScale = ScaleWrapper.localScale;
 
-        var pagesCount = (int)Mathf.Ceil(_words.Length / 2f);
-        for (int i = 0; i < pagesCount; i++)
+        for (int i = _words.Length - 1; i >= 0; i--)
         {
-            var page = Instantiate(_page, _pagesGroup);
+            var pageIndex = (int)Mathf.Ceil((_words.Length - i - 1) / 2f);
+            var page = pageIndex >= _pages.Count ? CreateWord() : _pages[pageIndex];
             page.gameObject.SetActive(true);
-            _pages.Add(page);
+
+            var side = i % 2 == 0 ? page.Front : page.Back;
+            side.SetDefinition(_words[i]);
+            _pagesSides.Add(_words[i], side);
         }
 
         _pages.Reverse();
@@ -66,15 +71,17 @@ public class DictionaryBook : MonoBehaviour
         _stateMachine.Update();
     }
 
-    public void AddWord(WordData word, int count)
+    private DictionaryPage CreateWord()
     {
-        if ((count + 1) <= _pages.Count * 2)
-        {
-            var page = _pages[(count - 1) / 2];
-            var side = count % 2 == 0 ? page.Back : page.Front;
-            var wasActive = side.gameObject.activeSelf;
-            side.SetWord(word);
-        }
+        var newPage = Instantiate(_page, _pagesGroup);
+        _pages.Add(newPage);
+        return newPage;
+    }
+
+    public void AddWord(WordData word)
+    {
+        if (_pagesSides.ContainsKey(word))
+            _pagesSides[word].SetTitle(word);
     }
 
     public void TurnThePage(bool left = false)
