@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -8,6 +9,8 @@ public class CollectableItem: MonoBehaviour, ICommentable
     [field: SerializeField] public CollectableItemData Data {get; private set;}
     public XRGrabInteractable Interactable { get; private set; }
     private Rigidbody _rigidbody;
+
+    public UnityEvent OnCollceted, OnRestored;
 
     public bool IsCollected {get; private set;}
 
@@ -33,6 +36,7 @@ public class CollectableItem: MonoBehaviour, ICommentable
     {
         IsCollected = true;
         gameObject.SetActive(false);
+        OnCollceted.Invoke();
     }
 
     public void RestoreSocketedItem(Transform attachPoint)
@@ -40,6 +44,8 @@ public class CollectableItem: MonoBehaviour, ICommentable
         transform.position = attachPoint.position;
         IsCollected = false;
         gameObject.SetActive(true);
+        OnRestored.Invoke();
+        Interactable.interactionLayers |= (1 << InteractionLayerMask.NameToLayer("Collectable"));
         ToggleGravity(false);
     }
 

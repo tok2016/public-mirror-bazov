@@ -20,7 +20,7 @@ public class CollectingQuest : Quest
         _hintTimer = _timeBetweenHints;
 
         foreach (var hintObj in _hintObjects)
-            hintObj.ToggleHint(true);
+            hintObj.ToggleOutline(true);
     }
 
     protected override void Update()
@@ -41,9 +41,9 @@ public class CollectingQuest : Quest
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (args.interactorObject.GetType() != typeof(XRSocketInteractor))
-            Debug.Log(item.Data.Commentary);
+        if (!item) return;
 
+        Debug.Log(item.Data.Commentary);
         item.WriteWord();
 
         if (_commentCoroutine != null)
@@ -70,7 +70,7 @@ public class CollectingQuest : Quest
             zone.gameObject.SetActive(false);
 
         foreach (var hintObj in _hintObjects)
-            hintObj.ToggleHint(false);
+            hintObj.ToggleOutline(false);
 
         base.Complete();
     }

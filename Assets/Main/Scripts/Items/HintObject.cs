@@ -3,8 +3,13 @@ using UnityEngine;
 public class HintObject : MonoBehaviour
 {
     private MeshRenderer _renderer;
-    private LayerMask _hintLayer = 6;
+
+    [SerializeField] private bool _enableOutline;
+    private LayerMask _hintLayer = 0;
     private LayerMask _defaultLayerMask;
+
+    [SerializeField] private Material _hintMaterial;
+    private Material _defaultMaterial;
 
     private void Awake()
     {
@@ -13,15 +18,19 @@ public class HintObject : MonoBehaviour
 
     private void Start()
     {
-        _defaultLayerMask = _renderer == null ? gameObject.layer : _renderer.gameObject.layer;
+        _defaultLayerMask = _renderer?.gameObject.layer ?? gameObject.layer;
+        _defaultMaterial = _renderer?.material;
     }
 
-    public void ToggleHint(bool enable)
+    public void ToggleOutline(bool enable)
     {
-        var layer = enable ? _hintLayer : _defaultLayerMask;
-        if (_renderer != null)
-            _renderer.gameObject.layer = layer;
-        else
-            gameObject.layer = layer;
+        if (_enableOutline && _renderer)
+            _renderer.gameObject.layer = enable ? _hintLayer : _defaultLayerMask;
+    }
+
+    public void ToggleMaterial(bool enable)
+    {
+        if (_hintMaterial && _defaultMaterial && _renderer)
+            _renderer.material = enable ? _hintMaterial : _defaultMaterial;
     }
 }

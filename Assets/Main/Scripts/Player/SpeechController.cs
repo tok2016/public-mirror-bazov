@@ -16,13 +16,18 @@ class TranscribeData
     public string result;
 }
 
+[RequireComponent(typeof(SpeecControllerhHint))]
 public class SpeechController : MonoBehaviour
 {
+    [Header("Recording")]
     [SerializeField] private InputActionReference _recordAction;
-    [SerializeField] private List<CollectableItem> _items;
     [SerializeField] private int _scoreTreshold = 33;
     [SerializeField] private int _recordingTime = 5;
+
+    [Header("Items Controll")]
+    [SerializeField] private List<CollectableItem> _items;
     [SerializeField] Transform _itemAttachPoint;
+
 
     private int _frequency = 48000;
 
@@ -35,6 +40,8 @@ public class SpeechController : MonoBehaviour
     private AudioClip _audioClip;
     private HttpClient _httpClient;
 
+    private SpeecControllerhHint _controllerHint;
+
     private void Awake()
     {
         Env.Load();
@@ -42,6 +49,8 @@ public class SpeechController : MonoBehaviour
 
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Api-Key {key}");
+
+        _controllerHint = GetComponent<SpeecControllerhHint>();
     }
 
     void Start()
@@ -59,6 +68,7 @@ public class SpeechController : MonoBehaviour
         {
             _audioClip = Microphone.Start(_deviceName, false, _recordingTime, _frequency);
             Debug.Log("Start");
+            _controllerHint.ShowRecording();
             _recordingTimer = _recordingTime;
             _isPressing = true;
         }
@@ -72,7 +82,10 @@ public class SpeechController : MonoBehaviour
             }
 
             if (_recordingTimer >= 0 && _recordingTimer <= _recordingTime - _recordingTreshold)
+            {
                 TranscribeRecord();
+                _controllerHint.HideRecording();
+            }
 
             _isPressing = false;
         }
@@ -85,7 +98,10 @@ public class SpeechController : MonoBehaviour
                 Debug.Log("End");
             }
             else
+            {
                 _recordingTimer -= Time.deltaTime;
+                _controllerHint.WarnRecording(_recordingTimer);
+            }
         }
     }
 
@@ -133,6 +149,13 @@ public class SpeechController : MonoBehaviour
         }
     }
 
+    private IEnumerator<WaitForSeconds> TestTranscribe()
+    {
+        yield return new WaitForSeconds(2);
+        _controllerHint.ShowResponse();
+        _items[0].RestoreSocketedItem(_itemAttachPoint);
+    }
+
     private void MatchWord(string transcribed)
     {
         var words = _items.Select(item => item.Data.Word.Title.ToLower().Replace('ё', 'е')).ToArray();
@@ -142,7 +165,10 @@ public class SpeechController : MonoBehaviour
         Debug.Log($"{result.Value}: {result.Score}");
 
         if (result.Score >= _scoreTreshold && result.Index >= 0 && result.Index < _items.Count)
+        {
             _items[result.Index].RestoreSocketedItem(_itemAttachPoint);
+            _controllerHint.ShowResponse();
+        }  
         else
             Debug.Log("Ничего нет. Может, повторишь снова?");
     }
