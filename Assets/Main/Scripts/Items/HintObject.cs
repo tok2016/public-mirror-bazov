@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class HintObject : MonoBehaviour
 {
-    private MeshRenderer _renderer;
+    protected MeshRenderer _renderer;
 
-    [SerializeField] private bool _enableOutline;
-    private LayerMask _hintLayer = 0;
-    private LayerMask _defaultLayerMask;
+    [SerializeField] protected bool _enableOutline;
+    protected LayerMask _hintLayer = 6;
+    protected LayerMask _defaultLayerMask;
 
-    [SerializeField] private Material _hintMaterial;
-    private Material _defaultMaterial;
+    [SerializeField] protected Material _hintMaterial;
+    protected Material _defaultMaterial;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _renderer = GetComponentInChildren<MeshRenderer>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         _defaultLayerMask = _renderer?.gameObject.layer ?? gameObject.layer;
         _defaultMaterial = _renderer?.material;
@@ -28,7 +28,7 @@ public class HintObject : MonoBehaviour
             _renderer.gameObject.layer = enable ? _hintLayer : _defaultLayerMask;
     }
 
-    public void ToggleMaterial(bool enable)
+    public virtual void ToggleMaterial(bool enable)
     {
         if (_hintMaterial && _defaultMaterial && _renderer)
             _renderer.material = enable ? _hintMaterial : _defaultMaterial;

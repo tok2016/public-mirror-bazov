@@ -10,30 +10,24 @@ enum HintButtonState
     Pressed = 3
 }
 
-public class HintButton : MonoBehaviour
+public class HintButton : HintObject
 {
     [SerializeField] private InputActionReference _action;
-    [SerializeField] private Material _active, _pressed, _disabled;
-    private Material _defaultMaterial;
-    private MeshRenderer _renderer;
+    [SerializeField] private Material _pressedMaterial, _disabledMaterial;
 
     private HintButtonState _state;
     private Dictionary<HintButtonState, Material> _materials;
 
-    private void Awake()
+    protected override void Start()
     {
-        _renderer = GetComponentInChildren<MeshRenderer>();
-    }
-
-    private void Start()
-    {
+        base.Start();
         _state = HintButtonState.Default;
         _defaultMaterial = _renderer?.material;
         _materials = new Dictionary<HintButtonState, Material>() {
             {HintButtonState.Default, _defaultMaterial },
-            {HintButtonState.Disabled, _disabled},
-            {HintButtonState.Active, _active},
-            {HintButtonState.Pressed, _pressed}
+            {HintButtonState.Disabled, _disabledMaterial},
+            {HintButtonState.Active, _hintMaterial},
+            {HintButtonState.Pressed, _pressedMaterial}
         };
     }
 
@@ -49,7 +43,7 @@ public class HintButton : MonoBehaviour
         }
     }
 
-    public void ToggleHint(bool enable)
+    public override void ToggleMaterial(bool enable)
     {
         if(_renderer)
         {

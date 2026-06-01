@@ -17,7 +17,7 @@ public class SpeecControllerhHint : MonoBehaviour
     public void ToggleHint(bool enable)
     {
         _hintAnimator.gameObject.SetActive(enable);
-        _hintButton.ToggleHint(enable);
+        _hintButton.ToggleMaterial(enable);
     }
 
     public void ShowRecording()
