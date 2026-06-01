@@ -13,7 +13,6 @@ public class DarenkaChasingState : DarenkaState
 
     public override void Update()
     {
-        _darenka.Agent.isStopped = _darenka.Agent.remainingDistance <= _distanceToStop;
         _darenka.Agent.SetDestination(_target.position);
     }
 

@@ -3,9 +3,11 @@ using UnityEngine.AI;
 
 public class Darenka : MonoBehaviour
 {
-    [SerializeField] private Transform _player;
+    [field: SerializeField] public Transform Camera {  get; private set; }
+    [SerializeField] private Transform _warpPosition;
     [SerializeField] private float _itemDistanceToStop;
     [SerializeField] private float _playerDistanceToStop;
+    [SerializeField] private Animator _animator;
 
     public NavMeshAgent Agent { get; private set; }
     private DarenkaStateMachine _stateMachine;
@@ -19,6 +21,7 @@ public class Darenka : MonoBehaviour
     void Update()
     {
         _stateMachine.Update();
+        _animator.SetFloat("Speed", Agent.velocity.magnitude);
     }
 
     public void Chase(Transform target)
@@ -38,6 +41,12 @@ public class Darenka : MonoBehaviour
 
     public void GoToPlayer()
     {
-        Chase(_player, _playerDistanceToStop);
+        Chase(Camera, _playerDistanceToStop);
+    }
+
+    public void Warp()
+    {
+        Agent.Warp(_warpPosition.position);
+        transform.LookAt(Camera);
     }
 }

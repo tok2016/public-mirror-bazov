@@ -4,7 +4,6 @@ public abstract class DarenkaState
 {
     protected Darenka _darenka;
     protected Transform _target;
-    protected float _distanceToStop;
 
     public DarenkaState(Darenka darenka) 
     {
@@ -14,7 +13,7 @@ public abstract class DarenkaState
     public virtual void Enter(Transform target, float distanceToStop) 
     {
         _target = target;
-        _distanceToStop = distanceToStop;
+        _darenka.Agent.stoppingDistance = distanceToStop;
     }
 
     public virtual void Update() { }
