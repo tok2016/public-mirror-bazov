@@ -9,6 +9,7 @@ public class SpeecControllerhHint : MonoBehaviour
     [SerializeField] private GameObject _itemAppearanceEffect;
     [SerializeField] private Animator _hintAnimator;
     [SerializeField] private float _warningStartTime = 3;
+    [SerializeField] private float _errorEffectGravity = 1;
 
     private bool _isWarning;
     private Coroutine _cancelCoroutine;
@@ -24,16 +25,28 @@ public class SpeecControllerhHint : MonoBehaviour
         _isWarning = false;
         _hintAnimator.SetTrigger("Start");
         _recordingEffect.gameObject.SetActive(true);
+        _recordingEffect.Play();
     }
 
     public void HideRecording()
     {
-        _hintAnimator.SetTrigger("Stop");
-        _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        _hintAnimator.SetTrigger("Send");
+        _hintButton.ToggleDisable(true);
+        _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+        var loadingMain = _loadingEffect.main;
+        loadingMain.gravityModifierMultiplier = 0;
         _loadingEffect.gameObject.SetActive(true);
+        _loadingEffect.Play();
 
         if (_cancelCoroutine != null)
             StopCoroutine(_cancelCoroutine);
+    }
+
+    public void CancelRecording()
+    {
+        _hintAnimator.SetTrigger("Stop");
+        _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     public void WarnRecording(float timer)
@@ -41,7 +54,7 @@ public class SpeecControllerhHint : MonoBehaviour
         if(timer <= _warningStartTime && !_isWarning)
         {
             _hintAnimator.SetTrigger("Warning");
-            _cancelCoroutine = StartCoroutine(CancelRecording());
+            _cancelCoroutine = StartCoroutine(StopRecording());
             _isWarning = true;
         }
     }
@@ -49,13 +62,25 @@ public class SpeecControllerhHint : MonoBehaviour
     public void ShowResponse()
     {
         _hintAnimator.SetTrigger("Response");
+        _hintButton.ToggleDisable(false);
         _loadingEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         _itemAppearanceEffect.gameObject.SetActive(true);
     }
 
-    private IEnumerator CancelRecording()
+    public void ShowError()
+    {
+        _hintAnimator.SetTrigger("Error");
+        _hintButton.ToggleDisable(false);
+
+        var loadingMain = _loadingEffect.main;
+        loadingMain.gravityModifierMultiplier = _errorEffectGravity;
+
+        _loadingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private IEnumerator StopRecording()
     {
         yield return new WaitForSeconds(_warningStartTime);
-        _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 }

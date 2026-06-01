@@ -36,6 +36,7 @@ public class SpeechController : MonoBehaviour
 
     private string _deviceName;
     private bool _isPressing = false;
+    private bool _isLoading = false;
 
     private AudioClip _audioClip;
     private HttpClient _httpClient;
@@ -61,7 +62,7 @@ public class SpeechController : MonoBehaviour
 
     public void CheckItemSpeech()
     {
-        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone) 
+        if (_isLoading || !Permission.HasUserAuthorizedPermission(Permission.Microphone) 
             || _deviceName == null || _deviceName == "") return;
 
         if (_recordAction.action.IsPressed() && !_isPressing && !Microphone.IsRecording(_deviceName))
@@ -83,9 +84,11 @@ public class SpeechController : MonoBehaviour
 
             if (_recordingTimer >= 0 && _recordingTimer <= _recordingTime - _recordingTreshold)
             {
-                TranscribeRecord();
+                //TranscribeRecord();
+                StartCoroutine(TestTranscribe());
                 _controllerHint.HideRecording();
-            }
+            } else
+                _controllerHint.CancelRecording();
 
             _isPressing = false;
         }
@@ -116,28 +119,32 @@ public class SpeechController : MonoBehaviour
 
     private async void TranscribeRecord()
     {
-        if(_audioClip && _audioClip.loadState == AudioDataLoadState.Loaded)
+        if (!_audioClip || _audioClip.loadState != AudioDataLoadState.Loaded)
+            return;
+        
+        Debug.Log("Transcribing");
+
+        _isLoading = true;
+
+        var originUri = Environment.GetEnvironmentVariable("YANDEX_AI_STUDIO_URI") ?? throw new Exception("No URI");
+        var folder = Environment.GetEnvironmentVariable("YANDEX_FOLDER_ID") ?? throw new Exception("No folder ID");
+
+        var wav = OpenWavParser.AudioClipToByteArray(_audioClip, OpenWavParser.Resolution._16bit);
+        var content = new ByteArrayContent(wav);
+        var uri = new UriBuilder("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize");
+        
+        var query = HttpUtility.ParseQueryString(uri.Query);
+        query["lang"] = "ru-RU";
+        query["topic"] = "general";
+        query["profanityFilter"] = "false";
+        query["rawResults"] = "true";
+        query["format"] = "lpcm";
+        query["sampleRateHertz"] = _frequency.ToString();
+        query["folderId"] = folder;
+        uri.Query = query.ToString();
+
+        try
         {
-            Debug.Log("Transcribing");
-
-            var wav = OpenWavParser.AudioClipToByteArray(_audioClip, OpenWavParser.Resolution._16bit);
-
-            var originUri = Environment.GetEnvironmentVariable("YANDEX_AI_STUDIO_URI") ?? throw new Exception("No URI");
-            var folder = Environment.GetEnvironmentVariable("YANDEX_FOLDER_ID") ?? throw new Exception("No folder ID");
-
-            var content = new ByteArrayContent(wav);
-            var uri = new UriBuilder("https://stt.api.cloud.yandex.net/speech/v1/stt:recognize");
-
-            var query = HttpUtility.ParseQueryString(uri.Query);
-            query["lang"] = "ru-RU";
-            query["topic"] = "general";
-            query["profanityFilter"] = "false";
-            query["rawResults"] = "true";
-            query["format"] = "lpcm";
-            query["sampleRateHertz"] = _frequency.ToString();
-            query["folderId"] = folder;
-            uri.Query = query.ToString();
-
             var response = await _httpClient.PostAsync(uri.ToString(), content);
             var strData = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<TranscribeData>(strData);
@@ -145,15 +152,38 @@ public class SpeechController : MonoBehaviour
             if (data != null && data.result != null)
                 MatchWord(data.result);
             else
-                throw new Exception("No results");
+                ThrowError("No results");
         }
+        catch
+        {
+            ThrowError("Request error");
+        }
+
+        _isLoading = false;
     }
 
     private IEnumerator<WaitForSeconds> TestTranscribe()
     {
+        _isLoading = true;
+        Debug.Log("Transcribing");
         yield return new WaitForSeconds(2);
-        _controllerHint.ShowResponse();
-        _items[0].RestoreSocketedItem(_itemAttachPoint);
+
+        int rand = UnityEngine.Random.Range(0, 2);
+        if (rand == 0)
+            _controllerHint.ShowError();
+        else
+        {
+            _controllerHint.ShowResponse();
+            _items[0].RestoreSocketedItem(_itemAttachPoint);
+        }
+
+        _isLoading = false;
+    }
+
+    private void ThrowError(string message)
+    {
+        _controllerHint.ShowError();
+        throw new Exception(message);
     }
 
     private void MatchWord(string transcribed)
