@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public static class DictionaryManager
 {
-    public static event Action<WordData, int> OnWordWrite;
+    public static event Action<WordData> OnWordWrite;
     public static List<WordData> StoredWords { get; } = new List<WordData>();
 
     public static void WriteWord(WordData wordData)
@@ -12,7 +12,7 @@ public static class DictionaryManager
         if(index < 0)
         {
             StoredWords.Add(wordData);
-            OnWordWrite?.Invoke(wordData, StoredWords.Count);
+            OnWordWrite?.Invoke(wordData);
         }
     }
 

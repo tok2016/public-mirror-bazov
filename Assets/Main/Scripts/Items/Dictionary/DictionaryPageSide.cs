@@ -11,9 +11,15 @@ public class DictionaryPageSide : MonoBehaviour
         _description.text = "";
     }
 
-    public void SetWord(WordData word)
+    public void SetTitle(WordData word)
     {
         _title.text = word.Title;
+        _description.text = word.Description;
+    }
+
+    public void SetDefinition(WordData word)
+    {
+        _title.text = "?";
         _description.text = word.Description;
     }
 }

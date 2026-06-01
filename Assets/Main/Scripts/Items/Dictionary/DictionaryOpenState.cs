@@ -5,6 +5,7 @@ public class DictionaryOpenState : DictionaryState
 {
     private float _rotationSpeed = 700;
     private float _scalingSpeed = 10;
+    private Vector3 _openedSize = new Vector3(0.75f, 0.75f, 0.75f);
     private Coroutine _opening, _closing;
 
     delegate bool Compare(float a, float b);
@@ -56,7 +57,7 @@ public class DictionaryOpenState : DictionaryState
 
     private IEnumerator RescaleBook(bool enlarge)
     {
-        var tagetScale = enlarge ? Vector3.one : _book.DefaultScale;
+        var tagetScale = enlarge ? _openedSize : _book.DefaultScale;
         var targetMagnitude = tagetScale.magnitude;
 
         Compare compare = enlarge ? IsLess : IsGreater;

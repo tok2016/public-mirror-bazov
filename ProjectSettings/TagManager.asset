@@ -14,7 +14,7 @@ TagManager:
   - floor
   - Water
   - UI
-  - Interacteble
+  - Hint
   - Player
   - collidetObj
   - Frame

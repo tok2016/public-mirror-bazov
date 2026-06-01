@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8664550813755191688}
   - component: {fileID: 6464438946691901728}
   - component: {fileID: 4302188772856509557}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Snow Teleport Pad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1237,13 +1237,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7268666611420731584, guid: 233034a638b19de418453ceac064f1ec, type: 3}
+      propertyPath: m_LengthScale
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7268666611420731584, guid: 233034a638b19de418453ceac064f1ec, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 22a398d6f375845409eae6fc96fa735f, type: 2}
     - target: {fileID: 7323388871818731059, guid: 233034a638b19de418453ceac064f1ec, type: 3}
       propertyPath: m_Name
       value: Godrays
       objectReference: {fileID: 0}
     - target: {fileID: 7323388871818731059, guid: 233034a638b19de418453ceac064f1ec, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8839009217310891309, guid: 233034a638b19de418453ceac064f1ec, type: 3}
       propertyPath: ShapeModule.m_Scale.x
@@ -1252,6 +1260,14 @@ PrefabInstance:
     - target: {fileID: 8839009217310891309, guid: 233034a638b19de418453ceac064f1ec, type: 3}
       propertyPath: ShapeModule.m_Scale.y
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8839009217310891309, guid: 233034a638b19de418453ceac064f1ec, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8839009217310891309, guid: 233034a638b19de418453ceac064f1ec, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

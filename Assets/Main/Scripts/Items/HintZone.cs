@@ -27,8 +27,11 @@ public class HintZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var item = other.GetComponent<CollectableItem>() ?? other.transform.parent?.GetComponent<CollectableItem>();
-        if(item && !item.IsCollected)
+        if(item && !item.IsCollected && item.Interactable.interactorsSelecting.Count == 0)
             Items.Add(other, item);
+
+        if (other.tag == "Player" && Items.Count > 0)
+            CommentHint();
     }
 
     private void OnTriggerExit(Collider other)

@@ -100,7 +100,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 355a9ff3005973d4597b2809a54066db, type: 2}
+  - {fileID: 2100000, guid: b2254b53c370a3e4d8b8e71b04e2f204, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -569,18 +569,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a7e781ccb70f5364fbdaa837a84e6ba6, type: 2}
   - {fileID: 11400000, guid: 9b99abd0fc8eb764a885272dfc8985ba, type: 2}
   - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
-  - {fileID: 11400000, guid: c402cc0faeda0124a893106c753c5db4, type: 2}
-  - {fileID: 11400000, guid: 2abeede1f59e5aa448d64a71e18806e6, type: 2}
-  - {fileID: 11400000, guid: 785d72d98f370b846a39150ab72a02b0, type: 2}
-  - {fileID: 11400000, guid: 14aeccb561739aa438d97e9dcefa1c4e, type: 2}
-  - {fileID: 11400000, guid: 685992a14f757f6438dfa613fe42a483, type: 2}
-  - {fileID: 11400000, guid: 2f08db487167c9143a45a731a04f2c59, type: 2}
-  - {fileID: 11400000, guid: 4c7fde8ee984bb841bb8c6c3fda3f656, type: 2}
   <FrontBinding>k__BackingField: {fileID: 1914329810443711572}
   _attachPoint: {fileID: 0}
   <ScaleWrapper>k__BackingField: {fileID: 6694254089544912746}
   <Camera>k__BackingField: {fileID: 0}
-  _minDistanceToOpen: 0.7
+  _minDistanceToOpen: 0.3
   _renderer: {fileID: 5608808663166474129}
   _pagesCanvas: {fileID: 2666206497969044497}
   _pagesGroup: {fileID: 887961561333147445}
@@ -1027,7 +1020,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 355a9ff3005973d4597b2809a54066db, type: 2}
+  - {fileID: 2100000, guid: b2254b53c370a3e4d8b8e71b04e2f204, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
