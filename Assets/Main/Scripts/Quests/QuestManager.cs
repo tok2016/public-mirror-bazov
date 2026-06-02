@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class QuestManager : MonoBehaviour
 {
     public Quest Current {  get; private set; }
     [SerializeField] private Quest _firstQuest;
+    [SerializeField] private TeleportationProvider _teleportationProvider;
     public UnityEvent onQuestComplete;
     public UnityEvent onQuestStart;
 
@@ -25,6 +27,12 @@ public class QuestManager : MonoBehaviour
         Current = _firstQuest;
     }
 
+    private void OnEnable()
+    {
+        _teleportationProvider.locomotionStarted += OnTeleportStart;
+        _teleportationProvider.locomotionEnded += OnTeleportEnd;
+    }
+
     private void Start()
     {
         Current?.Unlock();
@@ -41,8 +49,8 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest()
     {
-        Current = Current?.Next;
-        Current?.Unlock();
+        if(Current && Current.Next)
+            Current.Next.Unlock();
         onQuestComplete?.Invoke();
     }
 
@@ -76,8 +84,24 @@ public class QuestManager : MonoBehaviour
         Current?.OnItemLettingGo(args);
     }
 
+    public void OnTeleportStart(LocomotionProvider provider)
+    {
+        Current?.OnTeleportStart(provider);
+    }
+
+    public void OnTeleportEnd(LocomotionProvider provider)
+    {
+        Current?.OnTeleportEnd(provider);
+    }
+
     public void OnTeleport(TeleportingEventArgs args)
     {
         Current?.OnTeleport(args);
+    }
+
+    private void OnDisable()
+    {
+        _teleportationProvider.locomotionStarted -= OnTeleportStart;
+        _teleportationProvider.locomotionEnded -= OnTeleportEnd;
     }
 }

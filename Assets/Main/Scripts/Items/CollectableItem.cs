@@ -61,6 +61,12 @@ public class CollectableItem: MonoBehaviour, ICommentable
             DictionaryManager.WriteWord(Data.Word);
     }
 
+    public void ToggleInteractable(bool enable)
+    {
+        enabled = enable;
+        Interactable.enabled = enable;
+    }
+
     private void OnDisable()
     {
         //_interactable.selectEntered.RemoveAllListeners();

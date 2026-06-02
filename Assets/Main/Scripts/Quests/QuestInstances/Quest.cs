@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public abstract class Quest : MonoBehaviour
@@ -104,6 +105,10 @@ public abstract class Quest : MonoBehaviour
     internal virtual void OnItemGrab(SelectEnterEventArgs args) { }
 
     internal virtual void OnItemLettingGo(SelectExitEventArgs args) { }
+
+    internal virtual void OnTeleportStart(LocomotionProvider provider) { }
+
+    internal virtual void OnTeleportEnd(LocomotionProvider provider) { }
 
     internal virtual void OnTeleport(TeleportingEventArgs args) { }
 }

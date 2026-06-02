@@ -1029,6 +1029,7 @@ MonoBehaviour:
   _deactivated: {fileID: 2100000, guid: 2241b146fb06c684b93a13c7d6f4739f, type: 2}
   _snapVolume: {fileID: 6682018698686513193}
   _godrays: {fileID: 4571075507454343751}
+  <Anchor>k__BackingField: {fileID: 4308149994887651471}
   onPadEnter:
     m_PersistentCalls:
       m_Calls: []
@@ -1184,6 +1185,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 264747359678768830, guid: 3f685b5f47a11a247a6f17a0f2240bc3, type: 3}
   m_PrefabInstance: {fileID: 3376828681851673681}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4308149994887651471 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1519252750498512094, guid: 3f685b5f47a11a247a6f17a0f2240bc3, type: 3}
+  m_PrefabInstance: {fileID: 3376828681851673681}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e2f4617667341945b5a7756e14b62d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &6682018698686513193 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 8243746007383596152, guid: 3f685b5f47a11a247a6f17a0f2240bc3, type: 3}

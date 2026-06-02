@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class TeleportPad : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class TeleportPad : MonoBehaviour
     [SerializeField] private Material _activated, _deactivated;
     [SerializeField] private Collider _snapVolume;
     [SerializeField] private GameObject _godrays;
+    [field: SerializeField] public TeleportationAnchor Anchor {  get; private set; }
 
     private MeshRenderer _renderer;
 
@@ -18,8 +20,14 @@ public class TeleportPad : MonoBehaviour
         _renderer = GetComponent<MeshRenderer>();
     }
 
+    //private void OnEnable()
+    //{
+    //    Anchor.teleporting.AddListener(QuestManager.Instance.OnTeleport);
+    //}
+
     void Start()
     {
+        Anchor.teleporting.AddListener(QuestManager.Instance.OnTeleport);
         Deactivate();
     }
 
@@ -50,5 +58,10 @@ public class TeleportPad : MonoBehaviour
         onPadExit.Invoke(this);
         _godrays.SetActive(true);
         _snapVolume.gameObject.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        Anchor.teleporting.RemoveAllListeners();
     }
 }

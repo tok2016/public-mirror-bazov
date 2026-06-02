@@ -1,40 +1,38 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class SpeechQuest : Quest
 {
     [Header("Item Check")]
-    [SerializeField] private CollectableItem _correctItem;
+    [SerializeField] protected CollectableItem _correctItem;
     public UnityEvent OnCorrectItemGrab;
     public UnityEvent OnCorrectItemRelease;
 
     [Header("Input")]
-    [SerializeField] private SpeechController _controller;
-    [SerializeField] private TeleportationProvider _teleportationProvider;
-    public UnityEvent OnPadTeleport;
-
-    private void OnEnable()
-    {
-        _teleportationProvider.locomotionEnded += OnTeleport;
-    }
+    [SerializeField] protected SpeechController _controller;
+    [SerializeField] protected SpeecControllerhHint _controllerHint;
 
     protected override void Update()
     {
         _controller.CheckItemSpeech();
     }
 
-    internal override void Check(SelectEnterEventArgs args)
+    protected void OnEnable()
     {
-        var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (item && item.GetEntityId() == _correctItem.GetEntityId())
-        {
-            _controller.RemoveItem(item);
-            item.gameObject.SetActive(false);
-            Complete();
-        }    
+        onFirstEnter.AddListener(EnableHints);
+        onEnterRepeat.AddListener(EnableHints);
+        onEnterAfterComplete.AddListener(EnableHints);
+
+        onComplete.AddListener(EnableHints);
+    }
+
+    protected void EnableHints() => _controllerHint.ToggleHint(true);
+    protected void DisableHints() => _controllerHint.ToggleHint(false);
+
+    internal override void Check()
+    {
+        Complete();
     }
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
@@ -58,13 +56,12 @@ public class SpeechQuest : Quest
         }
     }
 
-    private void OnTeleport(LocomotionProvider provider)
+    protected void OnDisable()
     {
-        OnPadTeleport.Invoke();
-    }
+        onFirstEnter.RemoveAllListeners();
+        onEnterRepeat.RemoveAllListeners();
+        onEnterAfterComplete.RemoveAllListeners();
 
-    private void OnDisable()
-    {
-        _teleportationProvider.locomotionEnded -= OnTeleport;
+        onComplete.RemoveAllListeners();
     }
 }
