@@ -1,13 +1,25 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class SpeechQuest : Quest
 {
+    [Header("Item Check")]
     [SerializeField] private CollectableItem _correctItem;
-    [SerializeField] private SpeechController _controller;
     public UnityEvent OnCorrectItemGrab;
     public UnityEvent OnCorrectItemRelease;
+
+    [Header("Input")]
+    [SerializeField] private SpeechController _controller;
+    [SerializeField] private TeleportationProvider _teleportationProvider;
+    public UnityEvent OnPadTeleport;
+
+    private void OnEnable()
+    {
+        _teleportationProvider.locomotionEnded += OnTeleport;
+    }
 
     protected override void Update()
     {
@@ -28,7 +40,7 @@ public class SpeechQuest : Quest
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (_state == QuestState.InProgress && item && item.GetEntityId() == _correctItem.GetEntityId())
+        if (State == QuestState.InProgress && item && item.GetEntityId() == _correctItem.GetEntityId())
         {
             _controller.RemoveItem(item);
             OnCorrectItemGrab.Invoke();
@@ -38,11 +50,21 @@ public class SpeechQuest : Quest
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (_state == QuestState.InProgress && item)
+        if (State == QuestState.InProgress && item)
         {
             _controller.AddItem(item);
             if(item.GetEntityId() == _correctItem.GetEntityId())
                 OnCorrectItemRelease.Invoke();
         }
+    }
+
+    private void OnTeleport(LocomotionProvider provider)
+    {
+        OnPadTeleport.Invoke();
+    }
+
+    private void OnDisable()
+    {
+        _teleportationProvider.locomotionEnded -= OnTeleport;
     }
 }

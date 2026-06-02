@@ -5,13 +5,21 @@ using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public abstract class Quest : MonoBehaviour
 {
+    [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    protected QuestState _state = QuestState.Locked;
+    public QuestState State { get; protected set; } = QuestState.Locked;
 
+    [Header("Enter")]
     public UnityEvent onFirstEnter;
     public UnityEvent onEnterRepeat;
+    public UnityEvent onEnterAfterComplete;
+
+    [Header("Exit")]
     public UnityEvent onExit;
+    public UnityEvent onExitAfterComplete;
+
+    [Header("Complete")]
     public UnityEvent onComplete;
 
     protected virtual void Awake()
@@ -25,17 +33,23 @@ public abstract class Quest : MonoBehaviour
 
     public void Unlock()
     {
-        _state = QuestState.Available;
+        State = QuestState.Available;
         gameObject.SetActive(true);
     }
 
     public virtual void Enter()
     {
-        QuestManager.Instance.StartQuest(this);
-        if (_state == QuestState.Locked)
+        if (State == QuestState.Completed)
+        {
+            onEnterAfterComplete.Invoke();
+            return;
+        }
+        else if (State == QuestState.Locked)
             Unlock();
-        
-        if (_state == QuestState.Available)
+
+
+        QuestManager.Instance.StartQuest(this);
+        if (State == QuestState.Available)
         {
             onFirstEnter.Invoke();
             Debug.Log(_data.StartPhraseText);
@@ -43,19 +57,25 @@ public abstract class Quest : MonoBehaviour
         else
             onEnterRepeat.Invoke();
 
-        _state = QuestState.InProgress;
+        State = QuestState.InProgress;
     }
 
     public virtual void Exit()
     {
-        _state = QuestState.Visited;
+        if(State == QuestState.Completed)
+        {
+            onExitAfterComplete.Invoke();
+            return;
+        }
+
+        State = QuestState.Visited;
         onExit.Invoke();
     }
 
     public virtual void Complete()
     {
         QuestManager.Instance.CompleteQuest();
-        _state = QuestState.Completed;
+        State = QuestState.Completed;
         Debug.Log(_data.EndPhraseText);
         onComplete.Invoke();
         gameObject.SetActive(false);

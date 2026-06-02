@@ -13,7 +13,8 @@ public class DarenkaChasingState : DarenkaState
 
     public override void Update()
     {
-        _darenka.Agent.SetDestination(_target.position);
+        if((_darenka.Camera.position - _darenka.transform.position).magnitude > _darenka.Agent.stoppingDistance + 0.2f)
+            _darenka.Agent.SetDestination(_target.position);
     }
 
     public override void Exit()

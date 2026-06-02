@@ -5,7 +5,6 @@ public class Door : MonoBehaviour
 {
     [SerializeField] private float _rotationSpeed = 50;
     private float _rotationAngle = 90;
-    private bool _isOpening = false;
     private Quaternion _startRotation;
 
     [Header("Axis")]
@@ -18,16 +17,15 @@ public class Door : MonoBehaviour
         _startRotation = transform.rotation;
     }
 
-    public void Toggle()
+    public void Toggle(bool open)
     {
         StopAllCoroutines();
-        StartCoroutine(Rotate());
+        StartCoroutine(Rotate(open));
     }
 
-    private IEnumerator Rotate()
+    private IEnumerator Rotate(bool open)
     {
-        _isOpening = !_isOpening;
-        var angleDiff = _rotationAngle * (_isOpening ? 1 : 0);
+        var angleDiff = _rotationAngle * (open ? 1 : 0);
         var angle = _startRotation.eulerAngles - new Vector3(_x ? angleDiff : 0, _y ? angleDiff : 0, _z ? angleDiff : 0);
         var target = Quaternion.Euler(angle);
 

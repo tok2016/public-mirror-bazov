@@ -10,8 +10,8 @@ public class TeleportPad : MonoBehaviour
 
     private MeshRenderer _renderer;
 
-    public UnityEvent onPadEnter;
-    public UnityEvent onPadExit;
+    public UnityEvent<TeleportPad> onPadEnter;
+    public UnityEvent<TeleportPad> onPadExit;
 
     private void Awake()
     {
@@ -40,14 +40,14 @@ public class TeleportPad : MonoBehaviour
     public void EnterThePad()
     {
         _next?.Activate();
-        onPadEnter.Invoke();
+        onPadEnter.Invoke(this);
         _godrays.SetActive(false);
         _snapVolume.gameObject.SetActive(false);
     }
 
     public void ExitThePad()
     {
-        onPadExit.Invoke();
+        onPadExit.Invoke(this);
         _godrays.SetActive(true);
         _snapVolume.gameObject.SetActive(true);
     }
