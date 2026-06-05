@@ -54,7 +54,8 @@ public class NpcNavigatable : NpcContoller, INavigatable
 
     public void WarpToPlayer()
     {
-        Warp(_playerWarpPosition);
+        Agent.Warp(_playerWarpPosition.position);
+        transform.LookAt(PlayerCamera);
     }
 
     public void ComeUp(Transform target)

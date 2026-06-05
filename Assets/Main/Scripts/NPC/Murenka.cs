@@ -16,6 +16,7 @@ public class Murenka : NpcNavigatable
     {
         if(grabbable == _objectToEat)
         {
+            Debug.Log("Eat");
             _eatEffect.SetActive(true);
             grabbable.gameObject.SetActive(false);
         }

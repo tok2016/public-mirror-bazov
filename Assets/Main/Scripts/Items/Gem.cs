@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class Gem : MonoBehaviour, ICommentable
 {
     [SerializeField] protected CollectableItemData _data;
-    [SerializeField] protected float _growthSpeed = 1f;
+    [SerializeField] protected float _growthSpeed = 0.1f;
     protected Rigidbody _rigidbody;
     protected Vector3 _defaultScale;
 
@@ -32,9 +32,10 @@ public class Gem : MonoBehaviour, ICommentable
 
     private IEnumerator Grow()
     {
+        var growSpeed = _growthSpeed * Time.deltaTime;
         while (transform.localScale.magnitude < _defaultScale.magnitude)
         {
-            transform.localScale += Vector3.MoveTowards(transform.localScale, _defaultScale, _growthSpeed * Time.deltaTime);
+            transform.localScale += Vector3.MoveTowards(transform.localScale, _defaultScale, growSpeed);
             yield return null;
         }
 
