@@ -24,7 +24,7 @@ public class SpeechQuest : Quest
         onEnterRepeat.AddListener(EnableHints);
         onEnterAfterComplete.AddListener(EnableHints);
 
-        onComplete.AddListener(EnableHints);
+        onComplete.AddListener(DisableHints);
     }
 
     protected void EnableHints() => _controllerHint.ToggleHint(true);
