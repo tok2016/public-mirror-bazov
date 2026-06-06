@@ -2,12 +2,19 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(BoxCollider))]
 public class QuestZone : MonoBehaviour
 {
     public UnityEvent onEnter;
     public UnityEvent onExit;
 
     [SerializeField] private Quest[] _quests;
+    private BoxCollider _collider;
+
+    private void Awake()
+    {
+        _collider = GetComponent<BoxCollider>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {

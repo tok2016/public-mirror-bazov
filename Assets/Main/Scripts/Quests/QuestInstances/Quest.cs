@@ -9,6 +9,8 @@ public abstract class Quest : MonoBehaviour
     [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
+    [SerializeField] private ItemActiveZone _activeZone;
+
     public QuestState State { get; protected set; } = QuestState.Locked;
 
     [Header("Enter")]
@@ -80,6 +82,13 @@ public abstract class Quest : MonoBehaviour
         Debug.Log(_data.EndPhraseText);
         onComplete.Invoke();
         gameObject.SetActive(false);
+    }
+
+    public bool IsItemInActiveZone(Transform item) => _activeZone.IsItemInActiveZone(item);
+
+    public virtual void ReturnToActiveZone(Transform item)
+    {
+        _activeZone.ReturnToActiveZone(item);
     }
 
     internal virtual void Check(SelectEnterEventArgs args)

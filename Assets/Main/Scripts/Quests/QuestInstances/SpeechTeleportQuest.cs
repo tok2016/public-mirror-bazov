@@ -18,4 +18,11 @@ public class SpeechTeleportQuest : SpeechQuest
     {
         OnPadTeleport.Invoke();
     }
+
+    public override void ReturnToActiveZone(Transform item)
+    {
+        base.ReturnToActiveZone(item);
+        var collectable = item.GetComponent<CollectableItem>();
+        collectable?.ToggleGravity(false);
+    }
 }

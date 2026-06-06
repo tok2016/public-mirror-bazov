@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(RespawningItem))]
 public class CollectableItem: MonoBehaviour, ICommentable
 {
     [field: SerializeField] public CollectableItemData Data {get; protected set;}
@@ -57,12 +57,6 @@ public class CollectableItem: MonoBehaviour, ICommentable
     {
         if (Data.Word)
             DictionaryManager.WriteWord(Data.Word);
-    }
-
-    public void ToggleInteractable(bool enable)
-    {
-        enabled = enable;
-        Interactable.enabled = enable;
     }
 
     private void OnDisable()

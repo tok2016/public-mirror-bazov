@@ -56,7 +56,8 @@ public class CollectingQuest : Quest
 
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
-        if (args.interactableObject.transform.gameObject.activeInHierarchy)
+        if (args.interactableObject.transform.gameObject.activeInHierarchy 
+            && args.interactableObject.transform.GetComponent<CollectableItem>() != null)
             _commentCoroutine = StartCoroutine(CommentLettingGo(args));
     }
 

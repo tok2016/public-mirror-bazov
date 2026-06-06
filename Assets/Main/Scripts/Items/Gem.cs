@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(RespawningItem))]
 public class Gem : MonoBehaviour, ICommentable
 {
     [SerializeField] protected CollectableItemData _data;
