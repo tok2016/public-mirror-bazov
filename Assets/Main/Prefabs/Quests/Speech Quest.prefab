@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8811255852054744940}
-  - component: {fileID: 676064385569374125}
+  - component: {fileID: 5472256934067038594}
   m_Layer: 0
   m_Name: Speech Quest
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &676064385569374125
+--- !u!114 &5472256934067038594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3547392133364633181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea998cf170cfc6e4a9cbddfb5a0a5958, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a3001cb304de5f45841bc6274c4c19a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpeechQuest
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechTeleportQuest
   _data: {fileID: 0}
   <Next>k__BackingField: {fileID: 0}
   onFirstEnter:
@@ -52,11 +52,28 @@ MonoBehaviour:
   onEnterRepeat:
     m_PersistentCalls:
       m_Calls: []
+  onEnterAfterComplete:
+    m_PersistentCalls:
+      m_Calls: []
   onExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onExitAfterComplete:
     m_PersistentCalls:
       m_Calls: []
   onComplete:
     m_PersistentCalls:
       m_Calls: []
   _correctItem: {fileID: 0}
+  OnCorrectItemGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCorrectItemRelease:
+    m_PersistentCalls:
+      m_Calls: []
   _controller: {fileID: 0}
+  _controllerHint: {fileID: 0}
+  _target: {fileID: 0}
+  OnPadTeleport:
+    m_PersistentCalls:
+      m_Calls: []

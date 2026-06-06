@@ -3,10 +3,10 @@ using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(RespawningItem))]
 public class CollectableItem: MonoBehaviour, ICommentable
 {
-    [field: SerializeField] public CollectableItemData Data {get; private set;}
+    [field: SerializeField] public CollectableItemData Data {get; protected set;}
     public XRGrabInteractable Interactable { get; private set; }
     private Rigidbody _rigidbody;
 
@@ -22,8 +22,6 @@ public class CollectableItem: MonoBehaviour, ICommentable
 
     private void OnEnable()
     {
-        //_interactable.selectEntered.AddListener(QuestManager.Instance.OnItemGrab);
-        //_interactable.selectExited.AddListener(QuestManager.Instance.OnItemLettingGo);
         Interactable.selectExited.AddListener(OnLettingGo);
     }
 
@@ -57,13 +55,12 @@ public class CollectableItem: MonoBehaviour, ICommentable
 
     public void WriteWord()
     {
-        if (Data.Word && !DictionaryManager.IsWordStored(Data.Word))
+        if (Data.Word)
             DictionaryManager.WriteWord(Data.Word);
     }
 
     private void OnDisable()
     {
-        //_interactable.selectEntered.RemoveAllListeners();
         Interactable.selectExited.RemoveAllListeners();
     }
 

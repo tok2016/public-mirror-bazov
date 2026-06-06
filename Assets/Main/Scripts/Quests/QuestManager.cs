@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class QuestManager : MonoBehaviour
 {
-    public Quest Current {  get; private set; }
+    private Quest _current;
     [SerializeField] private Quest _firstQuest;
+    [SerializeField] private TeleportationProvider _teleportationProvider;
     public UnityEvent onQuestComplete;
     public UnityEvent onQuestStart;
 
@@ -22,62 +24,91 @@ public class QuestManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        Current = _firstQuest;
+        _current = _firstQuest;
+    }
+
+    private void OnEnable()
+    {
+        _teleportationProvider.locomotionStarted += OnTeleportStart;
+        _teleportationProvider.locomotionEnded += OnTeleportEnd;
     }
 
     private void Start()
     {
-        Current?.Unlock();
-        Current?.Enter();
+        _current?.Unlock();
+        _current?.Enter();
     }
 
     public void StartQuest(Quest quest)
     {
-        if(Current != quest)
-            Current = quest;
+        if(_current != quest)
+            _current = quest;
 
         onQuestStart?.Invoke();
     }
 
     public void CompleteQuest()
     {
-        Current = Current?.Next;
-        Current?.Unlock();
+        if(_current && _current.Next)
+            _current.Next.Unlock();
         onQuestComplete?.Invoke();
+    }
+
+    public bool IsInActiveZone(Transform item) => _current?.IsItemInActiveZone(item) ?? true;
+
+    public void ReturnToActiveZone(Transform item)
+    {
+        _current?.ReturnToActiveZone(item);
     }
 
     public void Check(SelectEnterEventArgs args)
     {
-        Current?.Check(args);
+        _current?.Check(args);
     }
 
     public void Check(SelectExitEventArgs args)
     {
-        Current?.Check(args);
+        _current?.Check(args);
     }
 
     public void Check(TeleportingEventArgs args)
     {
-        Current?.Check(args);
+        _current?.Check(args);
     }
 
     public void Check()
     {
-        Current?.Check();
+        _current?.Check();
     }
 
     public void OnItemGrab(SelectEnterEventArgs args)
     {
-        Current?.OnItemGrab(args);
+        _current?.OnItemGrab(args);
     }
 
     public void OnItemLettingGo(SelectExitEventArgs args)
     {
-        Current?.OnItemLettingGo(args);
+        _current?.OnItemLettingGo(args);
+    }
+
+    public void OnTeleportStart(LocomotionProvider provider)
+    {
+        _current?.OnTeleportStart(provider);
+    }
+
+    public void OnTeleportEnd(LocomotionProvider provider)
+    {
+        _current?.OnTeleportEnd(provider);
     }
 
     public void OnTeleport(TeleportingEventArgs args)
     {
-        Current?.OnTeleport(args);
+        _current?.OnTeleport(args);
+    }
+
+    private void OnDisable()
+    {
+        _teleportationProvider.locomotionStarted -= OnTeleportStart;
+        _teleportationProvider.locomotionEnded -= OnTeleportEnd;
     }
 }

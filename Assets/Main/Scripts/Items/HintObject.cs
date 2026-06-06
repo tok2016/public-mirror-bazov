@@ -14,12 +14,13 @@ public class HintObject : MonoBehaviour
     protected virtual void Awake()
     {
         _renderer = GetComponentInChildren<MeshRenderer>();
+        _defaultLayerMask = _renderer?.gameObject.layer ?? gameObject.layer;
+        _defaultMaterial = _renderer?.material;
     }
 
     protected virtual void Start()
     {
-        _defaultLayerMask = _renderer?.gameObject.layer ?? gameObject.layer;
-        _defaultMaterial = _renderer?.material;
+        
     }
 
     public void ToggleOutline(bool enable)

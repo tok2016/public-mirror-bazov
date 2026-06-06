@@ -36,7 +36,7 @@ public class TestItemCall : MonoBehaviour
     {
         foreach(var option in _itemsCallOptions)
         {
-            if(option.action.action.WasPressedThisFrame() && option.item.IsCollected)
+            if(option.action.action.WasPressedThisFrame())
             {
                 _currentItem?.TransformSocketedItem();
                 option.item.RestoreSocketedItem(_attachPoint);

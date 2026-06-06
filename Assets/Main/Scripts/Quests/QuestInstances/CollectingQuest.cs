@@ -14,15 +14,17 @@ public class CollectingQuest : Quest
     private float _hintTimer;
     private Coroutine _commentCoroutine;
 
+    private void OnEnable()
+    {
+        onFirstEnter.AddListener(EnableHints);
+    }
+
     public override void Enter()
     {
         base.Enter();
         _hintTimer = _timeBetweenHints;
-
-        foreach (var hintObj in _hintObjects)
-            hintObj.ToggleOutline(true);
     }
-
+    
     protected override void Update()
     {
         //if (_hintTimer <= 0)
@@ -54,7 +56,8 @@ public class CollectingQuest : Quest
 
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
-        if (args.interactableObject.transform.gameObject.activeInHierarchy)
+        if (args.interactableObject.transform.gameObject.activeInHierarchy 
+            && args.interactableObject.transform.GetComponent<CollectableItem>() != null)
             _commentCoroutine = StartCoroutine(CommentLettingGo(args));
     }
 
@@ -66,12 +69,23 @@ public class CollectingQuest : Quest
 
     public override void Complete()
     {
+        ToggleHints(false);
+        base.Complete();
+    }
+
+    public void ToggleHints(bool enable)
+    {
         foreach (var zone in _hintZones)
-            zone.gameObject.SetActive(false);
+            zone.gameObject.SetActive(enable);
 
         foreach (var hintObj in _hintObjects)
-            hintObj.ToggleOutline(false);
+            hintObj.ToggleOutline(enable);
+    }
 
-        base.Complete();
+    private void EnableHints() => ToggleHints(true);
+
+    private void OnDisable()
+    {
+        onFirstEnter.RemoveListener(EnableHints);
     }
 }
