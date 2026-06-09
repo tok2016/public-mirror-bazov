@@ -6,6 +6,9 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class CollectingQuest : Quest
 {
+    [Header("Collecting")]
+    [SerializeField] private Bag _bag;
+
     [Header("Hints")]
     [SerializeField] private HintObject[] _hintObjects;
     [SerializeField] private float _commentaryTimeOffset = 1.5f;
@@ -17,6 +20,7 @@ public class CollectingQuest : Quest
     private void OnEnable()
     {
         onFirstEnter.AddListener(EnableHints);
+        _bag.OnAllItemsCollected += Check;
     }
 
     public override void Enter()
@@ -38,6 +42,11 @@ public class CollectingQuest : Quest
         //}
         //else
         //    _hintTimer -= Time.deltaTime;
+    }
+
+    protected override void Check()
+    {
+        Complete();
     }
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
@@ -87,5 +96,6 @@ public class CollectingQuest : Quest
     private void OnDisable()
     {
         onFirstEnter.RemoveListener(EnableHints);
+        _bag.OnAllItemsCollected -= Check;
     }
 }

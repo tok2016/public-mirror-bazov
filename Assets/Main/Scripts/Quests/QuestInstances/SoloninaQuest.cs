@@ -1,9 +1,20 @@
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SoloninaQuest : SpeechQuest
 {
-    internal override void Check(SelectEnterEventArgs args)
+    [Header("Socket")]
+    [SerializeField] private XRSocketInteractor _correctItemSocket;
+
+    protected override void OnEnable()
+    {
+        EnableMainEvents();
+        _correctItemSocket.selectEntered.AddListener(CheckItem);
+    }
+
+    private void CheckItem(SelectEnterEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
         if (item && item.GetEntityId() == _correctItem.GetEntityId())
@@ -16,7 +27,13 @@ public class SoloninaQuest : SpeechQuest
             item.Interactable.interactionLayers = InteractionLayerMask.NameToLayer("Nothing");
 
             _controller.RemoveItem(item);
-            Complete();
+            Check();
         }
+    }
+
+    protected override void OnDisable()
+    {
+        DisableMainEvents();
+        _correctItemSocket.selectEntered.RemoveListener(CheckItem);
     }
 }

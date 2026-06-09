@@ -41,7 +41,7 @@ public class PrototypeCollectingQuest : ProtoQuest
             itemLabel.label.text = itemLabel.name;
     }
 
-    internal override void Check(SelectEnterEventArgs args)
+    public void Check(SelectEnterEventArgs args)
     {
         if(_itemsLabels.ContainsKey(args.interactableObject) && _objectsCount.ContainsKey(args.interactableObject)) 
         {
@@ -56,20 +56,15 @@ public class PrototypeCollectingQuest : ProtoQuest
             Complete();
     }
 
+    protected override void Check()
+    {
+        Complete();
+    }
+
     public override void Complete()
     {
         base.Complete();
         foreach (var itemLabel in _itemsLabels.Values)
             Destroy(itemLabel.label.gameObject);
-    }
-
-    internal override void Check(SelectExitEventArgs args)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    internal override void Check(TeleportingEventArgs args)
-    {
-        throw new System.NotImplementedException();
     }
 }

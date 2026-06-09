@@ -18,10 +18,10 @@ public class RespawningItem : MonoBehaviour
     {
         if (_interactable.interactorsSelecting.Count == 0 
             && _rigidbody.linearVelocity.magnitude > 0
-            && !QuestManager.Instance.IsInActiveZone(transform))
+            && !QuestManager.IsInActiveZone(transform))
         {
             Instantiate(_disappearEffectPrefab, transform.position, Quaternion.identity);
-            QuestManager.Instance.ReturnToActiveZone(transform);
+            QuestManager.ReturnToActiveZone(transform);
         }
     }
 }

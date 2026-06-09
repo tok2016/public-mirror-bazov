@@ -20,14 +20,8 @@ public class TeleportPad : MonoBehaviour
         _renderer = GetComponent<MeshRenderer>();
     }
 
-    //private void OnEnable()
-    //{
-    //    Anchor.teleporting.AddListener(QuestManager.Instance.OnTeleport);
-    //}
-
     void Start()
     {
-        Anchor.teleporting.AddListener(QuestManager.Instance.OnTeleport);
         Deactivate();
     }
 

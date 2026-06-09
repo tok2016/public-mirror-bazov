@@ -18,19 +18,34 @@ public class SpeechQuest : Quest
         _controller.CheckItemSpeech();
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
+    {
+        EnableMainEvents();
+        _correctItem.Interactable.selectEntered.AddListener(CheckItem);
+    }
+
+    protected void EnableMainEvents()
     {
         onFirstEnter.AddListener(EnableHints);
         onEnterRepeat.AddListener(EnableHints);
         onEnterAfterComplete.AddListener(EnableHints);
-
         onComplete.AddListener(DisableHints);
+    }
+
+    protected void DisableMainEvents()
+    {
+        onFirstEnter.RemoveAllListeners();
+        onEnterRepeat.RemoveAllListeners();
+        onEnterAfterComplete.RemoveAllListeners();
+        onComplete.RemoveAllListeners();
     }
 
     protected void EnableHints() => _controllerHint.ToggleHint(true);
     protected void DisableHints() => _controllerHint.ToggleHint(false);
 
-    internal override void Check()
+    private void CheckItem(SelectEnterEventArgs args) => Check();
+
+    protected override void Check()
     {
         Complete();
     }
@@ -56,12 +71,9 @@ public class SpeechQuest : Quest
         }
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
-        onFirstEnter.RemoveAllListeners();
-        onEnterRepeat.RemoveAllListeners();
-        onEnterAfterComplete.RemoveAllListeners();
-
-        onComplete.RemoveAllListeners();
+        DisableMainEvents();
+        _correctItem.Interactable.selectEntered.AddListener(CheckItem);
     }
 }

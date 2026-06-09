@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public abstract class Quest : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public abstract class Quest : MonoBehaviour
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
     [SerializeField] private ItemActiveZone _activeZone;
+    [SerializeField] private RespawningItem[] _importantItems;
 
     public QuestState State { get; protected set; } = QuestState.Locked;
 
@@ -50,15 +50,17 @@ public abstract class Quest : MonoBehaviour
         else if (State == QuestState.Locked)
             Unlock();
 
-
-        QuestManager.Instance.StartQuest(this);
+        QuestManager.StartQuest(this);
         if (State == QuestState.Available)
         {
             onFirstEnter.Invoke();
-            Debug.Log(_data.StartPhraseText);
+            DialogueManager.PlayLine(_data.StartPhrase);
         } 
         else
             onEnterRepeat.Invoke();
+
+        foreach (var item in _importantItems)
+            item.enabled = true;
 
         State = QuestState.InProgress;
     }
@@ -77,9 +79,12 @@ public abstract class Quest : MonoBehaviour
 
     public virtual void Complete()
     {
-        QuestManager.Instance.CompleteQuest();
+        foreach (var item in _importantItems)
+            item.enabled = false;
+
+        QuestManager.CompleteQuest();
         State = QuestState.Completed;
-        Debug.Log(_data.EndPhraseText);
+        DialogueManager.PlayLine(_data.EndPhrase);
         onComplete.Invoke();
         gameObject.SetActive(false);
     }
@@ -91,25 +96,7 @@ public abstract class Quest : MonoBehaviour
         _activeZone.ReturnToActiveZone(item);
     }
 
-    internal virtual void Check(SelectEnterEventArgs args)
-    {
-        Complete();
-    }
-
-    internal virtual void Check(SelectExitEventArgs args)
-    {
-        Complete();
-    }
-
-    internal virtual void Check(TeleportingEventArgs args)
-    {
-        Complete();
-    }
-
-    internal virtual void Check()
-    {
-        Complete();
-    }
+    protected abstract void Check();
 
     internal virtual void OnItemGrab(SelectEnterEventArgs args) { }
 
@@ -118,6 +105,4 @@ public abstract class Quest : MonoBehaviour
     internal virtual void OnTeleportStart(LocomotionProvider provider) { }
 
     internal virtual void OnTeleportEnd(LocomotionProvider provider) { }
-
-    internal virtual void OnTeleport(TeleportingEventArgs args) { }
 }

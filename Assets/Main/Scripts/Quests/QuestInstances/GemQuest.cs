@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class GemQuest : Quest
 {
+    [Header("Check")]
+    [SerializeField] private Gem _correctGem;
+    [SerializeField] private XRSocketInteractor _correctItemSocket;
     private List<CollectableItem> _gemsInHands;
 
     protected override void Awake()
@@ -12,7 +16,18 @@ public class GemQuest : Quest
         _gemsInHands = new List<CollectableItem>();
     }
 
-    internal override void Check(SelectEnterEventArgs args)
+    private void OnEnable()
+    {
+        _correctItemSocket.selectEntered.AddListener(CheckGem);
+    }
+
+    private void CheckGem(SelectEnterEventArgs args)
+    {
+        if (args.interactableObject.transform.GetInstanceID() == _correctGem.transform.GetInstanceID())
+            Check();
+    }
+
+    protected override void Check()
     {
         Complete();
     }
@@ -35,5 +50,10 @@ public class GemQuest : Quest
         var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
         if (gem && _gemsInHands.Contains(gem))
             _gemsInHands.Remove(gem);
+    }
+
+    private void OnDisable()
+    {
+        _correctItemSocket.selectEntered.RemoveListener(CheckGem);
     }
 }

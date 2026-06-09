@@ -16,12 +16,13 @@ MonoBehaviour:
     \u0434\u043B\u044F \u043F\u043E\u0445\u043E\u0434\u0430"
   <Description>k__BackingField: "\u0421\u043E\u0431\u0435\u0440\u0438 6 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043E\u0432
     \u043F\u0435\u0440\u0435\u0434 \u043F\u043E\u0445\u043E\u0434\u043E\u043C."
-  <StartPhrase>k__BackingField: {fileID: 0}
-  <StartPhraseText>k__BackingField: "\u0418\u0445 6. \u041E\u043D\u0438 \u0443 \u043D\u0430\u0441
-    \u0440\u0430\u0437\u0431\u0440\u043E\u0441\u0430\u043D\u044B \u043F\u043E \u0432\u0441\u0435\u0451
-    \u0438\u0437\u0431\u0435. \u0415\u0441\u043B\u0438 \u0447\u0442\u043E, \u044F
-    \u0442\u0435\u0431\u0435 \u0442\u043E\u0436\u0435 \u0431\u0443\u0434\u0443 \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C."
-  <EndPhrase>k__BackingField: {fileID: 0}
-  <EndPhraseText>k__BackingField: "\u0423\u0440\u0430! \u0422\u044B \u0441\u043E\u0431\u0440\u0430\u043B
-    \u0432\u0441\u0435 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u044B. \u0422\u0435\u043F\u0435\u0440\u044C
-    \u043F\u043E\u0439\u0434\u0451\u043C \u0438\u0441\u043A\u0430\u0442\u044C \u041C\u0443\u0440\u0451\u043D\u043A\u0443."
+  <StartPhrase>k__BackingField:
+    character: 0
+    clip: {fileID: 8300000, guid: 832a25f2448b54b4ab50a53701a962b2, type: 3}
+    text: 
+  <StartCutscene>k__BackingField: {fileID: 0}
+  <EndPhrase>k__BackingField:
+    character: 0
+    clip: {fileID: 8300000, guid: bf462a0f8b86e4446a8c49f4851b2662, type: 3}
+    text: 
+  <EndCutscene>k__BackingField: {fileID: 0}
