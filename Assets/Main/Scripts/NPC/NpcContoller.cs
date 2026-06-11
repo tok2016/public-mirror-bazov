@@ -34,6 +34,18 @@ public class NpcContoller : MonoBehaviour
         _audioSource.Play();
     }
 
+    public virtual void PlayLine(DialogueLine line)
+    {
+        _audioSource.Stop();
+        _audioSource.clip = line.Clip;
+        _audioSource.Play();
+    }
+
+    public virtual void ShutUp()
+    {
+        _audioSource.Stop();
+    }
+
     private void OnDestroy()
     {
         DialogueManager.RemoveCharacter(_characterName);

@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class HintZone : MonoBehaviour
 {
-    [SerializeField, TextArea] private string _hint;
+    [SerializeField] private DialogueLine _hint;
     public Dictionary<Collider, CollectableItem> Items {  get; private set; }
 
     void Start()
@@ -14,7 +14,8 @@ public class HintZone : MonoBehaviour
 
     public void CommentHint()
     {
-        Debug.Log(_hint);
+        if (_hint != null)
+            DialogueManager.PlayLine(_hint);
     }
 
     private void OnDrawGizmos()

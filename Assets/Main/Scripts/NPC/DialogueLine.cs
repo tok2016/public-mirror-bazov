@@ -10,10 +10,11 @@ public enum Character
     Bazhov = 4
 }
 
-[Serializable]
-public struct DialogueLine
+[CreateAssetMenu(fileName = "DialogueLine", menuName = "Scriptable Objects/DialogueLine")]
+public class DialogueLine : ScriptableObject
 {
-    public Character character;
-    public AudioClip clip;
-    [TextArea] public string text;
+    [field: SerializeField] public Character Character { get; private set; }
+    [field: SerializeField] public AudioClip Clip { get; private set; }
+    [field: SerializeField, TextArea] public string Text {  get; private set; }
+    [field: SerializeField] public WordData Word { get; private set; }
 }

@@ -7,6 +7,7 @@ public class SoloninaQuest : SpeechQuest
 {
     [Header("Socket")]
     [SerializeField] private XRSocketInteractor _correctItemSocket;
+    [SerializeField] private GameObject _successEffect;
 
     protected override void OnEnable()
     {
@@ -24,7 +25,9 @@ public class SoloninaQuest : SpeechQuest
                 npcGrabbable = item.AddComponent<NpcGrabbable>();
 
             npcGrabbable.enabled = true;
-            item.Interactable.interactionLayers = InteractionLayerMask.NameToLayer("Nothing");
+            item.ToggleInteractable(false);
+            item.transform.position = _correctItemSocket.attachTransform.position;
+            _successEffect.SetActive(true);
 
             _controller.RemoveItem(item);
             Check();
@@ -35,5 +38,17 @@ public class SoloninaQuest : SpeechQuest
     {
         DisableMainEvents();
         _correctItemSocket.selectEntered.RemoveListener(CheckItem);
+    }
+
+    protected override void Activate()
+    {
+        base.Activate();
+        _correctItemSocket.gameObject.SetActive(true);
+    }
+
+    protected override void Deactivate()
+    {
+        base.Deactivate();
+        _correctItemSocket.gameObject.SetActive(false);
     }
 }

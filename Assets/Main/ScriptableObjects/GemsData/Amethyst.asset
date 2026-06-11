@@ -13,8 +13,4 @@ MonoBehaviour:
   m_Name: Amethyst
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0410\u043C\u0435\u0442\u0438\u0441\u0442"
-  <Commentary>k__BackingField: "\u042D\u0442\u043E \u0430\u043C\u0435\u0442\u0438\u0441\u0442.
-    \u041E\u0431\u044B\u0447\u043D\u043E \u043E\u043D \u0444\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u044B\u0439.
-    \u041C\u0430\u043B\u0430\u0445\u0438\u0442 - \u0437\u0435\u043B\u0451\u043D\u044B\u0439."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 0}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: 14c0359b122ce2d4489b66d947b9343d, type: 2}

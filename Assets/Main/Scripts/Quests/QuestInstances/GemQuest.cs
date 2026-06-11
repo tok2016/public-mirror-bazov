@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -8,17 +7,16 @@ public class GemQuest : Quest
     [Header("Check")]
     [SerializeField] private Gem _correctGem;
     [SerializeField] private XRSocketInteractor _correctItemSocket;
-    private List<CollectableItem> _gemsInHands;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        _gemsInHands = new List<CollectableItem>();
-    }
+    [SerializeField] private GameObject _successEffect;
 
     private void OnEnable()
     {
         _correctItemSocket.selectEntered.AddListener(CheckGem);
+    }
+
+    private void ActivateSocket()
+    {
+        _correctItemSocket.gameObject.SetActive(true);
     }
 
     private void CheckGem(SelectEnterEventArgs args)
@@ -29,31 +27,37 @@ public class GemQuest : Quest
 
     protected override void Check()
     {
+        _correctGem.ToggleInteractable(false);
+        _successEffect.SetActive(true);
         Complete();
     }
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
-        var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (gem)
-        {
-            _gemsInHands.Add(gem);
-            gem.WriteWord();
-        }
-            
-        if (_gemsInHands.Count > 1)
-            Debug.Log("Один камешек - хорошо, а два - уж лишнее будет. Выбери самый заветный");
-    }
+        if (State != QuestState.InProgress) return;
 
-    internal override void OnItemLettingGo(SelectExitEventArgs args)
-    {
-        var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (gem && _gemsInHands.Contains(gem))
-            _gemsInHands.Remove(gem);
+        var gem = args.interactableObject.transform.GetComponent<Gem>();
+        if (gem)
+            gem.CommentGrab();
     }
 
     private void OnDisable()
     {
         _correctItemSocket.selectEntered.RemoveListener(CheckGem);
+    }
+
+    protected override void Activate()
+    {
+        ActivateSocket();
+    }
+
+    protected override void Stop()
+    {
+        
+    }
+
+    protected override void Deactivate()
+    {
+        
     }
 }

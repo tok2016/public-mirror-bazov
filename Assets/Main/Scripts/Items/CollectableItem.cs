@@ -43,7 +43,7 @@ public class CollectableItem: MonoBehaviour, ICommentable
         IsCollected = false;
         gameObject.SetActive(true);
         OnRestored.Invoke();
-        Interactable.interactionLayers |= (1 << InteractionLayerMask.NameToLayer("Collectable"));
+        ToggleInteractable(true);
         ToggleGravity(false);
     }
 
@@ -53,24 +53,28 @@ public class CollectableItem: MonoBehaviour, ICommentable
         _rigidbody.isKinematic = !enableGravity;
     }
 
-    public void WriteWord()
-    {
-        if (Data.Word)
-            DictionaryManager.WriteWord(Data.Word);
-    }
-
     private void OnDisable()
     {
         Interactable.selectExited.RemoveAllListeners();
     }
 
-    public void CommentGrab(string text)
+    public void CommentGrab()
     {
-        Debug.Log(text);
+        if(Data.DialogueLine)
+            DialogueManager.PlayLine(Data.DialogueLine);
     }
 
-    public void CommentLettingGo(string text)
+    public void CommentLettingGo()
     {
-        Debug.Log(text);
+        
+    }
+
+    public void ToggleInteractable(bool enable)
+    {
+        var collectableLayer = InteractionLayerMask.NameToLayer("Collectable");
+        if (enable)
+            Interactable.interactionLayers |= (1 << collectableLayer);
+        else
+            Interactable.interactionLayers &= ~(1 << collectableLayer);
     }
 }

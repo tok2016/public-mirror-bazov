@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface ICommentable
 {
-    public void CommentGrab(string text);
-    public void CommentLettingGo(string text);
-    public void WriteWord();
+    public void CommentGrab();
+    public void CommentLettingGo();
+    public void ToggleInteractable(bool enable);
 }

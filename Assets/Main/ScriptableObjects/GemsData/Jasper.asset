@@ -13,10 +13,4 @@ MonoBehaviour:
   m_Name: Jasper
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u042F\u0448\u043C\u0430"
-  <Commentary>k__BackingField: "\u042D\u0442\u043E \u044F\u0448\u043C\u0430. \u0423
-    \u043D\u0435\u0451 \u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u0440\u0430\u0437\u043D\u043E\u043E\u0431\u0440\u0438\u0435
-    \u0446\u0432\u0435\u0442\u043E\u0432, \u043D\u043E \u0437\u0435\u043B\u0451\u043D\u044B\u0439
-    \u0446\u0432\u0435\u0442 \u0432\u0441\u0442\u0440\u0435\u0447\u0430\u0435\u0442\u0441\u044F
-    \u0440\u0435\u0434\u043A\u043E. "
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 0}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: 4188c1ac0ffb04042860097c1bc83dfd, type: 2}

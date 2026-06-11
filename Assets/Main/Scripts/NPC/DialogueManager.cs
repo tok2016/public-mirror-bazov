@@ -18,7 +18,16 @@ public static class DialogueManager
 
     public static void PlayLine(DialogueLine line)
     {   
-        if (_characters.ContainsKey(line.character))
-            _characters[line.character].Pronounce(line.clip);
+        if (_characters.ContainsKey(line.Character))
+            _characters[line.Character].Pronounce(line.Clip);
+
+        if (line.Word)
+            DictionaryManager.WriteWord(line.Word);
+    }
+
+    public static void StopLines()
+    {
+        foreach (var character in _characters.Values)
+            character.ShutUp();
     }
 }

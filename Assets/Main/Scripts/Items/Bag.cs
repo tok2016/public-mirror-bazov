@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -88,6 +87,12 @@ public class Bag : MonoBehaviour
         yield return new WaitForSeconds(_bagDisapearDelay);
         OnAllItemsCollected?.Invoke();
         gameObject.SetActive(false);
+    }
+
+    public void ToggleBag(bool enable)
+    {
+        _socket.enabled = enable;
+        _itemsGroup.gameObject.SetActive(enable);
     }
 
     private void OnDisable()

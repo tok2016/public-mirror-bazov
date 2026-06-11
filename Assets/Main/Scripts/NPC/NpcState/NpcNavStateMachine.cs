@@ -5,6 +5,7 @@ public class NpcNavStateMachine
     public NpcNavIdleState IdleState { get; private set; }
     public NpcNavChaseState ChasingState { get; private set; }
     public NpcNavComeUpState ComeUpState { get; private set; }
+    public NpcNavLookState LookState { get; private set; }
 
     private NpcNavState _currentState;
 
@@ -13,6 +14,7 @@ public class NpcNavStateMachine
         IdleState = new NpcNavIdleState(character);
         ChasingState = new NpcNavChaseState(character);
         ComeUpState = new NpcNavComeUpState(character);
+        LookState = new NpcNavLookState(character);
 
         _currentState = IdleState;
         _currentState.Enter(initialTarget, 0);

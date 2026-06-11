@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 [System.Serializable]
 public struct ItemLabel
@@ -61,9 +60,9 @@ public class PrototypeCollectingQuest : ProtoQuest
         Complete();
     }
 
-    public override void Complete()
+    protected override void Deactivate()
     {
-        base.Complete();
+        base.Deactivate();
         foreach (var itemLabel in _itemsLabels.Values)
             Destroy(itemLabel.label.gameObject);
     }

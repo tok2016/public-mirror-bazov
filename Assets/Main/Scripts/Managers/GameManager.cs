@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
@@ -8,10 +9,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private NearFarInteractor _leftController, _rightController;
     [SerializeField] private TeleportationProvider _teleportationProvider;
     [SerializeField] private PlayableDirector _playableDirector;
+    [SerializeField] private InputActionReference _skipAction;
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
+        QuestManager.Runner = this;
     }
 
     private void OnEnable()
@@ -33,7 +36,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+        if (_skipAction.action.WasPressedThisFrame())
+            QuestManager.SkipCutscene();
     }
 
     private void OnDisable()

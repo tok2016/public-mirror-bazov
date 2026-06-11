@@ -1,23 +1,24 @@
 using UnityEngine;
+using System.Linq;
 
 [RequireComponent(typeof(BoxCollider))]
 public class ItemActiveZone : MonoBehaviour
 {
     [SerializeField] private Transform _cameraRespawnPoint, _reservedRespawnPoint;
-    private BoxCollider _collider;
+    private BoxCollider[] _colliders;
 
     private void Awake()
     {
-        _collider = GetComponent<BoxCollider>();
+        _colliders = GetComponents<BoxCollider>();
         if (!_reservedRespawnPoint)
             _reservedRespawnPoint = transform;
     }
 
-    public bool IsItemInActiveZone(Transform item)
+    private bool IsItemInCollider(BoxCollider collider, Transform item)
     {
         var localObjPoint = transform.InverseTransformPoint(item.position);
-        localObjPoint -= _collider.center;
-        var halfSize = _collider.size * 0.5f;
+        localObjPoint -= collider.center;
+        var halfSize = collider.size * 0.5f;
 
         bool insideX = Mathf.Abs(localObjPoint.x) <= halfSize.x;
         bool insideY = Mathf.Abs(localObjPoint.y) <= halfSize.y;
@@ -25,6 +26,8 @@ public class ItemActiveZone : MonoBehaviour
 
         return insideX && insideY && insideZ;
     }
+
+    public bool IsItemInActiveZone(Transform item) => _colliders.Any(collider => IsItemInCollider(collider, item));
 
     public virtual void ReturnToActiveZone(Transform item)
     {

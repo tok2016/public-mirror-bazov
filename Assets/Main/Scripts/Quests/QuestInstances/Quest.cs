@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 
@@ -8,22 +10,25 @@ public abstract class Quest : MonoBehaviour
     [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    [SerializeField] private ItemActiveZone _activeZone;
-    [SerializeField] private RespawningItem[] _importantItems;
+    [SerializeField] protected ItemActiveZone _activeZone;
+    [SerializeField] protected RespawningItem[] _importantItems;
+    [SerializeField] protected PlayableDirector _startCutscene, _endCutscene;
+    private bool _isCutsceneRunning = false;
+    private bool _skipCutscene = false;
 
     public QuestState State { get; protected set; } = QuestState.Locked;
 
     [Header("Enter")]
     public UnityEvent onFirstEnter;
     public UnityEvent onEnterRepeat;
-    public UnityEvent onEnterAfterComplete;
+    public UnityEvent onBeforeEnter;
 
     [Header("Exit")]
     public UnityEvent onExit;
-    public UnityEvent onExitAfterComplete;
 
     [Header("Complete")]
     public UnityEvent onComplete;
+    public UnityEvent onBeforeComplete;
 
     protected virtual void Awake()
     {
@@ -40,53 +45,47 @@ public abstract class Quest : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public virtual void Enter()
+    public void Enter()
     {
         if (State == QuestState.Completed)
+            return;
+        else if (State == QuestState.Locked)
         {
-            onEnterAfterComplete.Invoke();
+            QuestManager.EnqueueQuest(this);
             return;
         }
-        else if (State == QuestState.Locked)
-            Unlock();
 
         QuestManager.StartQuest(this);
-        if (State == QuestState.Available)
+
+        if (State == QuestState.Visited)
         {
-            onFirstEnter.Invoke();
-            DialogueManager.PlayLine(_data.StartPhrase);
-        } 
-        else
+            State = QuestState.InProgress;
             onEnterRepeat.Invoke();
+            Debug.Log("Return");
+        }
 
         foreach (var item in _importantItems)
             item.enabled = true;
-
-        State = QuestState.InProgress;
     }
 
-    public virtual void Exit()
-    {
-        if(State == QuestState.Completed)
-        {
-            onExitAfterComplete.Invoke();
-            return;
-        }
+    protected abstract void Activate();
+    protected abstract void Stop();
+    protected abstract void Deactivate();
 
+    public void Exit()
+    {
+        QuestManager.StopQuest(this);
         State = QuestState.Visited;
+        Stop();
         onExit.Invoke();
     }
 
-    public virtual void Complete()
+    public void Complete()
     {
         foreach (var item in _importantItems)
             item.enabled = false;
 
-        QuestManager.CompleteQuest();
-        State = QuestState.Completed;
-        DialogueManager.PlayLine(_data.EndPhrase);
-        onComplete.Invoke();
-        gameObject.SetActive(false);
+        QuestManager.CompleteQuest(this);
     }
 
     public bool IsItemInActiveZone(Transform item) => _activeZone.IsItemInActiveZone(item);
@@ -94,6 +93,63 @@ public abstract class Quest : MonoBehaviour
     public virtual void ReturnToActiveZone(Transform item)
     {
         _activeZone.ReturnToActiveZone(item);
+    }
+
+    public void SkipCutscene()
+    {
+        _skipCutscene = _isCutsceneRunning;
+    }
+
+    public IEnumerator WaitBeforeStart()
+    {
+        onBeforeEnter.Invoke();
+        yield return WaitForCutscene(_data.StartPhrase, _startCutscene);
+        onFirstEnter.Invoke();
+        Activate();
+        if (State < QuestState.InProgress)
+            State = QuestState.InProgress;
+    }
+
+    public IEnumerator WaitAfterComplete()
+    {
+        onBeforeComplete.Invoke();
+        State = QuestState.Completed;
+        yield return WaitForCutscene(_data.EndPhrase, _endCutscene);
+        Deactivate();
+        onComplete.Invoke();
+    }
+
+    private IEnumerator WaitForCutscene(DialogueLine phrase, PlayableDirector cutscene)
+    {
+        _isCutsceneRunning = true;
+        if (phrase)
+        {
+            var timer = phrase.Clip.length;
+            DialogueManager.PlayLine(phrase);
+            while (timer > 0 && !_skipCutscene)
+            {
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+
+            DialogueManager.StopLines();
+        }
+
+        if (cutscene)
+        {
+            cutscene.Play();
+            var cutsceneDuration = Mathf.Ceil((float)cutscene.duration);
+            while (cutsceneDuration > 0 && !_skipCutscene)
+            { 
+                cutsceneDuration -= Time.deltaTime;
+                yield return null;
+            }
+
+            cutscene.Stop();
+        }
+
+        _isCutsceneRunning = false;
+        _skipCutscene = false;
     }
 
     protected abstract void Check();

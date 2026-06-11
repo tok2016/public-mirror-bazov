@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 [RequireComponent(typeof(RespawningItem))]
 public class Gem : MonoBehaviour, ICommentable
@@ -7,11 +9,13 @@ public class Gem : MonoBehaviour, ICommentable
     [SerializeField] protected CollectableItemData _data;
     [SerializeField] protected float _growthSpeed = 0.1f;
     protected Rigidbody _rigidbody;
+    protected XRGrabInteractable _interactable;
     protected Vector3 _defaultScale;
 
     protected void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _interactable = GetComponent<XRGrabInteractable>();
     }
 
     public void Throw(Vector3 force)
@@ -41,19 +45,23 @@ public class Gem : MonoBehaviour, ICommentable
         transform.localScale = _defaultScale;
     }
 
-    public void CommentGrab(string text)
+    public void CommentGrab()
     {
-        Debug.Log(text);
+        if(_data.DialogueLine)
+            DialogueManager.PlayLine(_data.DialogueLine);
     }
 
-    public void CommentLettingGo(string text)
+    public void CommentLettingGo()
     {
-        Debug.Log(text);
+        
     }
 
-    void ICommentable.WriteWord()
+    public void ToggleInteractable(bool enable)
     {
-        if (_data.Word)
-            DictionaryManager.WriteWord(_data.Word);
+        var collectableLayer = InteractionLayerMask.NameToLayer("Collectable");
+        if (enable)
+            _interactable.interactionLayers |= (1 << collectableLayer);
+        else
+            _interactable.interactionLayers &= ~(1 << collectableLayer);
     }
 }

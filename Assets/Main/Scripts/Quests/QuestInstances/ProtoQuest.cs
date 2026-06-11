@@ -5,14 +5,18 @@ public abstract class ProtoQuest : Quest
 {
     [SerializeField] private TextMeshProUGUI _title;
 
-    public override void Enter()
+    protected override void Activate()
     {
-        base.Enter();
         _title.text = _data.Name;
         _title.fontStyle = FontStyles.Normal;
     }
 
-    public override void Complete()
+    protected override void Stop()
+    {
+        
+    }
+
+    protected override void Deactivate()
     {
         if (!Next)
         {
@@ -21,7 +25,5 @@ public abstract class ProtoQuest : Quest
         }
         else
             _title.fontStyle = FontStyles.Strikethrough;
-
-        base.Complete();
     }
 }

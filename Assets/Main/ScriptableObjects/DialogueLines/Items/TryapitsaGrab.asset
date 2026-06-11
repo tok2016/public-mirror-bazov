@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae784976c3bd404e8593170a4099648, type: 3}
+  m_Name: TryapitsaGrab
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueLine
+  <Character>k__BackingField: 0
+  <Clip>k__BackingField: {fileID: 8300000, guid: 8df7074a25c963c49bfb0371791227bf, type: 3}
+  <Text>k__BackingField: "\u0422\u0440\u044F\u043F\u0438\u0446\u0430 \u0447\u0438\u0441\u0442\u0430\u044F.
+    \u0420\u0443\u043A\u0438 \u0432\u044B\u0442\u0435\u0440\u0435\u0442\u044C \u0438\u043B\u0438
+    \u041C\u0443\u0440\u0451\u043D\u043A\u0443 \u0443\u043A\u0443\u0442\u0430\u0442\u044C,
+    \u0435\u0441\u043B\u0438 \u0437\u0430\u043C\u0451\u0440\u0437\u043B\u0430."
+  <Word>k__BackingField: {fileID: 11400000, guid: a7e781ccb70f5364fbdaa837a84e6ba6, type: 2}
