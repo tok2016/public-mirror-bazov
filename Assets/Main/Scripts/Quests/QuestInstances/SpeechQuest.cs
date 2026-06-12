@@ -15,30 +15,42 @@ public class SpeechQuest : Quest
 
     protected override void Update()
     {
-        _controller.CheckItemSpeech();
+        if(State == QuestState.InProgress)
+            _controller.CheckItemSpeech();
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
-        onFirstEnter.AddListener(EnableHints);
-        onEnterRepeat.AddListener(EnableHints);
-        onEnterAfterComplete.AddListener(EnableHints);
+        EnableMainEvents();
+        _correctItem.Interactable.selectEntered.AddListener(CheckItem);
+    }
 
-        onComplete.AddListener(DisableHints);
+    protected void EnableMainEvents()
+    {
+        onEnterRepeat.AddListener(EnableHints);
+    }
+
+    protected void DisableMainEvents()
+    {
+        onEnterRepeat.RemoveListener(EnableHints);
     }
 
     protected void EnableHints() => _controllerHint.ToggleHint(true);
     protected void DisableHints() => _controllerHint.ToggleHint(false);
 
-    internal override void Check()
+    private void CheckItem(SelectEnterEventArgs args) => Check();
+
+    protected override void Check()
     {
         Complete();
     }
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
+        if (State != QuestState.InProgress) return;
+
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (State == QuestState.InProgress && item && item.GetEntityId() == _correctItem.GetEntityId())
+        if (item && item.GetEntityId() == _correctItem.GetEntityId())
         {
             _controller.RemoveItem(item);
             OnCorrectItemGrab.Invoke();
@@ -47,8 +59,10 @@ public class SpeechQuest : Quest
 
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
+        if (State != QuestState.InProgress) return;
+
         var item = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (State == QuestState.InProgress && item)
+        if (item)
         {
             _controller.AddItem(item);
             if(item.GetEntityId() == _correctItem.GetEntityId())
@@ -56,12 +70,24 @@ public class SpeechQuest : Quest
         }
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
-        onFirstEnter.RemoveAllListeners();
-        onEnterRepeat.RemoveAllListeners();
-        onEnterAfterComplete.RemoveAllListeners();
+        DisableMainEvents();
+        _correctItem.Interactable.selectEntered.AddListener(CheckItem);
+    }
 
-        onComplete.RemoveAllListeners();
+    protected override void Activate()
+    {
+        EnableHints();
+    }
+
+    protected override void Stop()
+    {
+        DisableHints();
+    }
+
+    protected override void Deactivate()
+    {
+        DisableHints();
     }
 }

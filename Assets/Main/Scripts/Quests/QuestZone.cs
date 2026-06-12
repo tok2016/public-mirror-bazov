@@ -1,36 +1,30 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
-[RequireComponent(typeof(BoxCollider))]
 public class QuestZone : MonoBehaviour
 {
-    public UnityEvent onEnter;
-    public UnityEvent onExit;
-
     [SerializeField] private Quest[] _quests;
-    private BoxCollider _collider;
+    [SerializeField] private CombinedTrigger _combinedTrigger;
 
-    private void Awake()
+    private void OnEnable()
     {
-        _collider = GetComponent<BoxCollider>();
+        _combinedTrigger.OnTriggerGroupEnter += EnterQuestZone;
+        _combinedTrigger.OnTriggerGroupExit += ExitQuestZone;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void EnterQuestZone(Collider other)
     {
         if(other.tag == "Player")
         {
-            onEnter.Invoke();
             var current = GetLastIncompleteQuest();
             current?.Enter();
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void ExitQuestZone(Collider other)
     {
         if(other.tag == "Player")
         {
-            onExit.Invoke();
             var current = GetLastIncompleteQuest();
             current?.Exit();
         }
@@ -46,5 +40,11 @@ public class QuestZone : MonoBehaviour
         {
             return _quests.Last();
         }
+    }
+
+    private void OnDisable()
+    {
+        _combinedTrigger.OnTriggerGroupEnter -= EnterQuestZone;
+        _combinedTrigger.OnTriggerGroupExit -= ExitQuestZone;
     }
 }

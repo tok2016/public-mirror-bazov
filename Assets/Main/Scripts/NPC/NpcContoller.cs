@@ -1,13 +1,21 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class NpcContoller : MonoBehaviour
 {
     [Header("NPC Base")]
+    [SerializeField] protected Character _characterName;
     [SerializeField] protected Animator _animator;
+    protected AudioSource _audioSource;
+    protected DialogueLine _currentLine;
 
     protected virtual void Awake()
     {
-        
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.loop = false;
+        DialogueManager.AddCharacter(_characterName, this);
     }
 
     protected virtual void Start()
@@ -18,5 +26,33 @@ public class NpcContoller : MonoBehaviour
     protected virtual void Update()
     {
         
+    }
+
+    public virtual void PlaySound(AudioClip sound)
+    {
+        _audioSource.Stop();
+        _audioSource.clip = sound;
+        _audioSource.Play();
+    }
+
+    public virtual void PlayLine(DialogueLine line)
+    {
+        if (_audioSource.isPlaying && line.Priority < _currentLine.Priority)
+            return;
+
+        _audioSource.Stop();
+        _audioSource.clip = line.Clip;
+        _audioSource.Play();
+        _currentLine = line;
+    }
+
+    public virtual void ShutUp()
+    {
+        _audioSource.Stop();
+    }
+
+    private void OnDestroy()
+    {
+        DialogueManager.RemoveCharacter(_characterName);
     }
 }

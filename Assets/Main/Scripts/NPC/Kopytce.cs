@@ -19,6 +19,7 @@ public class Kopytce : NpcContoller
     [SerializeField] private Transform _throwCenter;
     [SerializeField] private float _throwZoneRadius = 0.25f;
     [SerializeField] private GameObject _throwEffect;
+    [SerializeField] private AudioClip _stompSound;
     private Vector3[] _throwOffsets;
     private int _currentGem = 0;
     private int _gemsPerStomp;
@@ -90,6 +91,7 @@ public class Kopytce : NpcContoller
         for (int i = 0; i < _stompsCount; i++)
         {
             _animator.SetTrigger("Stomp");
+
             while (_animator.GetCurrentAnimatorClipInfo(0).Length > 0 
                 && _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != _stompClip.name)
                 yield return null;
@@ -98,6 +100,7 @@ public class Kopytce : NpcContoller
             if (currentClip.clip != null)
                 yield return new WaitForSeconds(currentClip.clip.length);
 
+            PlaySound(_stompSound);
             _throwEffect.SetActive(true);
             ThrowGems();
         }

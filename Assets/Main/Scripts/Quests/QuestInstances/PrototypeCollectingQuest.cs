@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 [System.Serializable]
 public struct ItemLabel
@@ -41,7 +40,7 @@ public class PrototypeCollectingQuest : ProtoQuest
             itemLabel.label.text = itemLabel.name;
     }
 
-    internal override void Check(SelectEnterEventArgs args)
+    public void Check(SelectEnterEventArgs args)
     {
         if(_itemsLabels.ContainsKey(args.interactableObject) && _objectsCount.ContainsKey(args.interactableObject)) 
         {
@@ -56,20 +55,15 @@ public class PrototypeCollectingQuest : ProtoQuest
             Complete();
     }
 
-    public override void Complete()
+    protected override void Check()
     {
-        base.Complete();
+        Complete();
+    }
+
+    protected override void Deactivate()
+    {
+        base.Deactivate();
         foreach (var itemLabel in _itemsLabels.Values)
             Destroy(itemLabel.label.gameObject);
-    }
-
-    internal override void Check(SelectExitEventArgs args)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    internal override void Check(TeleportingEventArgs args)
-    {
-        throw new System.NotImplementedException();
     }
 }

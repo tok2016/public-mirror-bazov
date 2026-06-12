@@ -1,16 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Door : MonoBehaviour
 {
     [SerializeField] private float _rotationSpeed = 50;
     private float _rotationAngle = 90;
     private Quaternion _startRotation;
+    private AudioSource _audioSource;
 
     [Header("Axis")]
     [SerializeField] private bool _x;
     [SerializeField] private bool _y = true;
     [SerializeField] private bool _z;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
@@ -20,6 +27,7 @@ public class Door : MonoBehaviour
     public void Toggle(bool open)
     {
         StopAllCoroutines();
+        _audioSource.Play();
         StartCoroutine(Rotate(open));
     }
 

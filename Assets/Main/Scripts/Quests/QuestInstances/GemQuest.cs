@@ -1,39 +1,63 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class GemQuest : Quest
 {
-    private List<CollectableItem> _gemsInHands;
+    [Header("Check")]
+    [SerializeField] private Gem _correctGem;
+    [SerializeField] private XRSocketInteractor _correctItemSocket;
+    [SerializeField] private GameObject _successEffect;
 
-    protected override void Awake()
+    private void OnEnable()
     {
-        base.Awake();
-        _gemsInHands = new List<CollectableItem>();
+        _correctItemSocket.selectEntered.AddListener(CheckGem);
     }
 
-    internal override void Check(SelectEnterEventArgs args)
+    private void ActivateSocket()
     {
+        _correctItemSocket.gameObject.SetActive(true);
+    }
+
+    private void CheckGem(SelectEnterEventArgs args)
+    {
+        if (args.interactableObject.transform.GetInstanceID() == _correctGem.transform.GetInstanceID())
+            Check();
+    }
+
+    protected override void Check()
+    {
+        _correctGem.ToggleInteractable(false);
+        _successEffect.SetActive(true);
         Complete();
     }
 
     internal override void OnItemGrab(SelectEnterEventArgs args)
     {
-        var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
+        if (State != QuestState.InProgress) return;
+
+        var gem = args.interactableObject.transform.GetComponent<Gem>();
         if (gem)
-        {
-            _gemsInHands.Add(gem);
-            gem.WriteWord();
-        }
-            
-        if (_gemsInHands.Count > 1)
-            Debug.Log("Один камешек - хорошо, а два - уж лишнее будет. Выбери самый заветный");
+            gem.CommentGrab();
     }
 
-    internal override void OnItemLettingGo(SelectExitEventArgs args)
+    private void OnDisable()
     {
-        var gem = args.interactableObject.transform.GetComponent<CollectableItem>();
-        if (gem && _gemsInHands.Contains(gem))
-            _gemsInHands.Remove(gem);
+        _correctItemSocket.selectEntered.RemoveListener(CheckGem);
+    }
+
+    protected override void Activate()
+    {
+        ActivateSocket();
+    }
+
+    protected override void Stop()
+    {
+        
+    }
+
+    protected override void Deactivate()
+    {
+        
     }
 }

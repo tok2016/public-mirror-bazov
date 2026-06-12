@@ -5,6 +5,7 @@ public class Murenka : NpcNavigatable
     [Header("Murenka")]
     [SerializeField] private NpcGrabbable _objectToEat;
     [SerializeField] private GameObject _eatEffect;
+    [SerializeField] private DialogueLine _purr;
 
     protected override void Update()
     {
@@ -16,7 +17,7 @@ public class Murenka : NpcNavigatable
     {
         if(grabbable == _objectToEat)
         {
-            Debug.Log("Eat");
+            PlayLine(_purr);
             _eatEffect.SetActive(true);
             grabbable.gameObject.SetActive(false);
         }

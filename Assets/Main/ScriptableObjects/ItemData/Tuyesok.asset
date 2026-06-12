@@ -13,14 +13,4 @@ MonoBehaviour:
   m_Name: Tuyesok
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0422\u0443\u0435\u0441\u043E\u043A"
-  <Hint>k__BackingField: "\u0427\u0442\u043E-\u0442\u043E \u044F \u0432\u0438\u0434\u0435\u043B\u0430
-    \u043D\u0430 \u043F\u043E\u043B\u043A\u0435"
-  <Commentary>k__BackingField: "\u0422\u0443\u0435\u0441\u043E\u043A - \u043A\u043E\u0440\u043E\u0431
-    \u0438\u0437 \u0431\u0435\u0440\u0435\u0441\u0442\u044B. \u0412 \u043D\u0435\u0433\u043E
-    \u043C\u043E\u0436\u043D\u043E \u044F\u0433\u043E\u0434\u044B \u0441\u043E\u0431\u0438\u0440\u0430\u0442\u044C
-    \u0438\u043B\u0438 \u043A\u0440\u0443\u043F\u0443 \u0445\u0440\u0430\u043D\u0438\u0442\u044C.
-    \u041C\u043E\u0436\u0435\u0442, \u043F\u0440\u0438\u0433\u043E\u0434\u0438\u0442\u0441\u044F,
-    \u0435\u0441\u043B\u0438 \u041C\u0443\u0440\u0451\u043D\u043A\u0443 \u043D\u0430\u0439\u0434\u0451\u043C
-    - \u043C\u043E\u043B\u043E\u0447\u043A\u0430 \u0435\u0439 \u043D\u0430\u043B\u044C\u0451\u043C."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 11400000, guid: 9b99abd0fc8eb764a885272dfc8985ba, type: 2}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: 6e5e81d3abd0ff745ac47e0866698dd9, type: 2}

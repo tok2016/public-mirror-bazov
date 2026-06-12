@@ -67,4 +67,19 @@ public class NpcNavigatable : NpcContoller, INavigatable
     {
         _stateMachine.ChangeState(_stateMachine.ComeUpState, target, distanceToStop);
     }
+
+    public void LookAtPlayer()
+    {
+        LookAtTarget(PlayerCamera);
+    }
+
+    public void LookAtTarget(Transform target)
+    {
+        _stateMachine.ChangeState(_stateMachine.LookState, target, _itemDistanceToStop);
+    }
+
+    public void RotateAnimator(float rotationDifference)
+    {
+        _animator.SetFloat("Rotation", rotationDifference);
+    }
 }

@@ -13,9 +13,4 @@ MonoBehaviour:
   m_Name: Tryapitsa
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0422\u0440\u044F\u043F\u0438\u0446\u0430"
-  <Commentary>k__BackingField: "\u0422\u0440\u044F\u043F\u0438\u0446\u0443 \u0432\u043E\u0437\u044C\u043C\u0451\u043C
-    - \u043C\u0430\u043B\u043E \u043B\u0438, \u0440\u0443\u043A\u0438 \u0432\u044B\u0442\u0435\u0440\u0435\u0442\u044C
-    \u0438\u043B\u0438 \u041C\u0443\u0440\u0451\u043D\u043A\u0443 \u0443\u043A\u0443\u0442\u0430\u0442\u044C,
-    \u0435\u0441\u043B\u0438 \u0437\u0430\u043C\u0451\u0440\u0437\u043B\u0430."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 11400000, guid: a7e781ccb70f5364fbdaa837a84e6ba6, type: 2}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: 494f12b19c1d76c499928fa2ca9913f6, type: 2}

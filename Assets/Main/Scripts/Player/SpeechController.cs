@@ -188,7 +188,11 @@ public class SpeechController : MonoBehaviour
 
     private void MatchWord(string transcribed)
     {
-        var words = _items.Select(item => item.Data.Word.Title.ToLower().Replace('¸', 'å')).ToArray();
+        var words = _items
+            .Where(item => item.Data.DialogueLine && item.Data.DialogueLine.Word)
+            .Select(item => item.Data.DialogueLine.Word.Title.ToLower().Replace('¸', 'å'))
+            .ToArray();
+
         var result = Process.ExtractOne(transcribed, words, (s) => s);
 
         Debug.Log(transcribed);

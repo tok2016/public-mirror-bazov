@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -11,8 +11,8 @@ public class Bag : MonoBehaviour
     [Header("Main")]
     [SerializeField] private CollectableItem[] _items;
     [SerializeField] private XRSocketInteractor _socket;
-    public UnityEvent<CollectableItem> OnItemCollected;
-    public UnityEvent OnAllItemCollected;
+    public event Action<CollectableItem> OnItemCollected;
+    public event Action OnAllItemsCollected;
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem _itemBurstEffect;
@@ -59,7 +59,7 @@ public class Bag : MonoBehaviour
 
             _itemsInteractables.Remove(args.interactableObject);
             BurstItem();
-            OnItemCollected.Invoke(item);
+            OnItemCollected?.Invoke(item);
         }
         else
         {
@@ -85,8 +85,14 @@ public class Bag : MonoBehaviour
     {
         Instantiate(_bagBurstPrefab, transform.position, _bagBurstPrefab.transform.rotation, null);
         yield return new WaitForSeconds(_bagDisapearDelay);
-        OnAllItemCollected.Invoke();
+        OnAllItemsCollected?.Invoke();
         gameObject.SetActive(false);
+    }
+
+    public void ToggleBag(bool enable)
+    {
+        _socket.enabled = enable;
+        _itemsGroup.gameObject.SetActive(enable);
     }
 
     private void OnDisable()

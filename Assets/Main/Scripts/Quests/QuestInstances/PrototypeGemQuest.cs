@@ -7,20 +7,15 @@ public class PrototypeGemQuest : ProtoQuest
 {
     [SerializeField] private XRGrabInteractable _correctGem;
 
-    internal override void Check(SelectEnterEventArgs args)
+    public void Check(SelectEnterEventArgs args)
     {
         if (args.interactableObject.transform.gameObject == _correctGem.gameObject)
             Complete();
     }
 
-    internal override void Check(SelectExitEventArgs args)
+    protected override void Check()
     {
-        throw new System.NotImplementedException();
-    }
-
-    internal override void Check(TeleportingEventArgs args)
-    {
-        throw new System.NotImplementedException();
+        Complete();
     }
 
     private void OnTriggerEnter(Collider other)

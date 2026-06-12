@@ -13,13 +13,4 @@ MonoBehaviour:
   m_Name: Blyonda
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0411\u043B\u0451\u043D\u0434\u0430"
-  <Hint>k__BackingField: "\u041C\u043E\u0436\u0435\u0442, \u043D\u0430 \u043F\u0435\u0447\u0438
-    \u0435\u0449\u0451 \u0447\u0442\u043E-\u0442\u043E \u0435\u0441\u0442\u044C?"
-  <Commentary>k__BackingField: "\u0411\u043B\u0451\u043D\u0434\u0430 - \u0440\u0443\u0434\u043D\u0438\u0447\u043D\u0430\u044F
-    \u043B\u0430\u043C\u043F\u0430. \u0415\u0451 \u043D\u0430 \u043F\u043E\u044F\u0441
-    \u0432\u0435\u0448\u0430\u044E\u0442, \u0447\u0442\u043E\u0431\u044B \u0440\u0443\u043A\u0438
-    \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B \u0431\u044B\u043B\u0438. \u0412
-    \u043B\u0435\u0441\u0443 \u043F\u043E\u0434 \u0432\u0435\u0447\u0435\u0440 \u0442\u0435\u043C\u043D\u0435\u0435\u0442
-    \u0440\u0430\u043D\u043E - \u043E\u0441\u0432\u0435\u0442\u0438\u043C \u0434\u043E\u0440\u043E\u0433\u0443."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 11400000, guid: 1333647afdbad9742b146224ecbe38a4, type: 2}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: a568f50f2fb4e9340b0c736d1d4ba21c, type: 2}

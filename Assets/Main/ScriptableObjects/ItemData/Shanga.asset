@@ -13,10 +13,4 @@ MonoBehaviour:
   m_Name: Shanga
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0428\u0430\u043D\u044C\u0433\u0430"
-  <Hint>k__BackingField: "\u0412 \u0443\u0433\u043B\u0443, \u0443 \u043F\u0435\u0447\u0438,
-    \u043A\u0430\u0436\u0435\u0442\u0441\u044F, \u0447\u0442\u043E-\u0442\u043E \u043B\u0435\u0436\u0438\u0442."
-  <Commentary>k__BackingField: "\u0428\u0430\u043D\u044C\u0433\u0430 - \u043B\u0435\u043F\u0451\u0448\u043A\u0430
-    \u0441 \u043A\u0430\u0440\u0442\u043E\u0448\u043A\u043E\u0439. \u0422\u0451\u043F\u043B\u044B\u0435
-    \u0435\u0449\u0451. \u0412 \u0434\u043E\u0440\u043E\u0433\u0435 \u043F\u0435\u0440\u0435\u043A\u0443\u0441\u0438\u043C."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 11400000, guid: ce9b797ddb3d95446acb7f7df5ebd523, type: 2}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: 6166881936a960d458af0c496291e09e, type: 2}

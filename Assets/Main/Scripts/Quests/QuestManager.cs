@@ -1,114 +1,122 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
-public class QuestManager : MonoBehaviour
+public static class QuestManager
 {
-    private Quest _current;
-    [SerializeField] private Quest _firstQuest;
-    [SerializeField] private TeleportationProvider _teleportationProvider;
-    public UnityEvent onQuestComplete;
-    public UnityEvent onQuestStart;
-
-    public static QuestManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-            Destroy(gameObject);
-        else
+    private static Quest _current;
+    private static Quest s_Current 
+    { 
+        get => _current;
+        set
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            _current = value;
+        }
+    }
+
+    private static Queue<Quest> _quests = new Queue<Quest>();
+    private static bool _IsOccupied = false;
+    private static MonoBehaviour _runner;
+    public static MonoBehaviour Runner { 
+        get => _runner; 
+        set 
+        {
+            if (!_runner)
+                _runner = value;
+            else
+                throw new System.Exception("Can'r reassign runner");
+        } 
+    }
+
+    public static void EnqueueQuest(Quest quest)
+    {
+        if (s_Current == null || s_Current == quest)
+        {
+            quest.Unlock();
+            quest.Enter();
+        }   
+        else
+            _quests.Enqueue(quest);
+    }
+
+    public static void StartQuest(Quest quest)
+    {
+        quest.gameObject.SetActive(true);
+        s_Current = quest;
+        Runner.StartCoroutine(WaitForQuestStart(quest));
+    }
+
+    public static void StopQuest(Quest quest)
+    {
+        quest.gameObject.SetActive(false);
+
+        if (quest == s_Current)
+            s_Current = null;
+
+        if (_quests.Count == 0) return;
+        else if (_quests.Count > 1)
+        {
+            var tempQueue = new Queue<Quest>();
+            while (_quests.Count > 0)
+            {
+                var currentQuest = _quests.Dequeue();
+                if (currentQuest != quest)
+                    tempQueue.Enqueue(currentQuest);
+            }
+
+            _quests = tempQueue;
         }
 
-        _current = _firstQuest;
+        s_Current = _quests.Dequeue();
+        s_Current.Enter();
     }
 
-    private void OnEnable()
+    public static void CompleteQuest(Quest quest)
     {
-        _teleportationProvider.locomotionStarted += OnTeleportStart;
-        _teleportationProvider.locomotionEnded += OnTeleportEnd;
+        Runner.StartCoroutine(WaitForQuestComplete(quest));
     }
 
-    private void Start()
+    public static void SkipCutscene()
     {
-        _current?.Unlock();
-        _current?.Enter();
+        s_Current?.SkipCutscene();
     }
 
-    public void StartQuest(Quest quest)
+    private static System.Collections.IEnumerator WaitForQuestStart(Quest quest)
     {
-        if(_current != quest)
-            _current = quest;
-
-        onQuestStart?.Invoke();
+        _IsOccupied = true;
+        if (quest.State == QuestState.Available)
+            yield return quest.WaitBeforeStart();
+        _IsOccupied = false;
     }
 
-    public void CompleteQuest()
+    private static System.Collections.IEnumerator WaitForQuestComplete(Quest quest)
     {
-        if(_current && _current.Next)
-            _current.Next.Unlock();
-        onQuestComplete?.Invoke();
+        while(_IsOccupied)
+            yield return null;
+
+        yield return quest.WaitAfterComplete();
+        quest.Next?.Unlock();
+        StopQuest(quest);
     }
 
-    public bool IsInActiveZone(Transform item) => _current?.IsItemInActiveZone(item) ?? true;
-
-    public void ReturnToActiveZone(Transform item)
+    public static void GrabQuestItem(SelectEnterEventArgs args)
     {
-        _current?.ReturnToActiveZone(item);
+        s_Current?.OnItemGrab(args);
     }
 
-    public void Check(SelectEnterEventArgs args)
+    public static void LetGoQuestItem(SelectExitEventArgs args)
     {
-        _current?.Check(args);
+        s_Current?.OnItemLettingGo(args);
     }
 
-    public void Check(SelectExitEventArgs args)
+    public static void StartQuestTeleportation(LocomotionProvider provider)
     {
-        _current?.Check(args);
+        s_Current?.OnTeleportStart(provider);
     }
 
-    public void Check(TeleportingEventArgs args)
+    public static void EndQuestTeleportation(LocomotionProvider provider)
     {
-        _current?.Check(args);
-    }
-
-    public void Check()
-    {
-        _current?.Check();
-    }
-
-    public void OnItemGrab(SelectEnterEventArgs args)
-    {
-        _current?.OnItemGrab(args);
-    }
-
-    public void OnItemLettingGo(SelectExitEventArgs args)
-    {
-        _current?.OnItemLettingGo(args);
-    }
-
-    public void OnTeleportStart(LocomotionProvider provider)
-    {
-        _current?.OnTeleportStart(provider);
-    }
-
-    public void OnTeleportEnd(LocomotionProvider provider)
-    {
-        _current?.OnTeleportEnd(provider);
-    }
-
-    public void OnTeleport(TeleportingEventArgs args)
-    {
-        _current?.OnTeleport(args);
-    }
-
-    private void OnDisable()
-    {
-        _teleportationProvider.locomotionStarted -= OnTeleportStart;
-        _teleportationProvider.locomotionEnded -= OnTeleportEnd;
+        s_Current?.OnTeleportEnd(provider);
     }
 }

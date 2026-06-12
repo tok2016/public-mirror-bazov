@@ -13,10 +13,4 @@ MonoBehaviour:
   m_Name: Peridot
   m_EditorClassIdentifier: Assembly-CSharp::CollectableItemData
   <Name>k__BackingField: "\u0425\u0440\u0438\u0437\u043E\u043B\u0438\u0442"
-  <Commentary>k__BackingField: "\u042D\u0442\u043E \u0445\u0440\u0438\u0437\u043E\u043B\u0438\u0442.
-    \u0423 \u043C\u0430\u043B\u0430\u0445\u0438\u0442\u0430 \u043E\u0442\u0442\u0435\u043D\u043E\u043A
-    \u0431\u043E\u043B\u0435\u0435 \u0433\u043E\u043B\u0443\u0431\u043E\u0439, \u0438
-    \u0443 \u043D\u0435\u0433\u043E \u0435\u0441\u0442\u044C \u0447\u0451\u0440\u043D\u044B\u0435
-    \u0443\u0437\u043E\u0440\u044B."
-  <AudioCommentary>k__BackingField: {fileID: 0}
-  <Word>k__BackingField: {fileID: 0}
+  <DialogueLine>k__BackingField: {fileID: 11400000, guid: f1704a23b38faf342b68dd7dbbcdd459, type: 2}
