@@ -20,13 +20,6 @@ public class SpeechTeleportQuest : SpeechQuest
             character.WarpToPlayer();
     }
 
-    public override void ReturnToActiveZone(Transform item)
-    {
-        base.ReturnToActiveZone(item);
-        var collectable = item.GetComponent<CollectableItem>();
-        collectable?.ToggleGravity(false);
-    }
-
     protected override void OnDisable()
     {
         DisableMainEvents();

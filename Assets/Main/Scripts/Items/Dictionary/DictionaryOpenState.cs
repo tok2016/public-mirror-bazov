@@ -72,12 +72,14 @@ public class DictionaryOpenState : DictionaryState
 
     private IEnumerator OpenFrontBindng()
     {
+        _book.PlayOpeningSound();
         yield return RescaleBook(true);
         yield return RotateFrontBinding(true);
     }
 
     private IEnumerator CloseFrontBinding()
     {
+        _book.PlayOpeningSound();
         _book.EnableCanvas(false);
         yield return RotateFrontBinding(false);
         if(_stateMachine.Current == _stateMachine.CloseState)

@@ -19,16 +19,16 @@ public class RespawningItem : MonoBehaviour
 
     void Update()
     {
-        if (_interactable.interactorsSelecting.Count == 0 
-            && _rigidbody.linearVelocity.magnitude > _minSpeedToStop
-            && !QuestManager.IsInActiveZone(transform))
-        {
-            Instantiate(_disappearEffectPrefab, transform.position, Quaternion.identity);
-            QuestManager.ReturnToActiveZone(transform);
+        //if (_interactable.interactorsSelecting.Count == 0 
+        //    && _rigidbody.linearVelocity.magnitude > _minSpeedToStop
+        //    && !QuestManager.IsInActiveZone(transform))
+        //{
+        //    Instantiate(_disappearEffectPrefab, transform.position, Quaternion.identity);
+        //    QuestManager.ReturnToActiveZone(transform);
 
-            transform.rotation = _defaultRotation;
-            _rigidbody.angularVelocity = Vector3.zero;
-            _rigidbody.linearVelocity = Vector3.zero;
-        }
+        //    transform.rotation = _defaultRotation;
+        //    _rigidbody.angularVelocity = Vector3.zero;
+        //    _rigidbody.linearVelocity = Vector3.zero;
+        //}
     }
 }

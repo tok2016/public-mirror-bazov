@@ -56,13 +56,6 @@ public class LegacyQuestManager : MonoBehaviour
         onQuestComplete?.Invoke();
     }
 
-    public bool IsInActiveZone(Transform item) => _current?.IsItemInActiveZone(item) ?? true;
-
-    public void ReturnToActiveZone(Transform item)
-    {
-        _current?.ReturnToActiveZone(item);
-    }
-
     public void OnItemGrab(SelectEnterEventArgs args)
     {
         _current?.OnItemGrab(args);

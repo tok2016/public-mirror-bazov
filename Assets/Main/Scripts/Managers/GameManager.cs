@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private NearFarInteractor _leftController, _rightController;
     [SerializeField] private TeleportationProvider _teleportationProvider;
-    [SerializeField] private PlayableDirector _playableDirector;
+    [SerializeField] private NearFarInteractor _leftController, _rightController;
     [SerializeField] private InputActionReference _skipAction;
 
     private void Awake()

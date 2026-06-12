@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class DictionaryBook : MonoBehaviour
 {
+    [Header("Book")]
     [SerializeField] private WordData[] _words;
     [field: SerializeField] public Transform FrontBinding { get; private set; }
     private DictionaryStateMachine _stateMachine;
@@ -33,11 +34,17 @@ public class DictionaryBook : MonoBehaviour
 
     [SerializeField] private Button _leftButton, _rightButton;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip _pageTurningSound;
+    [SerializeField] private AudioClip _openingSound, _writingSound;
+    private RandomizedAudioSource _audioSource;
+
     private void Awake()
     {
         _pages = new List<DictionaryPage>();
         _pagesSides = new Dictionary<WordData, DictionaryPageSide>();
         _stateMachine = new DictionaryStateMachine(this);
+        _audioSource = GetComponent<RandomizedAudioSource>();
     }
 
     private void OnEnable()
@@ -81,7 +88,10 @@ public class DictionaryBook : MonoBehaviour
     public void AddWord(WordData word)
     {
         if (_pagesSides.ContainsKey(word))
+        {
             _pagesSides[word].SetTitle(word);
+            PlaySound(_writingSound);
+        } 
     }
 
     public void TurnThePage(bool left = false)
@@ -94,6 +104,8 @@ public class DictionaryBook : MonoBehaviour
 
             _leftButton.gameObject.SetActive(_currentPage != 0);
             _rightButton.gameObject.SetActive(_currentPage != _pages.Count);
+
+            PlaySound(_pageTurningSound);
         }
     }
 
@@ -174,6 +186,16 @@ public class DictionaryBook : MonoBehaviour
             args.interactorObject.transform.gameObject.SetActive(false);
             _added = true;
         }
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        _audioSource.Play(clip);
+    }
+
+    public void PlayOpeningSound()
+    {
+        PlaySound(_openingSound);
     }
 
     private void OnDisable()

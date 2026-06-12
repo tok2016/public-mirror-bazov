@@ -1,38 +1,83 @@
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(BoxCollider))]
 public class ItemActiveZone : MonoBehaviour
 {
     [SerializeField] private Transform _cameraRespawnPoint, _reservedRespawnPoint;
-    private BoxCollider[] _colliders;
+    [SerializeField] private CombinedTrigger _combinedTrigger;
+    [SerializeField] private XRGrabInteractable[] _importantInteractables;
 
     private void Awake()
     {
-        _colliders = GetComponents<BoxCollider>();
         if (!_reservedRespawnPoint)
             _reservedRespawnPoint = transform;
     }
 
-    private bool IsItemInCollider(BoxCollider collider, Transform item)
+    private void OnEnable()
     {
-        var localObjPoint = transform.InverseTransformPoint(item.position);
-        localObjPoint -= collider.center;
-        var halfSize = collider.size * 0.5f;
-
-        bool insideX = Mathf.Abs(localObjPoint.x) <= halfSize.x;
-        bool insideY = Mathf.Abs(localObjPoint.y) <= halfSize.y;
-        bool insideZ = Mathf.Abs(localObjPoint.z) <= halfSize.z;
-
-        return insideX && insideY && insideZ;
+        _combinedTrigger.OnTriggerGroupExit += OnActiveZoneExit;
     }
 
-    public bool IsItemInActiveZone(Transform item) => _colliders.Any(collider => IsItemInCollider(collider, item));
-
-    public virtual void ReturnToActiveZone(Transform item)
+    private void Start()
     {
-        item.position = _cameraRespawnPoint && IsItemInActiveZone(_cameraRespawnPoint) 
-            ? _cameraRespawnPoint.position 
-            : _reservedRespawnPoint.position;
+        ToggleActive(false);
+    }
+
+    public void ToggleActive(bool enable)
+    {
+        if (enable)
+        {
+            foreach (var item in _importantInteractables)
+                if(!IsInActiveZone(item.transform))
+                    ReturnExitedItem(item);
+        }
+
+        gameObject.SetActive(enable);
+    }
+
+    private void OnItemLetGo(SelectExitEventArgs args)
+    {
+        ReturnExitedItem(args.interactableObject);
+        args.interactableObject.selectExited.RemoveListener(OnItemLetGo);
+    }
+
+    private void OnActiveZoneExit(Collider other)
+    {
+        var interactable = other.GetComponent<IXRSelectInteractable>();
+        if(interactable != null)
+        {
+            if (interactable.interactorsSelecting.Count == 0)
+                ReturnExitedItem(interactable);
+            else
+                interactable.selectExited.AddListener(OnItemLetGo);
+        }
+    }
+
+    private void ReturnExitedItem(IXRSelectInteractable interactable)
+    {
+        var respawnPoint = _cameraRespawnPoint && IsInActiveZone(_cameraRespawnPoint) 
+            ? _cameraRespawnPoint
+            : _reservedRespawnPoint;
+
+        interactable.transform.position = respawnPoint.position;
+        interactable.transform.localRotation = Quaternion.identity;
+
+        var rigidbody = interactable.transform.GetComponent<Rigidbody>();
+        if (rigidbody != null)
+        {
+            rigidbody.linearVelocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+        }
+    }
+
+    private bool IsInActiveZone(Transform item) => _combinedTrigger
+        .Triggers
+        .Any(collider => collider.bounds.Contains(item.position));
+
+    private void OnDisable()
+    {
+        _combinedTrigger.OnTriggerGroupExit -= OnActiveZoneExit;
     }
 }

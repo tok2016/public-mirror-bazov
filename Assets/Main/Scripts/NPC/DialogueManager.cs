@@ -19,7 +19,7 @@ public static class DialogueManager
     public static void PlayLine(DialogueLine line)
     {   
         if (_characters.ContainsKey(line.Character))
-            _characters[line.Character].Pronounce(line.Clip);
+            _characters[line.Character].PlayLine(line);
 
         if (line.Word)
             DictionaryManager.WriteWord(line.Word);

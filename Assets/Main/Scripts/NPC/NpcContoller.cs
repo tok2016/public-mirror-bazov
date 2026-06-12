@@ -9,6 +9,7 @@ public class NpcContoller : MonoBehaviour
     [SerializeField] protected Character _characterName;
     [SerializeField] protected Animator _animator;
     protected AudioSource _audioSource;
+    protected DialogueLine _currentLine;
 
     protected virtual void Awake()
     {
@@ -27,7 +28,7 @@ public class NpcContoller : MonoBehaviour
         
     }
 
-    public virtual void Pronounce(AudioClip sound)
+    public virtual void PlaySound(AudioClip sound)
     {
         _audioSource.Stop();
         _audioSource.clip = sound;
@@ -36,9 +37,13 @@ public class NpcContoller : MonoBehaviour
 
     public virtual void PlayLine(DialogueLine line)
     {
+        if (_audioSource.isPlaying && line.Priority < _currentLine.Priority)
+            return;
+
         _audioSource.Stop();
         _audioSource.clip = line.Clip;
         _audioSource.Play();
+        _currentLine = line;
     }
 
     public virtual void ShutUp()

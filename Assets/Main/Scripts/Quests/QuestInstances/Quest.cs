@@ -10,9 +10,9 @@ public abstract class Quest : MonoBehaviour
     [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    [SerializeField] protected ItemActiveZone _activeZone;
-    [SerializeField] protected RespawningItem[] _importantItems;
+    [SerializeField] protected ItemActiveZone _itemActiveZone;
     [SerializeField] protected PlayableDirector _startCutscene, _endCutscene;
+
     private bool _isCutsceneRunning = false;
     private bool _skipCutscene = false;
 
@@ -47,14 +47,14 @@ public abstract class Quest : MonoBehaviour
 
     public void Enter()
     {
-        if (State == QuestState.Completed)
-            return;
+        if (State == QuestState.Completed) return;
         else if (State == QuestState.Locked)
         {
             QuestManager.EnqueueQuest(this);
             return;
         }
 
+        _itemActiveZone.ToggleActive(true);
         QuestManager.StartQuest(this);
 
         if (State == QuestState.Visited)
@@ -63,9 +63,6 @@ public abstract class Quest : MonoBehaviour
             onEnterRepeat.Invoke();
             Debug.Log("Return");
         }
-
-        foreach (var item in _importantItems)
-            item.enabled = true;
     }
 
     protected abstract void Activate();
@@ -74,25 +71,19 @@ public abstract class Quest : MonoBehaviour
 
     public void Exit()
     {
+        if(State == QuestState.Completed) return;
+
         QuestManager.StopQuest(this);
         State = QuestState.Visited;
         Stop();
         onExit.Invoke();
+        _itemActiveZone.ToggleActive(false);
     }
 
     public void Complete()
     {
-        foreach (var item in _importantItems)
-            item.enabled = false;
-
         QuestManager.CompleteQuest(this);
-    }
-
-    public bool IsItemInActiveZone(Transform item) => _activeZone.IsItemInActiveZone(item);
-
-    public virtual void ReturnToActiveZone(Transform item)
-    {
-        _activeZone.ReturnToActiveZone(item);
+        _itemActiveZone.ToggleActive(false);
     }
 
     public void SkipCutscene()

@@ -56,7 +56,7 @@ public class TeleportPadsGroup : MonoBehaviour
 
     private IEnumerator WaitBeforeExit(TeleportPad pad)
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
         if(pad == _current)
         {
             OnPadGroupExit.Invoke();

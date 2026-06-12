@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 public static class QuestManager
 {
     private static Quest _current;
-    private static Quest Current 
+    private static Quest s_Current 
     { 
         get => _current;
         set
@@ -31,7 +31,7 @@ public static class QuestManager
 
     public static void EnqueueQuest(Quest quest)
     {
-        if (Current == null || Current == quest)
+        if (s_Current == null || s_Current == quest)
         {
             quest.Unlock();
             quest.Enter();
@@ -43,7 +43,7 @@ public static class QuestManager
     public static void StartQuest(Quest quest)
     {
         quest.gameObject.SetActive(true);
-        Current = quest;
+        s_Current = quest;
         Runner.StartCoroutine(WaitForQuestStart(quest));
     }
 
@@ -51,8 +51,8 @@ public static class QuestManager
     {
         quest.gameObject.SetActive(false);
 
-        if (quest == Current)
-            Current = null;
+        if (quest == s_Current)
+            s_Current = null;
 
         if (_quests.Count == 0) return;
         else if (_quests.Count > 1)
@@ -68,8 +68,8 @@ public static class QuestManager
             _quests = tempQueue;
         }
 
-        Current = _quests.Dequeue();
-        Current.Enter();
+        s_Current = _quests.Dequeue();
+        s_Current.Enter();
     }
 
     public static void CompleteQuest(Quest quest)
@@ -79,7 +79,7 @@ public static class QuestManager
 
     public static void SkipCutscene()
     {
-        Current?.SkipCutscene();
+        s_Current?.SkipCutscene();
     }
 
     private static System.Collections.IEnumerator WaitForQuestStart(Quest quest)
@@ -100,30 +100,23 @@ public static class QuestManager
         StopQuest(quest);
     }
 
-    public static bool IsInActiveZone(Transform item) => Current?.IsItemInActiveZone(item) ?? true;
-
-    public static void ReturnToActiveZone(Transform item)
-    {
-        Current?.ReturnToActiveZone(item);
-    }
-
     public static void GrabQuestItem(SelectEnterEventArgs args)
     {
-        Current?.OnItemGrab(args);
+        s_Current?.OnItemGrab(args);
     }
 
     public static void LetGoQuestItem(SelectExitEventArgs args)
     {
-        Current?.OnItemLettingGo(args);
+        s_Current?.OnItemLettingGo(args);
     }
 
     public static void StartQuestTeleportation(LocomotionProvider provider)
     {
-        Current?.OnTeleportStart(provider);
+        s_Current?.OnTeleportStart(provider);
     }
 
     public static void EndQuestTeleportation(LocomotionProvider provider)
     {
-        Current?.OnTeleportEnd(provider);
+        s_Current?.OnTeleportEnd(provider);
     }
 }
