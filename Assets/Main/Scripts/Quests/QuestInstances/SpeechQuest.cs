@@ -35,8 +35,14 @@ public class SpeechQuest : Quest
         onEnterRepeat.RemoveListener(EnableHints);
     }
 
-    protected void EnableHints() => _controllerHint.ToggleHint(true);
-    protected void DisableHints() => _controllerHint.ToggleHint(false);
+    protected void EnableHints()
+    {
+        _controllerHint.ToggleHint(true);
+    }
+    protected void DisableHints()
+    {
+        _controllerHint.ToggleHint(false);
+    }
 
     private void CheckItem(SelectEnterEventArgs args) => Check();
 
