@@ -17,7 +17,7 @@ public class SoloninaQuest : SpeechQuest
 
     private void CheckItem(SelectEnterEventArgs args)
     {
-        var item = args.interactableObject.transform.GetComponent<CollectableItem>();
+        var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
         if (item && item.GetEntityId() == _correctItem.GetEntityId())
         {
             var npcGrabbable = item.GetComponent<NpcGrabbable>();
@@ -25,7 +25,7 @@ public class SoloninaQuest : SpeechQuest
                 npcGrabbable = item.AddComponent<NpcGrabbable>();
 
             npcGrabbable.enabled = true;
-            item.ToggleInteractable(false);
+            item.ToggleInteractivity(false);
             item.transform.position = _correctItemSocket.attachTransform.position;
             _successEffect.SetActive(true);
 

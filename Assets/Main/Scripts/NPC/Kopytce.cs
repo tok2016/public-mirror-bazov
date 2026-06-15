@@ -118,7 +118,7 @@ public class Kopytce : NpcContoller
         {
             var gem = _gems[i + _currentGem];
             var throwOffset = _throwOffsets[i];
-            var direction = new Vector3(throwOffset.x, _throwZoneRadius * 4, throwOffset.z);
+            var direction = new Vector3(throwOffset.x, _throwZoneRadius * 3, throwOffset.z);
 
             gem.transform.position = _throwOffsets[i] + _throwCenter.position;
             gem.Appear();

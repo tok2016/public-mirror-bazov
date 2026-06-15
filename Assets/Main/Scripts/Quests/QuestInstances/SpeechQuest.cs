@@ -1,28 +1,17 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class SpeechQuest : Quest
 {
     [Header("Item Check")]
-    [SerializeField] protected CollectableItem _correctItem;
+    [SerializeField] protected GrabbableObject _correctItem;
     public UnityEvent OnCorrectItemGrab;
     public UnityEvent OnCorrectItemRelease;
-    private IXRSelectInteractable[] _importantItems = new IXRSelectInteractable[1];
 
     [Header("Input")]
     [SerializeField] protected SpeechController _controller;
     [SerializeField] protected SpeecControllerhHint _controllerHint;
-
-    protected override IXRSelectInteractable[] ImportantItems
-    {
-        get
-        {
-            _importantItems[0] = _correctItem.Interactable;
-            return _importantItems;
-        }
-    }
 
     protected override void Update()
     {
@@ -38,12 +27,12 @@ public class SpeechQuest : Quest
 
     protected void EnableMainEvents()
     {
-        onEnterRepeat.AddListener(EnableHints);
+        onReturn.AddListener(EnableHints);
     }
 
     protected void DisableMainEvents()
     {
-        onEnterRepeat.RemoveListener(EnableHints);
+        onReturn.RemoveListener(EnableHints);
     }
 
     protected void EnableHints()
@@ -66,7 +55,7 @@ public class SpeechQuest : Quest
     {
         if (State != QuestState.InProgress) return;
 
-        var item = args.interactableObject.transform.GetComponent<CollectableItem>();
+        var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
         if (item && item.GetEntityId() == _correctItem.GetEntityId())
         {
             _controller.RemoveItem(item);
@@ -78,7 +67,7 @@ public class SpeechQuest : Quest
     {
         if (State != QuestState.InProgress) return;
 
-        var item = args.interactableObject.transform.GetComponent<CollectableItem>();
+        var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
         if (item)
         {
             _controller.AddItem(item);

@@ -1,17 +1,13 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class GemQuest : Quest
 {
     [Header("Check")]
     [SerializeField] private Gem _correctGem;
-    [SerializeField] private XRGrabInteractable[] _allGems;
     [SerializeField] private XRSocketInteractor _correctItemSocket;
     [SerializeField] private GameObject _successEffect;
-
-    protected override IXRSelectInteractable[] ImportantItems => _allGems;
 
     private void OnEnable()
     {
@@ -31,7 +27,7 @@ public class GemQuest : Quest
 
     protected override void Check()
     {
-        _correctGem.ToggleInteractable(false);
+        _correctGem.ToggleInteractivity(false);
         _successEffect.SetActive(true);
         Complete();
     }

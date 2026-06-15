@@ -1,24 +1,10 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 [RequireComponent(typeof(RespawningItem))]
-public class CollectableItem: MonoBehaviour, ICommentable
+public class CollectableItem: GrabbableObject
 {
-    [field: SerializeField] public CollectableItemData Data {get; protected set;}
-    public XRGrabInteractable Interactable { get; private set; }
-    private Rigidbody _rigidbody;
-
-    public UnityEvent OnCollceted, OnRestored;
-
     public bool IsCollected {get; private set;}
-
-    private void Awake()
-    {
-        Interactable = GetComponent<XRGrabInteractable>();
-        _rigidbody = GetComponent<Rigidbody>();
-    }
 
     private void OnEnable()
     {
@@ -30,51 +16,23 @@ public class CollectableItem: MonoBehaviour, ICommentable
         ToggleGravity(true);
     }
 
-    public void TransformSocketedItem()
+    public override void TransformSocketedItem()
     {
+        base.TransformSocketedItem();
         IsCollected = true;
-        gameObject.SetActive(false);
-        OnCollceted.Invoke();
     }
 
-    public void RestoreSocketedItem(Transform attachPoint)
+    public override void RestoreSocketedItem(Transform attachPoint, Transform parent = null)
     {
-        transform.position = attachPoint.position;
+        base.RestoreSocketedItem(attachPoint, parent);
         IsCollected = false;
-        gameObject.SetActive(true);
-        OnRestored.Invoke();
-        ToggleInteractable(true);
-        ToggleGravity(false);
-    }
 
-    public void ToggleGravity(bool enableGravity)
-    {
-        _rigidbody.useGravity = enableGravity;
-        _rigidbody.isKinematic = !enableGravity;
+        ToggleInteractivity(true);
+        ToggleGravity(false);
     }
 
     private void OnDisable()
     {
-        Interactable.selectExited.RemoveAllListeners();
-    }
-
-    public void CommentGrab()
-    {
-        if(Data.DialogueLine)
-            DialogueManager.PlayLine(Data.DialogueLine);
-    }
-
-    public void CommentLettingGo()
-    {
-        
-    }
-
-    public void ToggleInteractable(bool enable)
-    {
-        var collectableLayer = InteractionLayerMask.NameToLayer("Collectable");
-        if (enable)
-            Interactable.interactionLayers |= (1 << collectableLayer);
-        else
-            Interactable.interactionLayers &= ~(1 << collectableLayer);
-    }
+        Interactable.selectExited.RemoveListener(OnLettingGo);
+    }    
 }

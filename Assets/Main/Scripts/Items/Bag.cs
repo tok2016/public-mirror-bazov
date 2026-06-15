@@ -9,9 +9,9 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 public class Bag : MonoBehaviour
 {
     [Header("Main")]
-    [SerializeField] private CollectableItem[] _items;
+    [SerializeField] private GrabbableObject[] _items;
     [SerializeField] private XRSocketInteractor _socket;
-    public event Action<CollectableItem> OnItemCollected;
+    public event Action<GrabbableObject> OnItemCollected;
     public event Action OnAllItemsCollected;
 
     [Header("Effects")]
@@ -23,8 +23,8 @@ public class Bag : MonoBehaviour
     [SerializeField] private Transform _itemsGroup;
     [SerializeField] private TextMeshProUGUI _itemLabelPrefab;
     [SerializeField] private Color activeColor, collectedColor;
-    private Dictionary<IXRSelectInteractable, CollectableItem> _itemsInteractables;
-    private Dictionary<CollectableItem, TextMeshProUGUI> _itemsLabels;
+    private Dictionary<IXRSelectInteractable, GrabbableObject> _itemsInteractables;
+    private Dictionary<GrabbableObject, TextMeshProUGUI> _itemsLabels;
 
     private void OnEnable()
     {
@@ -33,8 +33,8 @@ public class Bag : MonoBehaviour
 
     void Start()
     {
-        _itemsInteractables = new Dictionary<IXRSelectInteractable, CollectableItem>();
-        _itemsLabels = new Dictionary<CollectableItem, TextMeshProUGUI>();
+        _itemsInteractables = new Dictionary<IXRSelectInteractable, GrabbableObject>();
+        _itemsLabels = new Dictionary<GrabbableObject, TextMeshProUGUI>();
 
         foreach (var item in _items)
         {
