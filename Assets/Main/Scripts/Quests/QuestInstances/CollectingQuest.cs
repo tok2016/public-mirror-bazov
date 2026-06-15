@@ -1,15 +1,19 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class CollectingQuest : Quest
 {
     [Header("Collecting")]
     [SerializeField] private Bag _bag;
+    [SerializeField] private XRGrabInteractable[] _importantInteractables;
 
     [Header("Hints")]
     [SerializeField] private HintObject[] _hintObjects;
     [SerializeField] private HintZone[] _hintZones;
     private Coroutine _commentCoroutine;
+
+    protected override IXRSelectInteractable[] ImportantItems => _importantInteractables;
 
     protected override void Awake()
     {

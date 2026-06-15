@@ -18,6 +18,8 @@ public class PrototypeCollectingQuest : ProtoQuest
     private Dictionary<IXRSelectInteractable, ItemLabel> _itemsLabels;
     private Dictionary<IXRSelectInteractable, int> _objectsCount;
 
+    protected override IXRSelectInteractable[] ImportantItems => throw new System.NotImplementedException();
+
     protected override void Awake()
     {
         base.Awake();

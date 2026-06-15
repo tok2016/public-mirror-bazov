@@ -23,6 +23,8 @@ public class SpeechController : MonoBehaviour
     [SerializeField] private InputActionReference _recordAction;
     [SerializeField] private int _scoreTreshold = 33;
     [SerializeField] private int _recordingTime = 5;
+    public event Action onRecordingStart, onRecordingStop;
+    public event Action<CollectableItem> onItemFound;
 
     [Header("Items Controll")]
     [SerializeField] private List<CollectableItem> _items;
@@ -72,6 +74,8 @@ public class SpeechController : MonoBehaviour
             _controllerHint.ShowRecording();
             _recordingTimer = _recordingTime;
             _isPressing = true;
+
+            onRecordingStart?.Invoke();
         }
 
         if (_recordAction.action.WasCompletedThisFrame())
@@ -80,12 +84,13 @@ public class SpeechController : MonoBehaviour
             {
                 Microphone.End(_deviceName);
                 Debug.Log("End");
+                onRecordingStop?.Invoke();
             }
 
             if (_recordingTimer >= 0 && _recordingTimer <= _recordingTime - _recordingTreshold)
             {
-                TranscribeRecord();
-                //StartCoroutine(TestTranscribe()); test hint and particles
+                //TranscribeRecord();
+                StartCoroutine(TestTranscribe()); 
                 _controllerHint.HideRecording();
             } else
                 _controllerHint.CancelRecording();
@@ -99,6 +104,7 @@ public class SpeechController : MonoBehaviour
             {
                 Microphone.End(_deviceName);
                 Debug.Log("End");
+                onRecordingStop?.Invoke();
             }
             else
             {
@@ -202,6 +208,7 @@ public class SpeechController : MonoBehaviour
         {
             _items[result.Index].RestoreSocketedItem(_itemAttachPoint);
             _controllerHint.ShowResponse();
+            onItemFound?.Invoke(_items[result.Index]);
         }  
         else
             Debug.Log("Ничего нет. Может, повторишь снова?");

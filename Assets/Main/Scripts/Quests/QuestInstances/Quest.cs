@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 
 public abstract class Quest : MonoBehaviour
@@ -15,6 +16,7 @@ public abstract class Quest : MonoBehaviour
 
     private bool _isCutsceneRunning = false;
     private bool _skipCutscene = false;
+    protected abstract IXRSelectInteractable[] ImportantItems { get; }
 
     public QuestState State { get; protected set; } = QuestState.Locked;
 
@@ -54,7 +56,7 @@ public abstract class Quest : MonoBehaviour
             return;
         }
 
-        _itemActiveZone.ToggleActive(true);
+        _itemActiveZone.ToggleActive(true, ImportantItems);
         QuestManager.StartQuest(this);
 
         if (State == QuestState.Visited)
@@ -77,13 +79,13 @@ public abstract class Quest : MonoBehaviour
         State = QuestState.Visited;
         Stop();
         onExit.Invoke();
-        _itemActiveZone.ToggleActive(false);
+        _itemActiveZone.ToggleActive(false, ImportantItems);
     }
 
     public void Complete()
     {
         QuestManager.CompleteQuest(this);
-        _itemActiveZone.ToggleActive(false);
+        _itemActiveZone.ToggleActive(false, ImportantItems);
     }
 
     public void SkipCutscene()

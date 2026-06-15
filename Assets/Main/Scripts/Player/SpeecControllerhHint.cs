@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SpeecControllerhHint : MonoBehaviour
 {
-    [SerializeField] private HintButton _hintButton;
+    [SerializeField] private ActionsVisualizer _controller, _hand;
     [SerializeField] private ParticleSystem _recordingEffect;
     [SerializeField] private ParticleSystem _loadingEffect;
     [SerializeField] private GameObject _itemAppearanceEffect;
@@ -17,7 +17,14 @@ public class SpeecControllerhHint : MonoBehaviour
     public void ToggleHint(bool enable)
     {
         _hintAnimator.gameObject.SetActive(enable);
-        _hintButton.ToggleMaterial(enable);
+
+        if (enable)
+            _controller.SetTranslucent();
+        else
+            _controller.SetInvisible();
+
+        _controller.WarnAboutRecording(enable);
+        _hand.WarnAboutRecording(enable);
     }
 
     public void ShowRecording()
@@ -31,8 +38,9 @@ public class SpeecControllerhHint : MonoBehaviour
     public void HideRecording()
     {
         _hintAnimator.SetTrigger("Send");
-        _hintButton.ToggleDisable(true);
         _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+        _controller.DisableRecording(true);
 
         var loadingMain = _loadingEffect.main;
         loadingMain.gravityModifierMultiplier = 0;
@@ -62,7 +70,7 @@ public class SpeecControllerhHint : MonoBehaviour
     public void ShowResponse()
     {
         _hintAnimator.SetTrigger("Response");
-        _hintButton.ToggleDisable(false);
+        _controller.DisableRecording(false);
         _loadingEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         _itemAppearanceEffect.gameObject.SetActive(true);
     }
@@ -70,7 +78,7 @@ public class SpeecControllerhHint : MonoBehaviour
     public void ShowError()
     {
         _hintAnimator.SetTrigger("Error");
-        _hintButton.ToggleDisable(false);
+        _controller.DisableRecording(false);
 
         var loadingMain = _loadingEffect.main;
         loadingMain.gravityModifierMultiplier = _errorEffectGravity;

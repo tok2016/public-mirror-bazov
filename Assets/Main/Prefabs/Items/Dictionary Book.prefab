@@ -566,9 +566,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1333647afdbad9742b146224ecbe38a4, type: 2}
   - {fileID: 11400000, guid: ce9b797ddb3d95446acb7f7df5ebd523, type: 2}
   - {fileID: 11400000, guid: 1a3bedc5f1afbdb449d89613b85e5971, type: 2}
-  - {fileID: 11400000, guid: a7e781ccb70f5364fbdaa837a84e6ba6, type: 2}
   - {fileID: 11400000, guid: 9b99abd0fc8eb764a885272dfc8985ba, type: 2}
   - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
+  - {fileID: 11400000, guid: 2abeede1f59e5aa448d64a71e18806e6, type: 2}
+  - {fileID: 11400000, guid: 2f08db487167c9143a45a731a04f2c59, type: 2}
+  - {fileID: 11400000, guid: 685992a14f757f6438dfa613fe42a483, type: 2}
+  - {fileID: 11400000, guid: 5be9783efd4b9b148871d1c689d46226, type: 2}
   <FrontBinding>k__BackingField: {fileID: 1914329810443711572}
   _attachPoint: {fileID: 0}
   <ScaleWrapper>k__BackingField: {fileID: 6694254089544912746}
@@ -580,6 +583,9 @@ MonoBehaviour:
   _page: {fileID: 6787036853722745743, guid: 8c078d9393dc14a40b1b2e993834e164, type: 3}
   _leftButton: {fileID: 8367287394834136587}
   _rightButton: {fileID: 1755032131071057537}
+  _pageTurningSound: {fileID: 0}
+  _openingSound: {fileID: 0}
+  _writingSound: {fileID: 0}
 --- !u!54 &2530255024778737719
 Rigidbody:
   m_ObjectHideFlags: 0
