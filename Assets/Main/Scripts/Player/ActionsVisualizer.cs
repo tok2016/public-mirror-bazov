@@ -1,14 +1,25 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
+[Serializable]
+public struct VisualizerMaterialSetting
+{
+    public Renderer renderer;
+    public Material visibleMaterial;
+    public Material translucentMaterial;
+}
+
 public abstract class ActionsVisualizer : MonoBehaviour
 {
     [SerializeField] protected XRBaseInteractor _grabInteractor, _pokeInteractor, _teleportInteractor;
     [SerializeField] protected NearFarInteractor _uiInteractor;
     [SerializeField] protected SpeechController _speechController;
+
+    [SerializeField] protected VisualizerMaterialSetting[] _materials;
 
     protected virtual void OnEnable()
     {
@@ -36,9 +47,8 @@ public abstract class ActionsVisualizer : MonoBehaviour
         if (_speechController)
         {
             _speechController.onRecordingStart += OnRecordingStart;
-            _speechController.onRecordingStart += OnRecordingStop;
+            _speechController.onRecordingStop += OnRecordingStop;
         }
-        
     }
 
     public abstract void WarnAboutPoke(bool enable);
@@ -56,6 +66,25 @@ public abstract class ActionsVisualizer : MonoBehaviour
     public abstract void WarnAboutTeleport(bool enable);
     public abstract void ShowTeleport(bool enable);
     public abstract void DisableTeleport(bool enable);
+
+    public void SetInvisible()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void SetTranslucent()
+    {
+        gameObject.SetActive(true);
+        foreach (var material in _materials)
+            material.renderer.material = material.translucentMaterial;
+    }
+
+    public void SetVisible()
+    {
+        gameObject.SetActive(true);
+        foreach (var material in _materials)
+            material.renderer.material = material.visibleMaterial;
+    }
 
     private void OnPokeZoneEnter(UIHoverEventArgs args) => WarnAboutPoke(true);
     private void OnPokeZoneEnter(HoverEnterEventArgs args) => WarnAboutPoke(true);
@@ -75,8 +104,8 @@ public abstract class ActionsVisualizer : MonoBehaviour
     private void OnRecordingStart() => ShowRecording(true);
     private void OnRecordingStop() => ShowRecording(false);
 
-    private void OnTeleportStart(SelectEnterEventArgs args) => WarnAboutTeleport(true);
-    private void OnTeleportStop(SelectExitEventArgs args) => WarnAboutTeleport(false);
+    private void OnTeleportStart(SelectEnterEventArgs args) => ShowTeleport(true);
+    private void OnTeleportStop(SelectExitEventArgs args) => ShowTeleport(false);
 
     protected virtual void OnDisable()
     {
@@ -104,7 +133,7 @@ public abstract class ActionsVisualizer : MonoBehaviour
         if(_speechController)
         {
             _speechController.onRecordingStart -= OnRecordingStart;
-            _speechController.onRecordingStart -= OnRecordingStop;
+            _speechController.onRecordingStop -= OnRecordingStop;
         }
     }
 }

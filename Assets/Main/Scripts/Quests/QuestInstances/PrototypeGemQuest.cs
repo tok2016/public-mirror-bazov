@@ -7,6 +7,8 @@ public class PrototypeGemQuest : ProtoQuest
 {
     [SerializeField] private XRGrabInteractable _correctGem;
 
+    protected override IXRSelectInteractable[] ImportantItems => throw new System.NotImplementedException();
+
     public void Check(SelectEnterEventArgs args)
     {
         if (args.interactableObject.transform.gameObject == _correctGem.gameObject)

@@ -89,8 +89,8 @@ public class SpeechController : MonoBehaviour
 
             if (_recordingTimer >= 0 && _recordingTimer <= _recordingTime - _recordingTreshold)
             {
-                TranscribeRecord();
-                //StartCoroutine(TestTranscribe()); test hint and particles
+                //TranscribeRecord();
+                StartCoroutine(TestTranscribe()); 
                 _controllerHint.HideRecording();
             } else
                 _controllerHint.CancelRecording();

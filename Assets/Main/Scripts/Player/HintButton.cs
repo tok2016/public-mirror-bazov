@@ -18,11 +18,10 @@ public class HintButton : HintObject
     private HintButtonState _state;
     private Dictionary<HintButtonState, Material> _materials;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         _state = HintButtonState.Default;
-        _defaultMaterial = _renderer?.material;
         _materials = new Dictionary<HintButtonState, Material>() {
             {HintButtonState.Default, _defaultMaterial },
             {HintButtonState.Disabled, _disabledMaterial},

@@ -7,7 +7,6 @@ public class ItemActiveZone : MonoBehaviour
 {
     [SerializeField] private Transform _cameraRespawnPoint, _reservedRespawnPoint;
     [SerializeField] private CombinedTrigger _combinedTrigger;
-    [SerializeField] private XRGrabInteractable[] _importantInteractables;
 
     private void Awake()
     {
@@ -22,14 +21,14 @@ public class ItemActiveZone : MonoBehaviour
 
     private void Start()
     {
-        ToggleActive(false);
+        gameObject.SetActive(false);
     }
 
-    public void ToggleActive(bool enable)
+    public void ToggleActive(bool enable, IXRSelectInteractable[] importantItems)
     {
         if (enable)
         {
-            foreach (var item in _importantInteractables)
+            foreach (var item in importantItems)
                 if(!IsInActiveZone(item.transform))
                     ReturnExitedItem(item);
         }

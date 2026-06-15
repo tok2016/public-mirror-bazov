@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class SpeechQuest : Quest
 {
@@ -8,10 +9,20 @@ public class SpeechQuest : Quest
     [SerializeField] protected CollectableItem _correctItem;
     public UnityEvent OnCorrectItemGrab;
     public UnityEvent OnCorrectItemRelease;
+    private IXRSelectInteractable[] _importantItems = new IXRSelectInteractable[1];
 
     [Header("Input")]
     [SerializeField] protected SpeechController _controller;
     [SerializeField] protected SpeecControllerhHint _controllerHint;
+
+    protected override IXRSelectInteractable[] ImportantItems
+    {
+        get
+        {
+            _importantItems[0] = _correctItem.Interactable;
+            return _importantItems;
+        }
+    }
 
     protected override void Update()
     {
