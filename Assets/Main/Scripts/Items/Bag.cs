@@ -15,7 +15,7 @@ public class Bag : MonoBehaviour
     public event Action OnAllItemsCollected;
 
     [Header("Effects")]
-    [SerializeField] private ParticleSystem _itemBurstEffect;
+    [SerializeField] private GameObject _itemBurstEffect;
     [SerializeField] private GameObject _bagBurstPrefab;
     [SerializeField] private float _bagDisapearDelay = 1;
 
@@ -72,13 +72,9 @@ public class Bag : MonoBehaviour
 
     private void BurstItem()
     {
-        if (_itemBurstEffect.gameObject.activeInHierarchy)
-        {
-            _itemBurstEffect.Clear();
-            _itemBurstEffect.Play();
-        }
-        else
-            _itemBurstEffect.gameObject.SetActive(true);
+        if (_itemBurstEffect.activeInHierarchy)
+            _itemBurstEffect.SetActive(false);
+        _itemBurstEffect.gameObject.SetActive(true);
     }
 
     private IEnumerator<WaitForSeconds> CloseBag()
