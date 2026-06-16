@@ -1,88 +1,98 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
-public static class QuestManager
+public class QuestManager : MonoBehaviour
 {
-    private static Quest _current;
-    private static Quest s_Current 
-    { 
-        get => _current;
-        set
-        {
-            _current = value;
-        }
-    }
+    [SerializeField] private Quest[] _quests;
+    [SerializeField] private TeleportationProvider _teleportationProvider;
+    [SerializeField] private XRBaseInteractor _leftGrabInteractor, _rightGrabInteractor;
+    [SerializeField] private InputActionReference _skipAction;
 
-    private static Queue<Quest> _quests = new Queue<Quest>();
-    private static bool _IsOccupied = false;
-    private static MonoBehaviour _runner;
-    public static MonoBehaviour Runner { 
-        get => _runner; 
-        set 
-        {
-            if (!_runner)
-                _runner = value;
-            else
-                throw new System.Exception("Can'r reassign runner");
-        } 
-    }
+    private Queue<Quest> _enteredQuests = new Queue<Quest>();
+    private Quest _current;
+    private bool _IsOccupied = false;
 
-    public static void EnqueueQuest(Quest quest)
+    private void OnEnable()
     {
-        if (s_Current == null || s_Current == quest)
+        foreach (var quest in _quests)
+        {
+            quest.onQuestLocked += EnqueueLockedQuest;
+            quest.onQuestStart += StartQuest;
+            quest.onQuestStop += StopQuest;
+            quest.onQuestEnd += EndQuest;
+        }
+
+        _teleportationProvider.locomotionStarted += OnQuestTeleportationStart;
+        _teleportationProvider.locomotionEnded += OnQuestTeleportationEnd;
+
+        _leftGrabInteractor.selectEntered.AddListener(OnQuestItemGrab);
+        _leftGrabInteractor.selectExited.AddListener(OnQuestItemLetGo);
+
+        _rightGrabInteractor.selectEntered.AddListener(OnQuestItemGrab);
+        _rightGrabInteractor.selectExited.AddListener(OnQuestItemLetGo);
+
+        _skipAction.action.performed += SkipCutscene;
+    }
+
+    private void EnqueueLockedQuest(Quest quest)
+    {
+        if (_current == null)
         {
             quest.Unlock();
             quest.Enter();
-        }   
+        }
         else
-            _quests.Enqueue(quest);
+            _enteredQuests.Enqueue(quest);
     }
 
-    public static void StartQuest(Quest quest)
+    private void StartQuest(Quest quest)
     {
         quest.gameObject.SetActive(true);
-        s_Current = quest;
-        Runner.StartCoroutine(WaitForQuestStart(quest));
+        _current = quest;
+        StartCoroutine(WaitForQuestStart(quest));
     }
 
-    public static void StopQuest(Quest quest)
+    private void StopQuest(Quest quest)
     {
         quest.gameObject.SetActive(false);
 
-        if (quest == s_Current)
-            s_Current = null;
+        if (quest == _current)
+            _current = null;
 
-        if (_quests.Count == 0) return;
-        else if (_quests.Count > 1)
+        if (_enteredQuests.Count == 0) return;
+        else if (_enteredQuests.Count > 1)
         {
             var tempQueue = new Queue<Quest>();
-            while (_quests.Count > 0)
+            while (_enteredQuests.Count > 0)
             {
-                var currentQuest = _quests.Dequeue();
+                var currentQuest = _enteredQuests.Dequeue();
                 if (currentQuest != quest)
                     tempQueue.Enqueue(currentQuest);
             }
 
-            _quests = tempQueue;
+            _enteredQuests = tempQueue;
         }
 
-        s_Current = _quests.Dequeue();
-        s_Current.Enter();
+        _current = _enteredQuests.Dequeue();
+        _current.Enter();
     }
 
-    public static void CompleteQuest(Quest quest)
+    private void EndQuest(Quest quest)
     {
-        Runner.StartCoroutine(WaitForQuestComplete(quest));
+        StartCoroutine(WaitForQuestComplete(quest));
     }
 
-    public static void SkipCutscene()
+    private void SkipCutscene(InputAction.CallbackContext context)
     {
-        s_Current?.SkipCutscene();
+        _current?.SkipCutscene();
     }
 
-    private static System.Collections.IEnumerator WaitForQuestStart(Quest quest)
+    private System.Collections.IEnumerator WaitForQuestStart(Quest quest)
     {
         _IsOccupied = true;
         if (quest.State == QuestState.Available)
@@ -90,9 +100,9 @@ public static class QuestManager
         _IsOccupied = false;
     }
 
-    private static System.Collections.IEnumerator WaitForQuestComplete(Quest quest)
+    private System.Collections.IEnumerator WaitForQuestComplete(Quest quest)
     {
-        while(_IsOccupied)
+        while (_IsOccupied)
             yield return null;
 
         yield return quest.WaitAfterComplete();
@@ -100,23 +110,45 @@ public static class QuestManager
         StopQuest(quest);
     }
 
-    public static void GrabQuestItem(SelectEnterEventArgs args)
+    public void OnQuestItemGrab(SelectEnterEventArgs args)
     {
-        s_Current?.OnItemGrab(args);
+        _current?.OnItemGrab(args);
     }
 
-    public static void LetGoQuestItem(SelectExitEventArgs args)
+    public void OnQuestItemLetGo(SelectExitEventArgs args)
     {
-        s_Current?.OnItemLettingGo(args);
+        _current?.OnItemLettingGo(args);
     }
 
-    public static void StartQuestTeleportation(LocomotionProvider provider)
+    public void OnQuestTeleportationStart(LocomotionProvider provider)
     {
-        s_Current?.OnTeleportStart(provider);
+        _current?.OnTeleportStart(provider);
     }
 
-    public static void EndQuestTeleportation(LocomotionProvider provider)
+    public void OnQuestTeleportationEnd(LocomotionProvider provider)
     {
-        s_Current?.OnTeleportEnd(provider);
+        _current?.OnTeleportEnd(provider);
+    }
+
+    private void OnDisable()
+    {
+        foreach (var quest in _quests)
+        {
+            quest.onQuestLocked -= EnqueueLockedQuest;
+            quest.onQuestStart -= StartQuest;
+            quest.onQuestStop -= StopQuest;
+            quest.onQuestEnd -= EndQuest;
+        }
+
+        _teleportationProvider.locomotionStarted -= OnQuestTeleportationStart;
+        _teleportationProvider.locomotionEnded -= OnQuestTeleportationEnd;
+
+        _leftGrabInteractor.selectEntered.RemoveListener(OnQuestItemGrab);
+        _leftGrabInteractor.selectExited.RemoveListener(OnQuestItemLetGo);
+
+        _rightGrabInteractor.selectEntered.RemoveListener(OnQuestItemGrab);
+        _rightGrabInteractor.selectExited.RemoveListener(OnQuestItemLetGo);
+
+        _skipAction.action.performed -= SkipCutscene;
     }
 }

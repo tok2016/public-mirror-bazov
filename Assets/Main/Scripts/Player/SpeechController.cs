@@ -24,12 +24,11 @@ public class SpeechController : MonoBehaviour
     [SerializeField] private int _scoreTreshold = 33;
     [SerializeField] private int _recordingTime = 5;
     public event Action onRecordingStart, onRecordingStop;
-    public event Action<CollectableItem> onItemFound;
+    public event Action<IGrabbable> onItemFound;
 
     [Header("Items Controll")]
-    [SerializeField] private List<CollectableItem> _items;
+    [SerializeField] private List<GrabbableObject> _items;
     [SerializeField] Transform _itemAttachPoint;
-
 
     private int _frequency = 48000;
 
@@ -89,8 +88,8 @@ public class SpeechController : MonoBehaviour
 
             if (_recordingTimer >= 0 && _recordingTimer <= _recordingTime - _recordingTreshold)
             {
-                //TranscribeRecord();
-                StartCoroutine(TestTranscribe()); 
+                TranscribeRecord();
+                //StartCoroutine(TestTranscribe()); 
                 _controllerHint.HideRecording();
             } else
                 _controllerHint.CancelRecording();
@@ -214,12 +213,12 @@ public class SpeechController : MonoBehaviour
             Debug.Log("Ничего нет. Может, повторишь снова?");
     }
 
-    public void AddItem(CollectableItem item)
+    public void AddItem(GrabbableObject item)
     {
         _items.Add(item);
     }
 
-    public void RemoveItem(CollectableItem item)
+    public void RemoveItem(GrabbableObject item)
     {
         _items.Remove(item);
     }

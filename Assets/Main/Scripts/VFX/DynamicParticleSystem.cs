@@ -12,7 +12,6 @@ public class DynamicParticleSystem : MonoBehaviour
 
     public void ChangeColor()
     {
-        Debug.Log("Change color");
         var main = _particleSystem.main;
         main.startColor = _targetColor;
     }

@@ -11,7 +11,7 @@ public class NpcNavLookState : NpcNavState
             - new Vector3(_character.transform.position.x, 0, _character.transform.position.z);
         var dot = Vector3.Dot(_character.transform.forward, direction.normalized);
 
-        if (dot <= 0.99f)
+        if (dot <= 0.97f)
         {
             _character.RotateAnimator(1);
             var targetRotation = Quaternion.Euler(0, Quaternion.LookRotation(direction).eulerAngles.y, 0);

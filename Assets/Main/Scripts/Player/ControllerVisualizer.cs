@@ -6,6 +6,15 @@ public class ControllerVisualizer : ActionsVisualizer
     [SerializeField] private HintButton _grabButton;
     [SerializeField] private HintButton _pokeButton, _teleportationStick, _recordingButton;
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        _grabButton?.ToggleMaterial(false);
+        _pokeButton?.ToggleMaterial(false);
+        _teleportationStick?.ToggleMaterial(false);
+        _recordingButton?.ToggleMaterial(false);
+    }
+
     public override void DisableGrab(bool enable)
     {
         _grabButton?.ToggleDisable(enable);
@@ -48,21 +57,21 @@ public class ControllerVisualizer : ActionsVisualizer
 
     public override void WarnAboutGrab(bool enable)
     {
-        _grabButton?.ToggleMaterial(enable);
+        _grabButton?.ToggleWarningHint(enable);
     }
 
     public override void WarnAboutPoke(bool enable)
     {
-        _pokeButton?.ToggleMaterial(enable);
+        _pokeButton?.ToggleWarningHint(enable);
     }
 
     public override void WarnAboutRecording(bool enable)
     {
-        _recordingButton?.ToggleMaterial(enable);
+        _recordingButton?.ToggleWarningHint(enable);
     }
 
     public override void WarnAboutTeleport(bool enable)
     {
-        _teleportationStick?.ToggleMaterial(enable);
+        _teleportationStick?.ToggleWarningHint(enable);
     }
 }

@@ -5,11 +5,11 @@ using UnityEngine;
 public class HintZone : MonoBehaviour
 {
     [SerializeField] private DialogueLine _hint;
-    public Dictionary<Collider, CollectableItem> Items {  get; private set; }
+    public Dictionary<Collider, IGrabbable> Items {  get; private set; }
 
     void Start()
     {
-        Items = new Dictionary<Collider, CollectableItem>();
+        Items = new Dictionary<Collider, IGrabbable>();
     }
 
     public void CommentHint()
@@ -27,10 +27,10 @@ public class HintZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var item = other.GetComponent<CollectableItem>() ?? other.transform.parent?.GetComponent<CollectableItem>();
-        if(item && !item.IsCollected && item.Interactable.interactorsSelecting.Count == 0)
+        var item = other.GetComponent<IGrabbable>() ?? other.transform.parent?.GetComponent<IGrabbable>();
+        if(item != null && item.Interactable.isSelected)
             Items.Add(other, item);
-
+            
         if (other.tag == "Player" && Items.Count > 0)
             CommentHint();
     }

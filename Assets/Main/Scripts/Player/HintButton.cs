@@ -51,6 +51,15 @@ public class HintButton : HintObject
         }
     }
 
+    public void ToggleWarningHint(bool enable)
+    {
+        if(_renderer && _state != HintButtonState.Pressed && _state != HintButtonState.Disabled)
+        {
+            _state = enable ? HintButtonState.Active : HintButtonState.Default;
+            _renderer.material = _materials[_state];
+        }
+    }
+
     public void TogglePressHint(bool enable)
     {
         if (_renderer && (_state == HintButtonState.Active || _state == HintButtonState.Pressed))

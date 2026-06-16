@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 
 public abstract class Quest : MonoBehaviour
@@ -11,26 +11,27 @@ public abstract class Quest : MonoBehaviour
     [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    [SerializeField] protected ItemActiveZone _itemActiveZone;
     [SerializeField] protected PlayableDirector _startCutscene, _endCutscene;
 
     private bool _isCutsceneRunning = false;
     private bool _skipCutscene = false;
-    protected abstract IXRSelectInteractable[] ImportantItems { get; }
 
     public QuestState State { get; protected set; } = QuestState.Locked;
 
     [Header("Enter")]
+    public UnityEvent onActivate;
+    public UnityEvent onReturn;
     public UnityEvent onFirstEnter;
-    public UnityEvent onEnterRepeat;
-    public UnityEvent onBeforeEnter;
+    public event Action<Quest> onQuestLocked, onQuestStart;
 
     [Header("Exit")]
     public UnityEvent onExit;
+    public Action<Quest> onQuestStop;
 
     [Header("Complete")]
+    public UnityEvent onDeactivate;
     public UnityEvent onComplete;
-    public UnityEvent onBeforeComplete;
+    public Action<Quest> onQuestEnd;
 
     protected virtual void Awake()
     {
@@ -52,18 +53,18 @@ public abstract class Quest : MonoBehaviour
         if (State == QuestState.Completed) return;
         else if (State == QuestState.Locked)
         {
-            QuestManager.EnqueueQuest(this);
+            //QuestManager.EnqueueQuest(this);
+            onQuestLocked?.Invoke(this);
             return;
         }
 
-        _itemActiveZone.ToggleActive(true, ImportantItems);
-        QuestManager.StartQuest(this);
+        //QuestManager.StartQuest(this);
+        onQuestStart?.Invoke(this);
 
         if (State == QuestState.Visited)
         {
             State = QuestState.InProgress;
-            onEnterRepeat.Invoke();
-            Debug.Log("Return");
+            onReturn.Invoke();
         }
     }
 
@@ -75,17 +76,17 @@ public abstract class Quest : MonoBehaviour
     {
         if(State == QuestState.Completed) return;
 
-        QuestManager.StopQuest(this);
+        //QuestManager.StopQuest(this);
+        onQuestStop?.Invoke(this);
         State = QuestState.Visited;
         Stop();
         onExit.Invoke();
-        _itemActiveZone.ToggleActive(false, ImportantItems);
     }
 
     public void Complete()
     {
-        QuestManager.CompleteQuest(this);
-        _itemActiveZone.ToggleActive(false, ImportantItems);
+        //QuestManager.CompleteQuest(this);
+        onQuestEnd?.Invoke(this);
     }
 
     public void SkipCutscene()
@@ -95,9 +96,9 @@ public abstract class Quest : MonoBehaviour
 
     public IEnumerator WaitBeforeStart()
     {
-        onBeforeEnter.Invoke();
-        yield return WaitForCutscene(_data.StartPhrase, _startCutscene);
         onFirstEnter.Invoke();
+        yield return WaitForCutscene(_data.StartPhrase, _startCutscene);
+        onActivate.Invoke();
         Activate();
         if (State < QuestState.InProgress)
             State = QuestState.InProgress;
@@ -105,11 +106,11 @@ public abstract class Quest : MonoBehaviour
 
     public IEnumerator WaitAfterComplete()
     {
-        onBeforeComplete.Invoke();
+        onComplete.Invoke();
         State = QuestState.Completed;
         yield return WaitForCutscene(_data.EndPhrase, _endCutscene);
         Deactivate();
-        onComplete.Invoke();
+        onDeactivate.Invoke();
     }
 
     private IEnumerator WaitForCutscene(DialogueLine phrase, PlayableDirector cutscene)
@@ -138,7 +139,12 @@ public abstract class Quest : MonoBehaviour
                 yield return null;
             }
 
-            cutscene.Stop();
+            if (_skipCutscene)
+            {
+                var diff = cutscene.duration - cutscene.time;
+                cutscene.time += diff;
+                cutscene.Evaluate();
+            }
         }
 
         _isCutsceneRunning = false;
