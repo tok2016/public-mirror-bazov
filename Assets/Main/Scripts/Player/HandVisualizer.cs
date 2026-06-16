@@ -13,23 +13,23 @@ public class HandVisualizer : ActionsVisualizer
     {
         if(enable)
         {
-            _handAnimator.SetBool("ReadyToGrab", false);
-            _handAnimator.SetBool("IsGrabbing", false);
+            _handAnimator?.SetBool("ReadyToGrab", false);
+            _handAnimator?.SetBool("IsGrabbing", false);
         }
     }
 
     public override void DisablePoke(bool enable)
     {
         if (enable)
-            _handAnimator.SetBool("IsPoking", false);
+            _handAnimator?.SetBool("IsPoking", false);
     }
 
     public override void DisableRecording(bool enable)
     {
         if (enable)
         {
-            _handAnimator.SetBool("ReadyToRecord", false);
-            _handAnimator.SetBool("IsRecording", false);
+            _handAnimator?.SetBool("ReadyToRecord", false);
+            _handAnimator?.SetBool("IsRecording", false);
         }
     }
 
@@ -40,18 +40,18 @@ public class HandVisualizer : ActionsVisualizer
 
     public override void ShowGrab(bool enable)
     {
-        _handAnimator.SetBool("IsGrabbing", enable);
+        _handAnimator?.SetBool("IsGrabbing", enable);
     }
 
     public override void ShowPoke(bool enable)
     {
         if (enable)
-            _handAnimator.SetTrigger("Poke");
+            _handAnimator?.SetTrigger("Poke");
     }
 
     public override void ShowRecording(bool enable)
     {
-        _handAnimator.SetBool("IsRecording", enable);
+        _handAnimator?.SetBool("IsRecording", enable);
     }
 
     public override void ShowTeleport(bool enable)
@@ -61,17 +61,17 @@ public class HandVisualizer : ActionsVisualizer
 
     public override void WarnAboutGrab(bool enable)
     {
-        _handAnimator.SetBool("ReadyToGrab", enable);
+        _handAnimator?.SetBool("ReadyToGrab", enable);
     }
 
     public override void WarnAboutPoke(bool enable)
     {
-        _handAnimator.SetBool("IsPoking", enable);
+        _handAnimator?.SetBool("IsPoking", enable);
     }
 
     public override void WarnAboutRecording(bool enable)
     {
-        _handAnimator.SetBool("ReadyToRecord", enable);
+        _handAnimator?.SetBool("ReadyToRecord", enable);
     }
 
     public override void WarnAboutTeleport(bool enable) { }

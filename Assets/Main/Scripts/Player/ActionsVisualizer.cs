@@ -99,7 +99,11 @@ public abstract class ActionsVisualizer : MonoBehaviour
     private void OnGrabZoneExit(HoverExitEventArgs args) => WarnAboutGrab(false);
 
     private void OnGrabStart(SelectEnterEventArgs args) => ShowGrab(true);
-    private void OnGrabStop(SelectExitEventArgs args) => ShowGrab(false);
+    private void OnGrabStop(SelectExitEventArgs args) 
+    {
+        ShowGrab(false);
+        WarnAboutGrab(false);
+    }
 
     private void OnRecordingStart() => ShowRecording(true);
     private void OnRecordingStop() => ShowRecording(false);
