@@ -17,6 +17,4 @@ MonoBehaviour:
     - \u043A\u0430\u043C\u0435\u043D\u044C \u0446\u0432\u0435\u0442\u0430 \u043C\u043E\u0440\u0441\u043A\u043E\u0439
     \u0432\u043E\u043B\u043D\u044B."
   <StartPhrase>k__BackingField: {fileID: 11400000, guid: fc947c7682d8a8c46931525571cf58e5, type: 2}
-  <StartCutscene>k__BackingField: {fileID: 0}
-  <EndPhrase>k__BackingField: {fileID: 11400000, guid: f48a81f2540aa834eac77a1107de7a10, type: 2}
-  <EndCutscene>k__BackingField: {fileID: 0}
+  <EndPhrase>k__BackingField: {fileID: 0}

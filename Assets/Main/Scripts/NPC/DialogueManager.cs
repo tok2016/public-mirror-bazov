@@ -16,13 +16,18 @@ public static class DialogueManager
         _characters.Remove(character);
     }
 
-    public static void PlayLine(DialogueLine line)
-    {   
+    public static AudioSource PlayLine(DialogueLine line)
+    {
         if (_characters.ContainsKey(line.Character))
+        {
             _characters[line.Character].PlayLine(line);
 
-        if (line.Word)
-            DictionaryManager.WriteWord(line.Word);
+            //if (line.Word)
+            //    DictionaryManager.WriteWord(line.Word);
+
+            return _characters[line.Character].AudioSource;
+        }
+        return null;
     }
 
     public static void StopLines()

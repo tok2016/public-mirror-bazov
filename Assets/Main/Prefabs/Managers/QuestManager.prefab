@@ -48,4 +48,6 @@ MonoBehaviour:
   _teleportationProvider: {fileID: 0}
   _leftGrabInteractor: {fileID: 0}
   _rightGrabInteractor: {fileID: 0}
+  _otherGrabInteractors: []
   _skipAction: {fileID: 7896862214986045164, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _startDelay: 3

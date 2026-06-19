@@ -3,18 +3,9 @@ using UnityEngine;
 
 public class FadeScreen : MonoBehaviour
 {
-    [SerializeField] private bool _fadeOutOnAwake;
     [SerializeField] private CanvasGroup _canvasGroup;
     [field: SerializeField] public float FadeDuration { get; private set; }
     private Coroutine _loader;
-
-    void Start()
-    {
-        _canvasGroup.alpha = _fadeOutOnAwake ? 1 : 0;
-        _canvasGroup.blocksRaycasts = _fadeOutOnAwake;
-        if (_fadeOutOnAwake)
-            FadeOut();
-    }
 
     public void FadeIn()
     {
@@ -28,6 +19,14 @@ public class FadeScreen : MonoBehaviour
             StopCoroutine(_loader);
         else
             _loader = StartCoroutine(Fade(0, FadeDuration));
+    }
+
+    public void FadeOutFromStart()
+    {
+        _canvasGroup.alpha = 1;
+        _canvasGroup.blocksRaycasts = true;
+
+        FadeOut();
     }
 
     private IEnumerator Fade(float target, float duration)

@@ -5148,7 +5148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1778234958514295839, guid: c3b198349c46d4145a563a56d6713baa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.04
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1778234958514295839, guid: c3b198349c46d4145a563a56d6713baa, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14205,7 +14205,7 @@ PrefabInstance:
     - target: {fileID: 7819776409882281109, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: _defaultAmbient
       value: 
-      objectReference: {fileID: 8300000, guid: d2d8636540e69a14fb766da25321d870, type: 3}
+      objectReference: {fileID: 8300000, guid: 3c56fce4f3e1a7444affa8681218499c, type: 3}
     - target: {fileID: 7819776409882281109, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: _defaultStepSound
       value: 
@@ -14365,8 +14365,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TeleportTutorialQuest
   _data: {fileID: 11400000, guid: 074cb06b655148541a5d0b1185c491da, type: 2}
   <Next>k__BackingField: {fileID: 0}
-  _startCutscene: {fileID: 0}
-  _endCutscene: {fileID: 0}
+  _startCutscenes:
+  - _phrase: {fileID: 11400000, guid: ac622e1157068a142b7f28e4e8d2ffd1, type: 2}
+    _timelineCutscene: {fileID: 0}
+  _endCutscenes: []
   onActivate:
     m_PersistentCalls:
       m_Calls: []

@@ -4,9 +4,23 @@ using UnityEngine.SceneManagement;
 
 public class SceneBootstrapManager : MonoBehaviour
 {
+    [SerializeField] private bool _fadeOutOnAwake;
+    [SerializeField] private float _fadeDuration = 3f;
     [SerializeField] private FadeScreen _fadeScreen;
     [SerializeField] private AudioManager _audioManager;
+    [SerializeField] private QuestManager _questManager;
     private Coroutine _loader;
+
+    private void Start()
+    {
+        if (_fadeOutOnAwake)
+        {
+            _fadeScreen.FadeOutFromStart();
+            _questManager.Delay(_fadeDuration);
+        }
+            
+        _audioManager.ResetAmbient(_fadeDuration);
+    }
 
     public void LoadScene(int sceneIndex)
     {
@@ -17,8 +31,8 @@ public class SceneBootstrapManager : MonoBehaviour
     private IEnumerator StartLoadScene(int sceneIndex)
     {
         _fadeScreen.FadeIn();
-        _audioManager.ChangeVolume(0, _fadeScreen.FadeDuration);
-        yield return new WaitForSeconds(_fadeScreen.FadeDuration);
+        _audioManager.StopAmbient(_fadeDuration);
+        yield return new WaitForSeconds(_fadeDuration);
         var sceneLoader = SceneManager.LoadSceneAsync(sceneIndex);
         sceneLoader.allowSceneActivation = false;
 

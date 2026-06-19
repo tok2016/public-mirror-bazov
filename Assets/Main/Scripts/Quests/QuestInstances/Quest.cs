@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 
@@ -11,10 +10,10 @@ public abstract class Quest : MonoBehaviour
     [Header("Main")]
     [SerializeField] protected QuestData _data;
     [field: SerializeField] public Quest Next {  get; private set; }
-    [SerializeField] protected PlayableDirector _startCutscene, _endCutscene;
+    [SerializeField] protected Cutscene[] _startCutscenes, _endCutscenes;
 
-    private bool _isCutsceneRunning = false;
     private bool _skipCutscene = false;
+    private Cutscene _currentCutscene;
 
     public QuestState State { get; protected set; } = QuestState.Locked;
 
@@ -53,12 +52,10 @@ public abstract class Quest : MonoBehaviour
         if (State == QuestState.Completed) return;
         else if (State == QuestState.Locked)
         {
-            //QuestManager.EnqueueQuest(this);
             onQuestLocked?.Invoke(this);
             return;
         }
 
-        //QuestManager.StartQuest(this);
         onQuestStart?.Invoke(this);
 
         if (State == QuestState.Visited)
@@ -76,7 +73,6 @@ public abstract class Quest : MonoBehaviour
     {
         if(State == QuestState.Completed) return;
 
-        //QuestManager.StopQuest(this);
         onQuestStop?.Invoke(this);
         State = QuestState.Visited;
         Stop();
@@ -85,19 +81,19 @@ public abstract class Quest : MonoBehaviour
 
     public void Complete()
     {
-        //QuestManager.CompleteQuest(this);
         onQuestEnd?.Invoke(this);
     }
 
     public void SkipCutscene()
     {
-        _skipCutscene = _isCutsceneRunning;
+        _skipCutscene = _currentCutscene != null;
+        _currentCutscene?.Skip();
     }
 
     public IEnumerator WaitBeforeStart()
     {
         onFirstEnter.Invoke();
-        yield return WaitForCutscene(_data.StartPhrase, _startCutscene);
+        yield return WaitForCutscene(_startCutscenes);
         onActivate.Invoke();
         Activate();
         if (State < QuestState.InProgress)
@@ -108,46 +104,23 @@ public abstract class Quest : MonoBehaviour
     {
         onComplete.Invoke();
         State = QuestState.Completed;
-        yield return WaitForCutscene(_data.EndPhrase, _endCutscene);
+        yield return WaitForCutscene(_endCutscenes);
         Deactivate();
         onDeactivate.Invoke();
     }
 
-    private IEnumerator WaitForCutscene(DialogueLine phrase, PlayableDirector cutscene)
+    private IEnumerator WaitForCutscene(Cutscene[] cutscenes)
     {
-        _isCutsceneRunning = true;
-        if (phrase)
+        foreach (var cutscene in cutscenes)
         {
-            var timer = phrase.Clip.length;
-            DialogueManager.PlayLine(phrase);
-            while (timer > 0 && !_skipCutscene)
-            {
-                timer -= Time.deltaTime;
-                yield return null;
-            }
-
-            DialogueManager.StopLines();
-        }
-
-        if (cutscene)
-        {
-            cutscene.Play();
-            var cutsceneDuration = Mathf.Ceil((float)cutscene.duration);
-            while (cutsceneDuration > 0 && !_skipCutscene)
-            { 
-                cutsceneDuration -= Time.deltaTime;
-                yield return null;
-            }
-
+            _currentCutscene = cutscene;
             if (_skipCutscene)
-            {
-                var diff = cutscene.duration - cutscene.time;
-                cutscene.time += diff;
-                cutscene.Evaluate();
-            }
+                cutscene.Skip();
+            else 
+                yield return cutscene.Play();
         }
 
-        _isCutsceneRunning = false;
+        _currentCutscene = null;
         _skipCutscene = false;
     }
 

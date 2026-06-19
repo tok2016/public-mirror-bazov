@@ -14,6 +14,8 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private XRBaseInteractor[] _otherGrabInteractors;
     [SerializeField] private InputActionReference _skipAction;
 
+    private Coroutine _delayRoutine;
+
     private Queue<Quest> _enteredQuests = new Queue<Quest>();
     private Quest _current;
     private bool _IsOccupied = false;
@@ -48,7 +50,7 @@ public class QuestManager : MonoBehaviour
 
     private void EnqueueLockedQuest(Quest quest)
     {
-        if (_current == null)
+        if (_current == null && _delayRoutine == null)
         {
             quest.Unlock();
             quest.Enter();
@@ -115,6 +117,22 @@ public class QuestManager : MonoBehaviour
         yield return quest.WaitAfterComplete();
         quest.Next?.Unlock();
         StopQuest(quest);
+    }
+
+    public void Delay(float delay)
+    {
+        if (_delayRoutine != null)
+            StopCoroutine(_delayRoutine);
+        _delayRoutine = StartCoroutine(DelayRoutine(delay));
+    }
+
+    private System.Collections.IEnumerator DelayRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _delayRoutine = null;
+
+        if (_enteredQuests.Count > 0)
+            _enteredQuests.Dequeue().Enter();
     }
 
     public void OnQuestItemGrab(SelectEnterEventArgs args)

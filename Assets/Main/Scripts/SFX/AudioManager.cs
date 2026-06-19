@@ -9,8 +9,10 @@ public class AudioManager : MonoBehaviour
     [Header("Music")]
     [SerializeField] private AudioClip _defaultAmbient;
     [SerializeField] private AudioZone[] _musicZones;
+    [SerializeField] private float _fadeDuration = 3f;
     private AudioSource _audioSource;
-    private Coroutine _volumeCoroutine;
+    private float _defaultVolume;
+    private Coroutine _switchCoroutine;
 
     [Header("Steps")]
     [SerializeField] private TeleportationProvider _teleportationProvider;
@@ -21,6 +23,7 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _defaultVolume = _audioSource.volume;
     }
 
     private void OnEnable()
@@ -43,7 +46,6 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         ResetStepSound();
-        ResetAmbient();
     }
 
     public void PlayStepSound(LocomotionProvider provider)
@@ -62,41 +64,90 @@ public class AudioManager : MonoBehaviour
         ChangeStepSound(_defaultStepSound);
     }
 
-    public void ChangeAmbient(AudioClip ambient)
+    public void StopAmbient(float fadeDuration)
+    {
+        if(_switchCoroutine != null)
+            StopCoroutine(_switchCoroutine);
+        _switchCoroutine = StartCoroutine(StopAmbientRoutine(fadeDuration));
+    }
+
+    public void PlayAmbient(float fadeDuration)
+    {
+        if (_switchCoroutine != null)
+            StopCoroutine(_switchCoroutine);
+        _switchCoroutine = StartCoroutine(PlayAmbientRoutine(fadeDuration));
+    }
+
+    public void ChangeAmbient(AudioClip ambient, float fadeDuration)
     {
         if (!_audioSource.clip || !_audioSource.clip.Equals(ambient))
         {
-            _audioSource.Stop();
-            _audioSource.clip = ambient;
-            _audioSource.Play();
+            if (_switchCoroutine != null)
+                StopCoroutine(_switchCoroutine);
+            _switchCoroutine = StartCoroutine(SwitchAmbient(ambient, fadeDuration));
         }
+    }
+
+    public void ChangeAmbient(AudioClip ambient)
+    {
+        ChangeAmbient(ambient, _fadeDuration);
+    }
+
+    public void ResetAmbient(float fadeDuration)
+    {
+        ChangeAmbient(_defaultAmbient, fadeDuration);
     }
 
     public void ResetAmbient()
     {
-        ChangeAmbient(_defaultAmbient);
+        ResetAmbient(_fadeDuration);
     }
 
-    public void ChangeVolume(float volume, float duration)
+    private IEnumerator SwitchAmbient(AudioClip ambient, float fadeDuration)
     {
-        if (_volumeCoroutine != null)
-            StopCoroutine(_volumeCoroutine);
-        _volumeCoroutine = StartCoroutine(SmoothVolume(volume, duration));
+        if (_audioSource.clip)
+            yield return StopAmbientRoutine(fadeDuration, false);
+        else
+            _audioSource.volume = 0;
+
+        _audioSource.clip = ambient;
+        yield return PlayAmbientRoutine(fadeDuration);
     }
 
-    private IEnumerator SmoothVolume(float volume, float duration)
+    private IEnumerator StopAmbientRoutine(float fadeDuration, bool emptyCoroutine = true)
+    {
+        yield return SmoothVolume(0, fadeDuration);
+        _audioSource.Stop();
+
+        if(emptyCoroutine)
+            _switchCoroutine = null;
+    }
+
+    private IEnumerator PlayAmbientRoutine(float fadeDuration, bool emptyCoroutine = true)
+    {
+        _audioSource.Play();
+        yield return SmoothVolume(_defaultVolume, fadeDuration);
+
+        if(emptyCoroutine)
+            _switchCoroutine = null;
+    }
+
+    private IEnumerator SmoothVolume(float targetVolume, float duration)
     {
         var from = _audioSource.volume;
         var timer = 0f;
 
+        if(from == targetVolume)
+            yield break;
+
         while(timer < duration)
         {
-            _audioSource.volume = Mathf.Lerp(from, volume, timer / duration);
+            _audioSource.volume = Mathf.Lerp(from, targetVolume, timer / duration);
             timer += Time.deltaTime;
             yield return null;
         }
 
-        _audioSource.volume = volume;
+        _audioSource.volume = targetVolume;
     }
 
     private void OnDisable()

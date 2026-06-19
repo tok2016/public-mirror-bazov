@@ -13,6 +13,7 @@ public class Portal : MonoBehaviour
 
     private void TeleportToScene(TeleportPad pad)
     {
+        Debug.Log(pad);
         _bootstrapManager.LoadScene(_sceneToPort);
     }
 
