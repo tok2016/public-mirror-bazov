@@ -11,6 +11,7 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private Quest[] _quests;
     [SerializeField] private TeleportationProvider _teleportationProvider;
     [SerializeField] private XRBaseInteractor _leftGrabInteractor, _rightGrabInteractor;
+    [SerializeField] private XRBaseInteractor[] _otherGrabInteractors;
     [SerializeField] private InputActionReference _skipAction;
 
     private Queue<Quest> _enteredQuests = new Queue<Quest>();
@@ -37,6 +38,12 @@ public class QuestManager : MonoBehaviour
         _rightGrabInteractor.selectExited.AddListener(OnQuestItemLetGo);
 
         _skipAction.action.performed += SkipCutscene;
+
+        foreach(var interactor  in _otherGrabInteractors)
+        {
+            interactor.selectEntered.AddListener(OnQuestItemGrab);
+            interactor.selectExited.AddListener(OnQuestItemLetGo);
+        }
     }
 
     private void EnqueueLockedQuest(Quest quest)
@@ -150,5 +157,11 @@ public class QuestManager : MonoBehaviour
         _rightGrabInteractor.selectExited.RemoveListener(OnQuestItemLetGo);
 
         _skipAction.action.performed -= SkipCutscene;
+
+        foreach (var interactor in _otherGrabInteractors)
+        {
+            interactor.selectEntered.RemoveListener(OnQuestItemGrab);
+            interactor.selectExited.RemoveListener(OnQuestItemLetGo);
+        }
     }
 }

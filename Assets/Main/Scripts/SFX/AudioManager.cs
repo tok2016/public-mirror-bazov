@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _defaultAmbient;
     [SerializeField] private AudioZone[] _musicZones;
     private AudioSource _audioSource;
-    private Coroutine _musicCoroutine;
+    private Coroutine _volumeCoroutine;
 
     [Header("Steps")]
     [SerializeField] private TeleportationProvider _teleportationProvider;
@@ -20,7 +20,6 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         _audioSource = GetComponent<AudioSource>();
     }
 
@@ -44,6 +43,7 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         ResetStepSound();
+        ResetAmbient();
     }
 
     public void PlayStepSound(LocomotionProvider provider)
@@ -77,15 +77,26 @@ public class AudioManager : MonoBehaviour
         ChangeAmbient(_defaultAmbient);
     }
 
-    private IEnumerator SwitchAmbient(AudioClip ambient)
+    public void ChangeVolume(float volume, float duration)
     {
-        yield return null;
-        if (!_audioSource.clip || !_audioSource.clip.Equals(ambient))
+        if (_volumeCoroutine != null)
+            StopCoroutine(_volumeCoroutine);
+        _volumeCoroutine = StartCoroutine(SmoothVolume(volume, duration));
+    }
+
+    private IEnumerator SmoothVolume(float volume, float duration)
+    {
+        var from = _audioSource.volume;
+        var timer = 0f;
+
+        while(timer < duration)
         {
-            _audioSource.Stop();
-            _audioSource.clip = ambient;
-            _audioSource.Play();
+            _audioSource.volume = Mathf.Lerp(from, volume, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
         }
+
+        _audioSource.volume = volume;
     }
 
     private void OnDisable()

@@ -5,6 +5,13 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
+public enum VisualizerState
+{
+    Invisible = 0,
+    Translucent = 1,
+    Visible = 2
+}
+
 [Serializable]
 public struct VisualizerMaterialSetting
 {
@@ -18,8 +25,25 @@ public abstract class ActionsVisualizer : MonoBehaviour
     [SerializeField] protected XRBaseInteractor _grabInteractor, _pokeInteractor, _teleportInteractor;
     [SerializeField] protected NearFarInteractor _uiInteractor;
     [SerializeField] protected SpeechController _speechController;
+    [SerializeField] protected VisualizerState _defaultState = VisualizerState.Visible;
 
     [SerializeField] protected VisualizerMaterialSetting[] _materials;
+
+    private void Start()
+    {
+        switch (_defaultState)
+        {
+            case VisualizerState.Invisible:
+                SetInvisible();
+                break;
+            case VisualizerState.Translucent:
+                SetTranslucent(); 
+                break;
+            default:
+                SetVisible();
+                break;
+        }
+    }
 
     protected virtual void OnEnable()
     {

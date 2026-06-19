@@ -4,6 +4,7 @@ using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
 public class TeleportPad : MonoBehaviour
 {
+    [SerializeField] private bool _activateOnAwake;
     [SerializeField] private TeleportPad _next;
     [SerializeField] private Material _activated, _deactivated;
     [SerializeField] private Collider _snapVolume;
@@ -11,6 +12,7 @@ public class TeleportPad : MonoBehaviour
     [field: SerializeField] public TeleportationAnchor Anchor {  get; private set; }
 
     private MeshRenderer _renderer;
+    private bool _isActive;
 
     public UnityEvent<TeleportPad> onPadEnter;
     public UnityEvent<TeleportPad> onPadExit;
@@ -18,15 +20,13 @@ public class TeleportPad : MonoBehaviour
     private void Awake()
     {
         _renderer = GetComponent<MeshRenderer>();
-    }
-
-    void Start()
-    {
-        Deactivate();
+        if (_activateOnAwake) Activate();
+        else Deactivate();
     }
 
     public void Activate()
     {
+        _isActive = true;
         _renderer.material = _activated;
         _godrays.SetActive(true);
         _snapVolume.gameObject.SetActive(true);
@@ -34,6 +34,7 @@ public class TeleportPad : MonoBehaviour
 
     public void Deactivate()
     {
+        _isActive = false;
         _renderer.material = _deactivated;
         _godrays.SetActive(false);
         _snapVolume.gameObject.SetActive(false);
@@ -41,17 +42,23 @@ public class TeleportPad : MonoBehaviour
 
     public void EnterThePad()
     {
-        _next?.Activate();
-        onPadEnter.Invoke(this);
-        _godrays.SetActive(false);
-        _snapVolume.gameObject.SetActive(false);
+        if (_isActive)
+        {
+            _next?.Activate();
+            onPadEnter.Invoke(this);
+            _godrays.SetActive(false);
+            _snapVolume.gameObject.SetActive(false);
+        }
     }
 
     public void ExitThePad()
     {
-        onPadExit.Invoke(this);
-        _godrays.SetActive(true);
-        _snapVolume.gameObject.SetActive(true);
+        if (_isActive)
+        {
+            onPadExit.Invoke(this);
+            _godrays.SetActive(true);
+            _snapVolume.gameObject.SetActive(true);
+        }
     }
 
     private void OnDisable()

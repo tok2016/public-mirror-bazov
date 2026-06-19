@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class NpcNavigatable : NpcContoller, INavigatable
+public abstract class NpcNavigatable : NpcContoller, INavigatable
 {
     [Header("Navigation")]
     [field: SerializeField] public Transform PlayerCamera { get; private set; }
@@ -78,8 +78,6 @@ public class NpcNavigatable : NpcContoller, INavigatable
         _stateMachine.ChangeState(_stateMachine.LookState, target, _itemDistanceToStop);
     }
 
-    public void RotateAnimator(float rotationDifference)
-    {
-        _animator.SetFloat("Rotation", rotationDifference);
-    }
+    public abstract void MoveAnimator(Vector3 velocity);
+    public abstract void RotateAnimator(float rotationSpeed);
 }

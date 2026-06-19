@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,13 +15,13 @@ public class DictionaryBook : MonoBehaviour
     [Header("Transform")]
     [SerializeField] private Transform _attachPoint;
     [field: SerializeField] public Transform ScaleWrapper {  get; private set; }
+    [field: SerializeField] public float OpenedScale { get; private set; } = 1f;
     [field: SerializeField] public Transform Camera { get; private set; }
     [SerializeField] private float _minDistanceToOpen = 1;
     [SerializeField] private Renderer _renderer;
 
     public Vector3 DefaultScale { get; private set; }
     private Coroutine _returning;
-    private bool _added = false;
     private float _returingMoveSpeed = 10;
     private float _returingRotationSpeed = 700;
 
@@ -32,6 +33,8 @@ public class DictionaryBook : MonoBehaviour
     private Dictionary<WordData, DictionaryPageSide> _pagesSides;
     private delegate float Round(float number);
     private int _currentPage = 0; //current page is the page on the right side of book
+
+    public event Action<DictionaryPage> onPageTurn;
 
     [SerializeField] private Button _leftButton, _rightButton;
 
@@ -66,6 +69,10 @@ public class DictionaryBook : MonoBehaviour
 
             var side = i % 2 == 0 ? page.Front : page.Back;
             side.SetDefinition(_words[i]);
+
+            if (DictionaryManager.IsWordStored(_words[i]))
+                side.SetTitle(_words[i]);
+
             _pagesSides.Add(_words[i], side);
         }
 
@@ -73,6 +80,7 @@ public class DictionaryBook : MonoBehaviour
 
         _leftButton.gameObject.SetActive(_currentPage != 0);
         _rightButton.gameObject.SetActive(_pages.Count > 0);
+        _pagesCanvas.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -108,6 +116,7 @@ public class DictionaryBook : MonoBehaviour
             _rightButton.gameObject.SetActive(_currentPage != _pages.Count);
 
             PlaySound(_pageTurningSound);
+            onPageTurn?.Invoke(_pages[pageToTurn]);
         }
     }
 
@@ -126,7 +135,7 @@ public class DictionaryBook : MonoBehaviour
 
     public void Close(SelectExitEventArgs args)
     {
-        if (_added && _stateMachine.Current != _stateMachine.OpenState)
+        if (_stateMachine.Current != _stateMachine.OpenState)
             StartReturing();
 
         _stateMachine.ChangeState(_stateMachine.CloseState);
@@ -157,6 +166,7 @@ public class DictionaryBook : MonoBehaviour
 
     public void StartReturing()
     {
+        transform.SetParent(_attachPoint);
         _returning = StartCoroutine(ReturnToAttach());
     }
 
@@ -177,17 +187,8 @@ public class DictionaryBook : MonoBehaviour
 
     public void Open(SelectEnterEventArgs args)
     {
-        if (_added && args.interactorObject.GetType() == typeof(NearFarInteractor))
+        if (args.interactorObject.GetType() == typeof(NearFarInteractor))
             _stateMachine.ChangeState(_stateMachine.GrabState);
-        else if(args.interactorObject.GetType() == typeof(XRSocketInteractor))
-        {
-            _stateMachine.ChangeState(_stateMachine.CloseState);
-            transform.SetParent(_attachPoint);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-            args.interactorObject.transform.gameObject.SetActive(false);
-            _added = true;
-        }
     }
 
     public void PlaySound(AudioClip clip)
