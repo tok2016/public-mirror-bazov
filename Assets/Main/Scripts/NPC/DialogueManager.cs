@@ -22,10 +22,10 @@ public static class DialogueManager
         {
             _characters[line.Character].PlayLine(line);
 
-            //if (line.Word)
-            //    DictionaryManager.WriteWord(line.Word);
+            if (line.Word)
+                DictionaryManager.WriteWord(line.Word);
 
-            return _characters[line.Character].AudioSource;
+            return _characters[line.Character].NpcAudioSource;
         }
         return null;
     }
@@ -33,6 +33,17 @@ public static class DialogueManager
     public static void StopLines()
     {
         foreach (var character in _characters.Values)
-            character.ShutUp();
+            character.StopLine();
+    }
+
+    public static AudioSource StopLine(DialogueLine line)
+    {
+        if (_characters.ContainsKey(line.Character))
+        {
+            _characters[line.Character].StopLine(line);
+            return _characters[line.Character].NpcAudioSource;
+        }
+
+        return null;
     }
 }

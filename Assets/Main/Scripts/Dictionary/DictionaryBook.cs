@@ -135,6 +135,11 @@ public class DictionaryBook : MonoBehaviour
 
     public void Close(SelectExitEventArgs args)
     {
+        Close();
+    }
+
+    public void Close()
+    {
         if (_stateMachine.Current != _stateMachine.OpenState)
             StartReturing();
 
@@ -182,7 +187,6 @@ public class DictionaryBook : MonoBehaviour
     private void FinishTransform()
     {
         transform.localRotation = Quaternion.identity;
-        //transform.rotation = _attachPoint.rotation;
     }
 
     public void Open(SelectEnterEventArgs args)

@@ -2,32 +2,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-enum HintButtonState
+public enum HintButtonState
 {
     Default = 0,
-    Disabled = 1,
-    Active = 2,
-    Pressed = 3
+    Active = 1,
+    UI = 2,
+    Pressed = 3,
+    Disabled = 4
 }
 
 public class HintButton : HintObject
 {
     [SerializeField] private InputActionReference _action;
-    [SerializeField] private Material _pressedMaterial, _disabledMaterial;
+    [SerializeField] private HintButtionProps _hintButtionProps;
+    [SerializeField] private GameObject _uiHint;
 
-    private HintButtonState _state;
-    private Dictionary<HintButtonState, Material> _materials;
+    private HintButtonState _state, _prevState;
 
     protected override void Awake()
     {
         base.Awake();
         _state = HintButtonState.Default;
-        _materials = new Dictionary<HintButtonState, Material>() {
-            {HintButtonState.Default, _defaultMaterial },
-            {HintButtonState.Disabled, _disabledMaterial},
-            {HintButtonState.Active, _hintMaterial},
-            {HintButtonState.Pressed, _pressedMaterial}
-        };
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        ToggleMaterial(false);
     }
 
     private void Update()
@@ -47,34 +48,51 @@ public class HintButton : HintObject
         if(_renderer)
         {
             _state = enable ? HintButtonState.Active : HintButtonState.Default;
-            _renderer.material = _materials[_state];
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
+
+            _uiHint.SetActive(enable);
+        }
+    }
+
+    public void ToggleUIHint(bool enable)
+    {
+        if (_renderer)
+        {
+            if(enable && _state != HintButtonState.UI)
+                _prevState = _state;
+
+            _state = enable ? HintButtonState.UI : _prevState;
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
+            _uiHint.SetActive(enable);
         }
     }
 
     public void ToggleWarningHint(bool enable)
     {
-        if(_renderer && _state != HintButtonState.Pressed && _state != HintButtonState.Disabled)
+        if(_renderer && _state < HintButtonState.UI)
         {
             _state = enable ? HintButtonState.Active : HintButtonState.Default;
-            _renderer.material = _materials[_state];
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
         }
     }
 
     public void TogglePressHint(bool enable)
     {
-        if (_renderer && (_state == HintButtonState.Active || _state == HintButtonState.Pressed))
+        if (_renderer && (_state > HintButtonState.Default || _state < HintButtonState.Disabled))
         {
-            _state = enable ? HintButtonState.Pressed : HintButtonState.Active;
-            _renderer.material = _materials[_state];
+            if (enable && _state != HintButtonState.Pressed)
+                _prevState = _state;
+            _state = enable ? HintButtonState.Pressed : _prevState;
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
         }
     }
 
     public void ToggleDisable(bool enable)
     {
-        if (_renderer && _state != HintButtonState.Default)
+        if (_renderer && _state > HintButtonState.UI)
         {
             _state = enable ? HintButtonState.Disabled : HintButtonState.Active;
-            _renderer.material = _materials[_state];
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
         }   
     }
 }

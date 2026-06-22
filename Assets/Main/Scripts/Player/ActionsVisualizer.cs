@@ -25,24 +25,35 @@ public abstract class ActionsVisualizer : MonoBehaviour
     [SerializeField] protected XRBaseInteractor _grabInteractor, _pokeInteractor, _teleportInteractor;
     [SerializeField] protected NearFarInteractor _uiInteractor;
     [SerializeField] protected SpeechController _speechController;
+    [SerializeField] protected GameObject _objectWrapper;
     [SerializeField] protected VisualizerState _defaultState = VisualizerState.Visible;
+
+    public VisualizerState State
+    {
+        get => _defaultState;
+        set
+        {
+            _defaultState = value;
+            switch (value)
+            {
+                case VisualizerState.Invisible:
+                    SetInvisible();
+                    break;
+                case VisualizerState.Translucent:
+                    SetTranslucent();
+                    break;
+                default:
+                    SetVisible();
+                    break;
+            }
+        }
+    }
 
     [SerializeField] protected VisualizerMaterialSetting[] _materials;
 
     private void Start()
     {
-        switch (_defaultState)
-        {
-            case VisualizerState.Invisible:
-                SetInvisible();
-                break;
-            case VisualizerState.Translucent:
-                SetTranslucent(); 
-                break;
-            default:
-                SetVisible();
-                break;
-        }
+        State = _defaultState;
     }
 
     protected virtual void OnEnable()
@@ -73,6 +84,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _speechController.onRecordingStart += OnRecordingStart;
             _speechController.onRecordingStop += OnRecordingStop;
         }
+
+        Pause.onPause += OnPauseStart;
+        Pause.onContinue += OnPauseStop;
     }
 
     public abstract void WarnAboutPoke(bool enable);
@@ -91,21 +105,25 @@ public abstract class ActionsVisualizer : MonoBehaviour
     public abstract void ShowTeleport(bool enable);
     public abstract void DisableTeleport(bool enable);
 
-    public void SetInvisible()
+    public abstract void WarnAboutPause(bool enable);
+    public abstract void ShowPause(bool enable);
+    public abstract void DisablePause(bool enable);
+
+    private void SetInvisible()
     {
-        gameObject.SetActive(false);
+        _objectWrapper.SetActive(false);
     }
 
-    public void SetTranslucent()
+    private void SetTranslucent()
     {
-        gameObject.SetActive(true);
+        _objectWrapper.SetActive(true);
         foreach (var material in _materials)
             material.renderer.material = material.translucentMaterial;
     }
 
-    public void SetVisible()
+    private void SetVisible()
     {
-        gameObject.SetActive(true);
+        _objectWrapper.SetActive(true);
         foreach (var material in _materials)
             material.renderer.material = material.visibleMaterial;
     }
@@ -135,6 +153,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
     private void OnTeleportStart(SelectEnterEventArgs args) => ShowTeleport(true);
     private void OnTeleportStop(SelectExitEventArgs args) => ShowTeleport(false);
 
+    private void OnPauseStart() => WarnAboutPause(true);
+    private void OnPauseStop() => WarnAboutPause(false);
+
     protected virtual void OnDisable()
     {
         _grabInteractor?.hoverEntered.RemoveListener(OnGrabZoneEnter);
@@ -163,5 +184,8 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _speechController.onRecordingStart -= OnRecordingStart;
             _speechController.onRecordingStop -= OnRecordingStop;
         }
+        
+        Pause.onPause -= OnPauseStart;
+        Pause.onContinue -= OnPauseStop;
     }
 }

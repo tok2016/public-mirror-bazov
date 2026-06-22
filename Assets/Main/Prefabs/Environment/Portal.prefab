@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3957790661129810183}
   - component: {fileID: 6482117386263182766}
   - component: {fileID: 1840152433646639836}
+  - component: {fileID: 2891454322169258049}
   m_Layer: 0
   m_Name: Godrays
   m_TagString: Untagged
@@ -4836,6 +4837,18 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &2891454322169258049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601997774452983851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3b6b004acc7e0469cbcc81a606f65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PausableParticles
 --- !u!1 &1944158377517740664
 GameObject:
   m_ObjectHideFlags: 0
@@ -4895,6 +4908,7 @@ GameObject:
   - component: {fileID: 7757600800426348873}
   - component: {fileID: 2781947498780196382}
   - component: {fileID: 8022486330005595381}
+  - component: {fileID: 2253406140722372066}
   m_Layer: 0
   m_Name: Spraks
   m_TagString: Untagged
@@ -9721,6 +9735,18 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &2253406140722372066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6060719427832292666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3b6b004acc7e0469cbcc81a606f65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PausableParticles
 --- !u!1001 &9064451336170033324
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,17 +13,31 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
     public NavMeshAgent Agent { get; private set; }
     protected NpcNavStateMachine _stateMachine;
 
+    private Transform _savedTarget;
+    private float _savedStopDistance;
+    private NpcNavState _savedState;
+
     protected override void Awake()
     {
         base.Awake();
         Agent = GetComponent<NavMeshAgent>();
         _stateMachine = new NpcNavStateMachine(this, transform);
+        _savedState = _stateMachine.IdleState;
+        _savedTarget = transform;
     }
 
     protected override void Update()
     {
         base.Update();
         _stateMachine.Update();
+    }
+
+    private void ChangeState(NpcNavState state, Transform target, float distanceToStop)
+    {
+        _savedStopDistance = distanceToStop;
+        _savedTarget = target;
+        _savedState = state;
+        _stateMachine.ChangeState(state, target, distanceToStop);
     }
 
     public void Chase(Transform target)
@@ -33,12 +47,12 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
 
     public virtual void Chase(Transform target, float distanceToStop)
     {
-        _stateMachine.ChangeState(_stateMachine.ChasingState, target, distanceToStop);
+        ChangeState(_stateMachine.ChasingState, target, distanceToStop);
     }
 
     public virtual void Stop()
     {
-        _stateMachine.ChangeState(_stateMachine.IdleState, transform, _itemDistanceToStop);
+        ChangeState(_stateMachine.IdleState, transform, _itemDistanceToStop);
     }
 
     public void ChaseAfterPlayer()
@@ -65,7 +79,7 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
 
     public virtual void ComeUp(Transform target, float distanceToStop)
     {
-        _stateMachine.ChangeState(_stateMachine.ComeUpState, target, distanceToStop);
+        ChangeState(_stateMachine.ComeUpState, target, distanceToStop);
     }
 
     public void LookAtPlayer()
@@ -75,9 +89,21 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
 
     public void LookAtTarget(Transform target)
     {
-        _stateMachine.ChangeState(_stateMachine.LookState, target, _itemDistanceToStop);
+        ChangeState(_stateMachine.LookState, target, _itemDistanceToStop);
     }
 
     public abstract void MoveAnimator(Vector3 velocity);
     public abstract void RotateAnimator(float rotationSpeed);
+
+    public override void Freeze()
+    {
+        base.Freeze();
+        _stateMachine.ChangeState(_stateMachine.IdleState, transform, _itemDistanceToStop);
+    }
+
+    public override void Unfreeze()
+    {
+        base.Unfreeze();
+        _stateMachine.ChangeState(_savedState, _savedTarget, _savedStopDistance);
+    }
 }

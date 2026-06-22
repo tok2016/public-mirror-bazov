@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 [RequireComponent(typeof(PlayableDirector))]
-public class TimelineCutscene : MonoBehaviour
+public class TimelineCutscene : MonoBehaviour, IPausable
 {
     private PlayableDirector _playableDirector;
     [SerializeField] private WordData[] _words;
@@ -21,6 +21,8 @@ public class TimelineCutscene : MonoBehaviour
     private void OnEnable()
     {
         _playableDirector.stopped += WriteWords;
+        Pause.onPause += Freeze;
+        Pause.onContinue += Unfreeze;
     }
 
     private void WriteWords(PlayableDirector playableDirector)
@@ -49,8 +51,20 @@ public class TimelineCutscene : MonoBehaviour
         _playableDirector.Stop();
     }
 
+    public void Freeze()
+    {
+        _playableDirector.Pause();
+    }
+
+    public void Unfreeze()
+    {
+        _playableDirector.Resume();
+    }
+
     private void OnDisable()
     {
         _playableDirector.stopped -= WriteWords;
+        Pause.onPause -= Freeze;
+        Pause.onContinue -= Unfreeze;
     }
 }

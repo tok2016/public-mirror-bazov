@@ -4,7 +4,8 @@ public class ControllerVisualizer : ActionsVisualizer
 {
     [Header("Buttons")]
     [SerializeField] private HintButton _grabButton;
-    [SerializeField] private HintButton _pokeButton, _teleportationStick, _recordingButton;
+    [SerializeField] private HintButton _pokeButton, _teleportationStick, _recordingButton, _pauseButton;
+    private VisualizerState _prevState;
 
     protected override void OnDisable()
     {
@@ -13,6 +14,7 @@ public class ControllerVisualizer : ActionsVisualizer
         _pokeButton?.ToggleMaterial(false);
         _teleportationStick?.ToggleMaterial(false);
         _recordingButton?.ToggleMaterial(false);
+        _pauseButton?.ToggleMaterial(false);
     }
 
     public override void DisableGrab(bool enable)
@@ -73,5 +75,38 @@ public class ControllerVisualizer : ActionsVisualizer
     public override void WarnAboutTeleport(bool enable)
     {
         _teleportationStick?.ToggleWarningHint(enable);
+    }
+
+    public void WarnAbourAllActions(bool enable)
+    {
+        _grabButton?.ToggleUIHint(enable);
+        _pokeButton?.ToggleUIHint(enable);
+        _recordingButton?.ToggleUIHint(enable);
+        _teleportationStick?.ToggleUIHint(enable);
+        _pauseButton?.ToggleUIHint(enable);
+    }
+
+    public override void WarnAboutPause(bool enable)
+    {
+        if (enable)
+        {
+            _prevState = State;
+            State = VisualizerState.Visible;
+        }
+        else
+            State = _prevState;
+
+        WarnAbourAllActions(enable);
+        _pauseButton?.ToggleWarningHint(enable);
+    }
+
+    public override void ShowPause(bool enable)
+    {
+        _pauseButton?.TogglePressHint(enable);
+    }
+
+    public override void DisablePause(bool enable)
+    {
+        _pauseButton?.ToggleDisable(enable);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(XRGrabInteractable), typeof(PausableRigidbody))]
 public abstract class GrabbableObject : MonoBehaviour, ICommentable, IGrabbable
 {
     [field: SerializeField] public CollectableItemData Data { get; protected set; }

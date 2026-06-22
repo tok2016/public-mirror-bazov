@@ -638,6 +638,7 @@ GameObject:
   - component: {fileID: 6473485555736288493}
   - component: {fileID: 8172188988097649130}
   - component: {fileID: 4814907479779094420}
+  - component: {fileID: 2604860128007883499}
   m_Layer: 0
   m_Name: Godrays
   m_TagString: Untagged
@@ -5463,6 +5464,18 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &2604860128007883499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738652967715636911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3b6b004acc7e0469cbcc81a606f65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PausableParticles
 --- !u!1 &6001092877795795627
 GameObject:
   m_ObjectHideFlags: 0
@@ -5572,6 +5585,7 @@ GameObject:
   - component: {fileID: 8383076498495236140}
   - component: {fileID: 3685938039344411353}
   - component: {fileID: 7670712073120622615}
+  - component: {fileID: 1867166813825425956}
   m_Layer: 0
   m_Name: Spraks
   m_TagString: Untagged
@@ -10398,6 +10412,18 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &1867166813825425956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9022958797168973588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3b6b004acc7e0469cbcc81a606f65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PausableParticles
 --- !u!1001 &1122687592440973480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14787,7 +14813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3473595019612129064, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
       propertyPath: m_VersionIndex
-      value: 557
+      value: 563
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

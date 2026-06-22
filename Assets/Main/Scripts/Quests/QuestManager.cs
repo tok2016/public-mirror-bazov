@@ -13,12 +13,22 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private XRBaseInteractor _leftGrabInteractor, _rightGrabInteractor;
     [SerializeField] private XRBaseInteractor[] _otherGrabInteractors;
     [SerializeField] private InputActionReference _skipAction;
+    [SerializeField] private Pause _pauseMenu;
 
     private Coroutine _delayRoutine;
 
     private Queue<Quest> _enteredQuests = new Queue<Quest>();
     private Quest _current;
     private bool _IsOccupied = false;
+
+    public readonly static Dictionary<QuestState, string> QuestStateNames = new Dictionary<QuestState, string>() 
+    { 
+        { QuestState.Locked, "Недоступен"},
+        { QuestState.Available, "В процессе" },
+        { QuestState.Visited, "В процессе" },
+        { QuestState.InProgress, "В процессе" },
+        { QuestState.Completed, "Завершён" }
+    };
 
     private void OnEnable()
     {
@@ -48,6 +58,14 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    private void UpdateQuestInfo(Quest quest)
+    {
+        if (quest)
+            _pauseMenu.ShowQuestInfo(quest.Data, QuestStateNames[quest.State], quest.State == QuestState.Completed);
+        else
+            _pauseMenu.ResetQuestInfo();
+    }
+
     private void EnqueueLockedQuest(Quest quest)
     {
         if (_current == null && _delayRoutine == null)
@@ -63,12 +81,14 @@ public class QuestManager : MonoBehaviour
     {
         quest.gameObject.SetActive(true);
         _current = quest;
+        UpdateQuestInfo(_current);
         StartCoroutine(WaitForQuestStart(quest));
     }
 
     private void StopQuest(Quest quest)
     {
         quest.gameObject.SetActive(false);
+        UpdateQuestInfo(quest);
 
         if (quest == _current)
             _current = null;

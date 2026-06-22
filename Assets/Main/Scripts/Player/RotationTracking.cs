@@ -19,6 +19,6 @@ public class RotationTracking : MonoBehaviour
     void Update()
     {
         _value = _rotationAction.action.ReadValue<Quaternion>().eulerAngles;
-        transform.rotation = Quaternion.Euler(_value.x * _corrected.x, _value.y * _corrected.y, _value.z * _corrected.z);
+        transform.localRotation = Quaternion.Euler(_value.x * _corrected.x, _value.y * _corrected.y, _value.z * _corrected.z);
     }
 }

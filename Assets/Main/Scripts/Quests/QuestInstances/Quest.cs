@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 public abstract class Quest : MonoBehaviour
 {
     [Header("Main")]
-    [SerializeField] protected QuestData _data;
+    [field: SerializeField] public QuestData Data { get; private set; }
     [field: SerializeField] public Quest Next {  get; private set; }
     [SerializeField] protected Cutscene[] _startCutscenes, _endCutscenes;
 

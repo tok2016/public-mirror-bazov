@@ -7,7 +7,7 @@ public abstract class ProtoQuest : Quest
 
     protected override void Activate()
     {
-        _title.text = _data.Name;
+        _title.text = Data.Name;
         _title.fontStyle = FontStyles.Normal;
     }
 

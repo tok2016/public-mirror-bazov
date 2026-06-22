@@ -3,6 +3,7 @@ using eToile;
 using FuzzySharp;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -17,7 +18,7 @@ class TranscribeData
 }
 
 [RequireComponent(typeof(SpeecControllerhHint))]
-public class SpeechController : MonoBehaviour
+public class SpeechController : MonoBehaviour, IPausable
 {
     [Header("Recording")]
     [SerializeField] private InputActionReference _recordAction;
@@ -55,6 +56,12 @@ public class SpeechController : MonoBehaviour
         _controllerHint = GetComponent<SpeecControllerhHint>();
     }
 
+    private void OnEnable()
+    {
+        Pause.onPause += Freeze;
+        Pause.onContinue += Unfreeze;
+    }
+
     void Start()
     {
         _deviceName = Microphone.devices[0];
@@ -63,8 +70,7 @@ public class SpeechController : MonoBehaviour
 
     public void CheckItemSpeech()
     {
-        if (_isLoading || !Permission.HasUserAuthorizedPermission(Permission.Microphone) 
-            || _deviceName == null || _deviceName == "") return;
+        if (IsUnableToRecord()) return;
 
         if (_recordAction.action.IsPressed() && !_isPressing && !Microphone.IsRecording(_deviceName))
         {
@@ -113,6 +119,10 @@ public class SpeechController : MonoBehaviour
         }
     }
 
+    private bool IsUnableToRecord() => Pause.IsPaused || _isLoading 
+        || !Permission.HasUserAuthorizedPermission(Permission.Microphone)
+        || _deviceName == null || _deviceName == "";
+
     private System.Collections.IEnumerator RequestPermission()
     {
         if(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
@@ -155,13 +165,13 @@ public class SpeechController : MonoBehaviour
             var data = JsonConvert.DeserializeObject<TranscribeData>(strData);
 
             if (data != null && data.result != null)
-                MatchWord(data.result);
+                StartCoroutine(MatchWord(data.result));
             else
-                ThrowError("No results");
+                throw new Exception("No results");
         }
         catch
         {
-            ThrowError("Request error");
+            StartCoroutine(ThrowError("Request error"));
         }
 
         _isLoading = false;
@@ -185,14 +195,20 @@ public class SpeechController : MonoBehaviour
         _isLoading = false;
     }
 
-    private void ThrowError(string message)
+    private IEnumerator ThrowError(string message)
     {
+        while (Pause.IsPaused)
+            yield return null;
+
         _controllerHint.ShowError();
-        throw new Exception(message);
+        //throw new Exception(message);
     }
 
-    private void MatchWord(string transcribed)
+    private IEnumerator MatchWord(string transcribed)
     {
+        while(Pause.IsPaused)
+            yield return null;
+
         var words = _items
             .Where(item => item.Data.DialogueLine && item.Data.DialogueLine.Word)
             .Select(item => item.Data.DialogueLine.Word.Title.ToLower().Replace('¸', 'å'))
@@ -221,5 +237,23 @@ public class SpeechController : MonoBehaviour
     public void RemoveItem(GrabbableObject item)
     {
         _items.Remove(item);
+    }
+
+    public void Freeze()
+    {
+        _isLoading = true;
+        _controllerHint.Freeze();
+    }
+
+    public void Unfreeze()
+    {
+        _isLoading = false;
+        _controllerHint.Unfreeze();
+    }
+
+    private void OnDisable()
+    {
+        Pause.onPause -= Freeze;
+        Pause.onContinue -= Unfreeze;
     }
 }

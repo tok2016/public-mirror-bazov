@@ -3,19 +3,25 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class NpcContoller : MonoBehaviour
+public class NpcContoller : MonoBehaviour, IPausable
 {
     [Header("NPC Base")]
     [SerializeField] protected Character _characterName;
     [SerializeField] protected Animator _animator;
-    public AudioSource AudioSource { get; private set; }
+    public AudioSource NpcAudioSource { get; private set; }
     protected DialogueLine _currentLine;
 
     protected virtual void Awake()
     {
-        AudioSource = GetComponent<AudioSource>();
-        AudioSource.loop = false;
+        NpcAudioSource = GetComponent<AudioSource>();
+        NpcAudioSource.loop = false;
         DialogueManager.AddCharacter(_characterName, this);
+    }
+
+    protected virtual void OnEnable()
+    {
+        Pause.onPause += Freeze;
+        Pause.onContinue += Unfreeze;
     }
 
     protected virtual void Start()
@@ -30,29 +36,55 @@ public class NpcContoller : MonoBehaviour
 
     public virtual void PlaySound(AudioClip sound)
     {
-        AudioSource.Stop();
-        AudioSource.clip = sound;
-        AudioSource.Play();
+        NpcAudioSource.Stop();
+        NpcAudioSource.clip = sound;
+        NpcAudioSource.Play();
     }
 
     public virtual void PlayLine(DialogueLine line)
     {
-        if (AudioSource.isPlaying && line.Priority < _currentLine.Priority)
+        if (NpcAudioSource.isPlaying && _currentLine && line.Priority < _currentLine.Priority)
             return;
 
-        AudioSource.Stop();
-        AudioSource.clip = line.Clip;
-        AudioSource.Play();
+        NpcAudioSource.Stop();
+        NpcAudioSource.clip = line.Clip;
         _currentLine = line;
+        NpcAudioSource.Play();
     }
 
-    public virtual void ShutUp()
+    public virtual void StopLine(DialogueLine line)
     {
-        AudioSource.Stop();
+        if (_currentLine == line)
+            StopLine();
+    }
+
+    public virtual void StopLine()
+    {
+        _currentLine = null;
+        NpcAudioSource.Stop();
+        NpcAudioSource.clip = null;
     }
 
     private void OnDestroy()
     {
         DialogueManager.RemoveCharacter(_characterName);
+    }
+
+    public virtual void Freeze()
+    {
+        _animator.speed = 0;
+        NpcAudioSource.Pause();
+    }
+
+    public virtual void Unfreeze()
+    {
+        _animator.speed = 1;
+        NpcAudioSource.UnPause();
+    }
+
+    protected virtual void OnDisable()
+    {
+        Pause.onPause -= Freeze;
+        Pause.onContinue -= Unfreeze;
     }
 }
