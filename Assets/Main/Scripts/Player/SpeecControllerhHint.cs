@@ -12,6 +12,7 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
     [SerializeField] private float _errorEffectGravity = 1;
 
     private bool _isWarning;
+    private bool _wasActive;
     private Coroutine _cancelCoroutine;
 
     public void ToggleHint(bool enable)
@@ -20,7 +21,7 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
 
         if (enable)
             _controller.State = VisualizerState.Translucent;
-        else
+        else if(!Pause.IsPaused)
             _controller.State = VisualizerState.Invisible;
 
         _controller.WarnAboutRecording(enable);
@@ -95,10 +96,13 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
     public void Freeze()
     {
         _hintAnimator.speed = 0;
+        _wasActive = _hintAnimator.gameObject.activeInHierarchy;
+        ToggleHint(false);
     }
 
     public void Unfreeze()
     {
         _hintAnimator.speed = 1;
+        ToggleHint(_wasActive);
     }
 }

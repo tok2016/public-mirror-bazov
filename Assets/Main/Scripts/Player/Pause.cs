@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -15,9 +16,14 @@ public class Pause : MonoBehaviour
     [SerializeField] private XROrigin _origin;
     [SerializeField] private GameObject _pausePlace;
     [SerializeField] private Transform _pauseAttachPoint;
+    
     public static bool IsPaused { get; private set; } = false;
     public static event Action onPause, onContinue;
     private Vector3 _prevPosition;
+
+    [Header("Quit")]
+    [SerializeField] private SceneBootstrapManager _sceneBootstrapManager;
+    [SerializeField] private int _startScene;
 
     [Header("UI")]
     [SerializeField] private GameObject _confirmMenu;
@@ -35,11 +41,23 @@ public class Pause : MonoBehaviour
 
     public void ToggleActive()
     {
+        StartCoroutine(WaitBeforePause());
+    }
+
+    public void ToggleActive(InputAction.CallbackContext context)
+    {
+        ToggleActive();
+    }
+
+    private IEnumerator WaitBeforePause()
+    {
+        yield return null;
+
         IsPaused = !IsPaused;
         _pausePlace.gameObject.SetActive(IsPaused);
         _locomotionProvider.enabled = !IsPaused;
 
-        foreach(var interactor  in _teleportInteractors)
+        foreach (var interactor in _teleportInteractors)
             interactor.enabled = !IsPaused;
 
         if (IsPaused)
@@ -56,14 +74,9 @@ public class Pause : MonoBehaviour
         }
     }
 
-    public void ToggleActive(InputAction.CallbackContext context)
-    {
-        ToggleActive();
-    }
-
     public void Quit()
     {
-        Application.Quit();
+        _sceneBootstrapManager.LoadScene(_startScene);
     }
 
     public void OpenConfirmMenu()

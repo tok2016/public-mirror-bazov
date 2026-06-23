@@ -17234,6 +17234,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 476518175327265946}
     - target: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
+      propertyPath: _uiPokeInteractor
+      value: 
+      objectReference: {fileID: 5555059906380200697}
+    - target: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
       propertyPath: _teleportInteractor
       value: 
       objectReference: {fileID: 8165098357025556306}
@@ -17310,6 +17314,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
+--- !u!114 &1685801524414064981 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
+  m_PrefabInstance: {fileID: 1761122512183181334}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c03ebfc074d6d54cbc32a3b013fc7d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandVisualizer
 --- !u!4 &4289931790861442610 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2591862971997937188, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
@@ -17338,7 +17353,7 @@ PrefabInstance:
       objectReference: {fileID: 1119029184433866230}
     - target: {fileID: 2512984454195402510, guid: 7986f58d0e0eeea488070f1ff96ae498, type: 3}
       propertyPath: _items.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3013809941915023699, guid: 7986f58d0e0eeea488070f1ff96ae498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17380,6 +17395,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4022773565717501786, guid: 7986f58d0e0eeea488070f1ff96ae498, type: 3}
+      propertyPath: _hand
+      value: 
+      objectReference: {fileID: 1685801524414064981}
     - target: {fileID: 4022773565717501786, guid: 7986f58d0e0eeea488070f1ff96ae498, type: 3}
       propertyPath: _controller
       value: 
@@ -17452,7 +17471,11 @@ PrefabInstance:
     - target: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
       propertyPath: _speechController
       value: 
-      objectReference: {fileID: 476518175327265946}
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
+      propertyPath: _uiPokeInteractor
+      value: 
+      objectReference: {fileID: 7847783926390267616}
     - target: {fileID: 1087030066537064771, guid: 2c21df55ee0dca249bab3283428350e2, type: 3}
       propertyPath: _teleportInteractor
       value: 
@@ -17543,6 +17566,10 @@ PrefabInstance:
     - target: {fileID: 58445280694286476, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178791450436251564, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      propertyPath: m_RequestedTrackingOriginMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_Name
@@ -17794,6 +17821,7 @@ MonoBehaviour:
   _pokeInteractor: {fileID: 5555059906380200697}
   _teleportInteractor: {fileID: 8165098357025556306}
   _uiInteractor: {fileID: 5372150265929144328}
+  _uiPokeInteractor: {fileID: 5555059906380200697}
   _speechController: {fileID: 476518175327265946}
   _objectWrapper: {fileID: 764988619597780714}
   _defaultState: 2
@@ -17913,8 +17941,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControllerVisualizer
   _grabInteractor: {fileID: 3142729197821691543}
   _pokeInteractor: {fileID: 7847783926390267616}
-  _teleportInteractor: {fileID: 0}
+  _teleportInteractor: {fileID: 5813907265042719563}
   _uiInteractor: {fileID: 3142729197821691543}
+  _uiPokeInteractor: {fileID: 7847783926390267616}
   _speechController: {fileID: 0}
   _objectWrapper: {fileID: 7499838263317111092}
   _defaultState: 2
@@ -17929,7 +17958,7 @@ MonoBehaviour:
   _pokeButton: {fileID: 6820776295704812828}
   _teleportationStick: {fileID: 0}
   _recordingButton: {fileID: 0}
-  _pauseButton: {fileID: 0}
+  _pauseButton: {fileID: 3056930936070729381}
 --- !u!23 &4133151529991224070 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7634941337736553285, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -17976,8 +18005,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HintButton
   _enableOutline: 0
   _hintMaterial: {fileID: 2100000, guid: 5946ae144c55f014bb089049276ce664, type: 2}
-  _action: {fileID: -3399129887853107794, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _hintButtionProps: {fileID: 11400000, guid: e6cc28a437ceb5a48abe38b4155ddf8f, type: 2}
+  _action: {fileID: -262595603656310412, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  _hintButtionProps: {fileID: 11400000, guid: c57f4c0b98c7eb649a5ec67db37cc565, type: 2}
   _uiHint: {fileID: 278310558231446283}
 --- !u!4 &5040672710249227474 stripped
 Transform:

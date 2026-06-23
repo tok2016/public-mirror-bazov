@@ -214,6 +214,12 @@ public class SpeechController : MonoBehaviour, IPausable
             .Select(item => item.Data.DialogueLine.Word.Title.ToLower().Replace('¸', 'å'))
             .ToArray();
 
+        if (words.Length == 0)
+        {
+            yield return ThrowError("no words");
+            yield break;
+        }
+
         var result = Process.ExtractOne(transcribed, words, (s) => s);
 
         Debug.Log(transcribed);

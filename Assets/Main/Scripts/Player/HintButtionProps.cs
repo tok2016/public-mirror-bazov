@@ -13,8 +13,8 @@ public class HintButtionProps : ScriptableObject
         StateMaterials = new Dictionary<HintButtonState, Material>() {
             { HintButtonState.Default, _defaultMaterial },
             { HintButtonState.Disabled, _disableMaterial},
-            { HintButtonState.Active, _warningMaterial},
-            { HintButtonState.UI, _pauseMaterial },
+            { HintButtonState.Warn, _warningMaterial},
+            { HintButtonState.Pause, _pauseMaterial },
             { HintButtonState.Pressed, _pressMaterial}
         };
     }

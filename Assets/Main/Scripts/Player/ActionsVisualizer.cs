@@ -24,6 +24,7 @@ public abstract class ActionsVisualizer : MonoBehaviour
 {
     [SerializeField] protected XRBaseInteractor _grabInteractor, _pokeInteractor, _teleportInteractor;
     [SerializeField] protected NearFarInteractor _uiInteractor;
+    [SerializeField] protected XRPokeInteractor _uiPokeInteractor;
     [SerializeField] protected SpeechController _speechController;
     [SerializeField] protected GameObject _objectWrapper;
     [SerializeField] protected VisualizerState _defaultState = VisualizerState.Visible;
@@ -72,6 +73,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.performed += OnPokeStart;
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.canceled += OnPokeStop;
         }
+
+        _uiPokeInteractor?.uiHoverEntered.AddListener(OnPokeZoneEnter);
+        _uiPokeInteractor?.uiHoverExited.AddListener(OnPokeZoneExit);
 
         _pokeInteractor?.hoverEntered.AddListener(OnPokeZoneEnter);
         _pokeInteractor?.hoverExited.AddListener(OnPokeZoneExit);
@@ -141,11 +145,7 @@ public abstract class ActionsVisualizer : MonoBehaviour
     private void OnGrabZoneExit(HoverExitEventArgs args) => WarnAboutGrab(false);
 
     private void OnGrabStart(SelectEnterEventArgs args) => ShowGrab(true);
-    private void OnGrabStop(SelectExitEventArgs args) 
-    {
-        ShowGrab(false);
-        WarnAboutGrab(false);
-    }
+    private void OnGrabStop(SelectExitEventArgs args) => ShowGrab(false);
 
     private void OnRecordingStart() => ShowRecording(true);
     private void OnRecordingStop() => ShowRecording(false);
@@ -172,6 +172,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.performed -= OnPokeStart;
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.canceled -= OnPokeStop;
         }
+
+        _uiPokeInteractor?.uiHoverEntered.RemoveListener(OnPokeZoneEnter);
+        _uiPokeInteractor?.uiHoverExited.RemoveListener(OnPokeZoneExit);
 
         _pokeInteractor?.hoverEntered.RemoveListener(OnPokeZoneEnter);
         _pokeInteractor?.hoverExited.RemoveListener(OnPokeZoneExit);

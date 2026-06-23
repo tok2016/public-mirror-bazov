@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/first/WinterForest.unity
     guid: 100d93ad5f551bd45adbdc7a69f8bddd
   - enabled: 1
+    path: Assets/Main/Scenes/StartScene.unity
+    guid: 56c7ab433785c3d4b9d7027abdf00335
+  - enabled: 1
     path: Assets/Main/Scenes/StartBazhovCabinet.unity
     guid: c773d9bc99f5c984a8712addff88e211
   - enabled: 1
