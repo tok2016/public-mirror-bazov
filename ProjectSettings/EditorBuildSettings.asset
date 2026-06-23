@@ -30,10 +30,20 @@ EditorBuildSettings:
     path: Assets/Scenes/first/WinterForest.unity
     guid: 100d93ad5f551bd45adbdc7a69f8bddd
   - enabled: 1
+    path: Assets/Main/Scenes/StartScene.unity
+    guid: 56c7ab433785c3d4b9d7027abdf00335
+  - enabled: 1
+    path: Assets/Main/Scenes/StartBazhovCabinet.unity
+    guid: c773d9bc99f5c984a8712addff88e211
+  - enabled: 1
     path: Assets/Main/Scenes/Forest.unity
     guid: d6ae970f69e7af648a40b304c20621ff
+  - enabled: 1
+    path: Assets/Main/Scenes/EndBazhovCabinet.unity
+    guid: bfd542ac668358d4e81f2985905b0fb6
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings: {fileID: 11400000, guid: 524e1556d54c2bc458c358a192c0181e, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7c9dafe94c11df441843ec8367d771c6, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: f570dfa613dbfe04f8f47fdf311b18bc, type: 2}
     xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: fbb144ef548960d46a8144d4408cdc5d, type: 2}

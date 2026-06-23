@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 66682314739790461}
   - component: {fileID: 356623209455238747}
   - component: {fileID: 112503119307252971}
+  - component: {fileID: 3412255457291382433}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   _defaultAmbient: {fileID: 8300000, guid: 0a9ea847668c80e4db7cbeac8245c8ff, type: 3}
   _musicZones: []
+  _fadeDuration: 3
   _teleportationProvider: {fileID: 0}
   _playerStepsSourse: {fileID: 0}
   _defaultStepSound: {fileID: 8300000, guid: 09cb9746120af614d97b76a0686b1fdc, type: 3}
@@ -148,3 +150,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3412255457291382433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513503021926666567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5ca6febd2265d4dbce509e238c0d1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PausableAudioSource

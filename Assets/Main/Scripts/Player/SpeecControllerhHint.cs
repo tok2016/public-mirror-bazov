@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class SpeecControllerhHint : MonoBehaviour
+public class SpeecControllerhHint : MonoBehaviour, IPausable
 {
     [SerializeField] private ActionsVisualizer _controller, _hand;
     [SerializeField] private ParticleSystem _recordingEffect;
@@ -12,6 +12,7 @@ public class SpeecControllerhHint : MonoBehaviour
     [SerializeField] private float _errorEffectGravity = 1;
 
     private bool _isWarning;
+    private bool _wasActive;
     private Coroutine _cancelCoroutine;
 
     public void ToggleHint(bool enable)
@@ -19,9 +20,9 @@ public class SpeecControllerhHint : MonoBehaviour
         _hintAnimator.gameObject.SetActive(enable);
 
         if (enable)
-            _controller.SetTranslucent();
-        else
-            _controller.SetInvisible();
+            _controller.State = VisualizerState.Translucent;
+        else if(!Pause.IsPaused)
+            _controller.State = VisualizerState.Invisible;
 
         _controller.WarnAboutRecording(enable);
         _hand.WarnAboutRecording(enable);
@@ -90,5 +91,18 @@ public class SpeecControllerhHint : MonoBehaviour
     {
         yield return new WaitForSeconds(_warningStartTime);
         _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    public void Freeze()
+    {
+        _hintAnimator.speed = 0;
+        _wasActive = _hintAnimator.gameObject.activeInHierarchy;
+        ToggleHint(false);
+    }
+
+    public void Unfreeze()
+    {
+        _hintAnimator.speed = 1;
+        ToggleHint(_wasActive);
     }
 }

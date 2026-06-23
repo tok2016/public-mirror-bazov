@@ -5,7 +5,7 @@ public class DictionaryOpenState : DictionaryState
 {
     private float _rotationSpeed = 700;
     private float _scalingSpeed = 10;
-    private Vector3 _openedSize = new Vector3(0.75f, 0.75f, 0.75f);
+    private Vector3 _openedSize;
     private Coroutine _opening, _closing;
 
     delegate bool Compare(float a, float b);
@@ -16,6 +16,7 @@ public class DictionaryOpenState : DictionaryState
     {
         base.Enter();
         _book.EnableCanvas(true);
+        _openedSize = _book.DefaultScale * _book.OpenedScale;
 
         if(_closing != null)
             _book.StopCoroutine(_closing);

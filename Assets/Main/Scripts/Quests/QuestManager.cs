@@ -11,11 +11,24 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private Quest[] _quests;
     [SerializeField] private TeleportationProvider _teleportationProvider;
     [SerializeField] private XRBaseInteractor _leftGrabInteractor, _rightGrabInteractor;
+    [SerializeField] private XRBaseInteractor[] _otherGrabInteractors;
     [SerializeField] private InputActionReference _skipAction;
+    [SerializeField] private Pause _pauseMenu;
+
+    private Coroutine _delayRoutine;
 
     private Queue<Quest> _enteredQuests = new Queue<Quest>();
     private Quest _current;
     private bool _IsOccupied = false;
+
+    public readonly static Dictionary<QuestState, string> QuestStateNames = new Dictionary<QuestState, string>() 
+    { 
+        { QuestState.Locked, "Недоступен"},
+        { QuestState.Available, "В процессе" },
+        { QuestState.Visited, "В процессе" },
+        { QuestState.InProgress, "В процессе" },
+        { QuestState.Completed, "Завершён" }
+    };
 
     private void OnEnable()
     {
@@ -37,11 +50,25 @@ public class QuestManager : MonoBehaviour
         _rightGrabInteractor.selectExited.AddListener(OnQuestItemLetGo);
 
         _skipAction.action.performed += SkipCutscene;
+
+        foreach(var interactor  in _otherGrabInteractors)
+        {
+            interactor.selectEntered.AddListener(OnQuestItemGrab);
+            interactor.selectExited.AddListener(OnQuestItemLetGo);
+        }
+    }
+
+    private void UpdateQuestInfo(Quest quest)
+    {
+        if (quest)
+            _pauseMenu.ShowQuestInfo(quest.Data, QuestStateNames[quest.State], quest.State == QuestState.Completed);
+        else
+            _pauseMenu.ResetQuestInfo();
     }
 
     private void EnqueueLockedQuest(Quest quest)
     {
-        if (_current == null)
+        if (_current == null && _delayRoutine == null)
         {
             quest.Unlock();
             quest.Enter();
@@ -54,12 +81,14 @@ public class QuestManager : MonoBehaviour
     {
         quest.gameObject.SetActive(true);
         _current = quest;
+        UpdateQuestInfo(_current);
         StartCoroutine(WaitForQuestStart(quest));
     }
 
     private void StopQuest(Quest quest)
     {
         quest.gameObject.SetActive(false);
+        UpdateQuestInfo(quest);
 
         if (quest == _current)
             _current = null;
@@ -110,6 +139,22 @@ public class QuestManager : MonoBehaviour
         StopQuest(quest);
     }
 
+    public void Delay(float delay)
+    {
+        if (_delayRoutine != null)
+            StopCoroutine(_delayRoutine);
+        _delayRoutine = StartCoroutine(DelayRoutine(delay));
+    }
+
+    private System.Collections.IEnumerator DelayRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _delayRoutine = null;
+
+        if (_enteredQuests.Count > 0)
+            _enteredQuests.Dequeue().Enter();
+    }
+
     public void OnQuestItemGrab(SelectEnterEventArgs args)
     {
         _current?.OnItemGrab(args);
@@ -150,5 +195,11 @@ public class QuestManager : MonoBehaviour
         _rightGrabInteractor.selectExited.RemoveListener(OnQuestItemLetGo);
 
         _skipAction.action.performed -= SkipCutscene;
+
+        foreach (var interactor in _otherGrabInteractors)
+        {
+            interactor.selectEntered.RemoveListener(OnQuestItemGrab);
+            interactor.selectExited.RemoveListener(OnQuestItemLetGo);
+        }
     }
 }

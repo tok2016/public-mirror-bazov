@@ -5,6 +5,13 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
+public enum VisualizerState
+{
+    Invisible = 0,
+    Translucent = 1,
+    Visible = 2
+}
+
 [Serializable]
 public struct VisualizerMaterialSetting
 {
@@ -17,9 +24,38 @@ public abstract class ActionsVisualizer : MonoBehaviour
 {
     [SerializeField] protected XRBaseInteractor _grabInteractor, _pokeInteractor, _teleportInteractor;
     [SerializeField] protected NearFarInteractor _uiInteractor;
+    [SerializeField] protected XRPokeInteractor _uiPokeInteractor;
     [SerializeField] protected SpeechController _speechController;
+    [SerializeField] protected GameObject _objectWrapper;
+    [SerializeField] protected VisualizerState _defaultState = VisualizerState.Visible;
+
+    public VisualizerState State
+    {
+        get => _defaultState;
+        set
+        {
+            _defaultState = value;
+            switch (value)
+            {
+                case VisualizerState.Invisible:
+                    SetInvisible();
+                    break;
+                case VisualizerState.Translucent:
+                    SetTranslucent();
+                    break;
+                default:
+                    SetVisible();
+                    break;
+            }
+        }
+    }
 
     [SerializeField] protected VisualizerMaterialSetting[] _materials;
+
+    private void Start()
+    {
+        State = _defaultState;
+    }
 
     protected virtual void OnEnable()
     {
@@ -38,6 +74,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.canceled += OnPokeStop;
         }
 
+        _uiPokeInteractor?.uiHoverEntered.AddListener(OnPokeZoneEnter);
+        _uiPokeInteractor?.uiHoverExited.AddListener(OnPokeZoneExit);
+
         _pokeInteractor?.hoverEntered.AddListener(OnPokeZoneEnter);
         _pokeInteractor?.hoverExited.AddListener(OnPokeZoneExit);
 
@@ -49,6 +88,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _speechController.onRecordingStart += OnRecordingStart;
             _speechController.onRecordingStop += OnRecordingStop;
         }
+
+        Pause.onPause += OnPauseStart;
+        Pause.onContinue += OnPauseStop;
     }
 
     public abstract void WarnAboutPoke(bool enable);
@@ -67,21 +109,25 @@ public abstract class ActionsVisualizer : MonoBehaviour
     public abstract void ShowTeleport(bool enable);
     public abstract void DisableTeleport(bool enable);
 
-    public void SetInvisible()
+    public abstract void WarnAboutPause(bool enable);
+    public abstract void ShowPause(bool enable);
+    public abstract void DisablePause(bool enable);
+
+    private void SetInvisible()
     {
-        gameObject.SetActive(false);
+        _objectWrapper.SetActive(false);
     }
 
-    public void SetTranslucent()
+    private void SetTranslucent()
     {
-        gameObject.SetActive(true);
+        _objectWrapper.SetActive(true);
         foreach (var material in _materials)
             material.renderer.material = material.translucentMaterial;
     }
 
-    public void SetVisible()
+    private void SetVisible()
     {
-        gameObject.SetActive(true);
+        _objectWrapper.SetActive(true);
         foreach (var material in _materials)
             material.renderer.material = material.visibleMaterial;
     }
@@ -99,17 +145,16 @@ public abstract class ActionsVisualizer : MonoBehaviour
     private void OnGrabZoneExit(HoverExitEventArgs args) => WarnAboutGrab(false);
 
     private void OnGrabStart(SelectEnterEventArgs args) => ShowGrab(true);
-    private void OnGrabStop(SelectExitEventArgs args) 
-    {
-        ShowGrab(false);
-        WarnAboutGrab(false);
-    }
+    private void OnGrabStop(SelectExitEventArgs args) => ShowGrab(false);
 
     private void OnRecordingStart() => ShowRecording(true);
     private void OnRecordingStop() => ShowRecording(false);
 
     private void OnTeleportStart(SelectEnterEventArgs args) => ShowTeleport(true);
     private void OnTeleportStop(SelectExitEventArgs args) => ShowTeleport(false);
+
+    private void OnPauseStart() => WarnAboutPause(true);
+    private void OnPauseStop() => WarnAboutPause(false);
 
     protected virtual void OnDisable()
     {
@@ -128,6 +173,9 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _uiInteractor.uiPressInput.inputActionReferencePerformed.action.canceled -= OnPokeStop;
         }
 
+        _uiPokeInteractor?.uiHoverEntered.RemoveListener(OnPokeZoneEnter);
+        _uiPokeInteractor?.uiHoverExited.RemoveListener(OnPokeZoneExit);
+
         _pokeInteractor?.hoverEntered.RemoveListener(OnPokeZoneEnter);
         _pokeInteractor?.hoverExited.RemoveListener(OnPokeZoneExit);
 
@@ -139,5 +187,8 @@ public abstract class ActionsVisualizer : MonoBehaviour
             _speechController.onRecordingStart -= OnRecordingStart;
             _speechController.onRecordingStop -= OnRecordingStop;
         }
+        
+        Pause.onPause -= OnPauseStart;
+        Pause.onContinue -= OnPauseStop;
     }
 }

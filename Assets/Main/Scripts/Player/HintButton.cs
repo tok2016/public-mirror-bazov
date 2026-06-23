@@ -1,80 +1,94 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-enum HintButtonState
+public enum HintButtonState
 {
     Default = 0,
-    Disabled = 1,
-    Active = 2,
-    Pressed = 3
+    Pause = 1,
+    Warn = 2,
+    Pressed = 3,
+    Disabled = 4
 }
 
 public class HintButton : HintObject
 {
     [SerializeField] private InputActionReference _action;
-    [SerializeField] private Material _pressedMaterial, _disabledMaterial;
+    [SerializeField] private HintButtionProps _hintButtionProps;
+    [SerializeField] private GameObject _uiHint;
 
-    private HintButtonState _state;
-    private Dictionary<HintButtonState, Material> _materials;
+    private HintButtonState _state, _prevState;
+    private bool _isPaused, _isWarned;
+
+    public HintButtonState State
+    {
+        get => _state;
+        private set
+        {
+            if (!_renderer) return;
+            _state = value;
+            _renderer.material = _hintButtionProps.StateMaterials[_state];
+        }
+    }
 
     protected override void Awake()
     {
         base.Awake();
-        _state = HintButtonState.Default;
-        _materials = new Dictionary<HintButtonState, Material>() {
-            {HintButtonState.Default, _defaultMaterial },
-            {HintButtonState.Disabled, _disabledMaterial},
-            {HintButtonState.Active, _hintMaterial},
-            {HintButtonState.Pressed, _pressedMaterial}
-        };
-    }
 
-    private void Update()
-    {
-        if (_state == HintButtonState.Active || _state == HintButtonState.Pressed)
-        {
-            if (_action.action.WasPressedThisFrame())
-                TogglePressHint(true);
-
-            if (_action.action.WasReleasedThisFrame())
-                TogglePressHint(false);
-        }
+        State = HintButtonState.Default;
+        _uiHint.SetActive(false);
     }
 
     public override void ToggleMaterial(bool enable)
     {
-        if(_renderer)
+        State = enable ? HintButtonState.Warn : HintButtonState.Default;
+
+        if (!enable)
         {
-            _state = enable ? HintButtonState.Active : HintButtonState.Default;
-            _renderer.material = _materials[_state];
+            _isWarned = false;
+            _isPaused = false;
         }
     }
 
-    public void ToggleWarningHint(bool enable)
+    public void Return()
     {
-        if(_renderer && _state != HintButtonState.Pressed && _state != HintButtonState.Disabled)
-        {
-            _state = enable ? HintButtonState.Active : HintButtonState.Default;
-            _renderer.material = _materials[_state];
-        }
+        State = _prevState;
     }
 
-    public void TogglePressHint(bool enable)
+    public void Warn(bool enable)
     {
-        if (_renderer && (_state == HintButtonState.Active || _state == HintButtonState.Pressed))
-        {
-            _state = enable ? HintButtonState.Pressed : HintButtonState.Active;
-            _renderer.material = _materials[_state];
-        }
+        _isWarned = enable;
+        _prevState = _isPaused ? HintButtonState.Pause : HintButtonState.Default;
+
+        if (enable)
+            State = HintButtonState.Warn;
+        else
+            Return();
     }
 
-    public void ToggleDisable(bool enable)
+    public void Pause(bool enable)
     {
-        if (_renderer && _state != HintButtonState.Default)
-        {
-            _state = enable ? HintButtonState.Disabled : HintButtonState.Active;
-            _renderer.material = _materials[_state];
-        }   
+        _isPaused = enable;
+        _uiHint.SetActive(enable);
+        _prevState = _isWarned ? HintButtonState.Warn : HintButtonState.Default;
+        if(enable)
+            State = HintButtonState.Pause;
+        else 
+            Return();
+    }
+
+    public void Press()
+    {
+        if (State < HintButtonState.Pause) return;
+
+        _prevState = _isWarned ? HintButtonState.Warn : HintButtonState.Pause;
+        State = HintButtonState.Pressed;
+    }
+
+    public void Disable()
+    {
+        if (State < HintButtonState.Pause) return;
+
+        _prevState = _isWarned ? HintButtonState.Warn : HintButtonState.Pause;
+        State = HintButtonState.Disabled;
     }
 }

@@ -2,12 +2,8 @@ using UnityEngine;
 
 public class HandVisualizer : ActionsVisualizer
 {
-    private Animator _handAnimator;
-
-    private void Awake()
-    {
-        _handAnimator = GetComponent<Animator>();
-    }
+    [SerializeField] private Animator _handAnimator;
+    private VisualizerState _prevState;
 
     public override void DisableGrab(bool enable)
     {
@@ -75,4 +71,25 @@ public class HandVisualizer : ActionsVisualizer
     }
 
     public override void WarnAboutTeleport(bool enable) { }
+
+    public override void WarnAboutPause(bool enable)
+    {
+        if (enable)
+        {
+            _prevState = State;
+            State = VisualizerState.Invisible;
+        }
+        else
+            State = _prevState;
+    }
+
+    public override void ShowPause(bool enable)
+    {
+        
+    }
+
+    public override void DisablePause(bool enable)
+    {
+        
+    }
 }

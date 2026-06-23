@@ -528,6 +528,7 @@ GameObject:
   - component: {fileID: 670331518253436440}
   - component: {fileID: 8940738676112049362}
   - component: {fileID: 5702498553759563201}
+  - component: {fileID: 4451866377693728185}
   m_Layer: 0
   m_Name: Dictionary Book
   m_TagString: Untagged
@@ -564,12 +565,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DictionaryBook
   _words:
+  - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
   - {fileID: 11400000, guid: d5e304ebeec685547bb668c1bf2360ec, type: 2}
   - {fileID: 11400000, guid: 1333647afdbad9742b146224ecbe38a4, type: 2}
   - {fileID: 11400000, guid: ce9b797ddb3d95446acb7f7df5ebd523, type: 2}
   - {fileID: 11400000, guid: 1a3bedc5f1afbdb449d89613b85e5971, type: 2}
   - {fileID: 11400000, guid: 9b99abd0fc8eb764a885272dfc8985ba, type: 2}
-  - {fileID: 11400000, guid: 32dc786aef4e16040a5530542bdbfa69, type: 2}
   - {fileID: 11400000, guid: 2abeede1f59e5aa448d64a71e18806e6, type: 2}
   - {fileID: 11400000, guid: 2f08db487167c9143a45a731a04f2c59, type: 2}
   - {fileID: 11400000, guid: 685992a14f757f6438dfa613fe42a483, type: 2}
@@ -577,8 +578,9 @@ MonoBehaviour:
   <FrontBinding>k__BackingField: {fileID: 1914329810443711572}
   _attachPoint: {fileID: 0}
   <ScaleWrapper>k__BackingField: {fileID: 6694254089544912746}
+  <OpenedScale>k__BackingField: 1
   <Camera>k__BackingField: {fileID: 0}
-  _minDistanceToOpen: 0.3
+  _minDistanceToOpen: 0
   _renderer: {fileID: 5608808663166474129}
   _pagesCanvas: {fileID: 2666206497969044497}
   _pagesGroup: {fileID: 887961561333147445}
@@ -881,6 +883,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomizedAudioSource
   _pitchDifferance: 0.1
   _volumeDifferance: 0
+--- !u!114 &4451866377693728185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4139214955946074623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e0bf7770076144ca60c3fce326e880, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HintObject
+  _enableOutline: 1
+  _hintMaterial: {fileID: 0}
 --- !u!1 &6118484563567470662
 GameObject:
   m_ObjectHideFlags: 0

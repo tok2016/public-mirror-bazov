@@ -23,7 +23,6 @@ public class TestItemCall : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 

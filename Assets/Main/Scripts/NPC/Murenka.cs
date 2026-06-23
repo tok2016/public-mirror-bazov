@@ -10,7 +10,7 @@ public class Murenka : NpcNavigatable
     protected override void Update()
     {
         base.Update();
-        _animator.SetFloat("Speed", Agent.velocity.magnitude);
+        MoveAnimator(Agent.velocity);
     }
 
     public void Eat(NpcGrabbable grabbable, NpcSocket socket) 
@@ -21,5 +21,15 @@ public class Murenka : NpcNavigatable
             _eatEffect.SetActive(true);
             grabbable.gameObject.SetActive(false);
         }
+    }
+
+    public override void MoveAnimator(Vector3 velocity)
+    {
+        _animator.SetFloat("Speed", velocity.magnitude);
+    }
+
+    public override void RotateAnimator(float rotationSpeed)
+    {
+        _animator.SetFloat("Speed", rotationSpeed);
     }
 }

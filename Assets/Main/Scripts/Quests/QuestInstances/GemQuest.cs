@@ -27,7 +27,7 @@ public class GemQuest : Quest
 
     protected override void Check()
     {
-        _correctGem.ToggleInteractivity(false);
+        _correctGem.gameObject.SetActive(false);
         _successEffect.SetActive(true);
         Complete();
     }
