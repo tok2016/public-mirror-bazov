@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 43379726}
   - component: {fileID: 43379730}
   m_Layer: 5
-  m_Name: Main Scene Menu
+  m_Name: Main Scene Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -764,6 +764,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 330861992}
+    - target: {fileID: 749514039764744743, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _defaultState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 888001774196259066, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -842,7 +846,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2780085796654443962, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: _defaultState
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3050318033735356680, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_Name
@@ -888,6 +892,14 @@ PrefabInstance:
       propertyPath: _fadeOutOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4079127747981445561, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4258571991477941832, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4504031824005162087, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -900,6 +912,10 @@ PrefabInstance:
       propertyPath: debug
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5663362219789084177, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _defaultState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5778018204142588878, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -908,6 +924,10 @@ PrefabInstance:
       propertyPath: _defaultState
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6027911060169072468, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _materials.Array.data[0].visibleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a1b9cbc05d424754d97e1be9507dd2f8, type: 2}
     - target: {fileID: 6193926275918429024, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -1006,7 +1026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8719096214268527759, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: _defaultState
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8753710946837223346, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_IsActive
@@ -1018,8 +1038,12 @@ PrefabInstance:
       objectReference: {fileID: 1901621276}
     - target: {fileID: 8994659312709275729, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: _defaultState
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8994659312709275729, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _materials.Array.data[0].visibleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a1b9cbc05d424754d97e1be9507dd2f8, type: 2}
     - target: {fileID: 9090147985746650761, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1977,6 +2001,8 @@ MonoBehaviour:
   - {fileID: 466167307}
   - {fileID: 466167306}
   - {fileID: 466167304}
+  - {fileID: 919338148}
+  - {fileID: 1955647506}
   _quitButton: {fileID: 657364891}
 --- !u!4 &894378964
 Transform:
@@ -1993,6 +2019,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &919338148 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5663362219789084177, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+  m_PrefabInstance: {fileID: 466167303}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddf3fcbfe293294baeb48050c3c01ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetaControllerVisualizer
 --- !u!1001 &1087421045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2763,6 +2800,17 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!114 &1955647506 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 749514039764744743, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+  m_PrefabInstance: {fileID: 466167303}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddf3fcbfe293294baeb48050c3c01ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetaControllerVisualizer
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

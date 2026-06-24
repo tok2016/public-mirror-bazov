@@ -4,7 +4,7 @@ public abstract class TutorialQuest : Quest
 {
     [Header("Hints")]
     [SerializeField] protected HintObject[] _hintObjects;
-    [SerializeField] protected ControllerVisualizer _leftController, _rightController;
+    [SerializeField] protected ActionsVisualizer _leftController, _rightController;
 
     protected abstract void ToggleControllersHint(bool enable);
 
