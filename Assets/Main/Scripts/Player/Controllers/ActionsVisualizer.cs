@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -10,14 +9,6 @@ public enum VisualizerState
     Invisible = 0,
     Translucent = 1,
     Visible = 2
-}
-
-[Serializable]
-public struct VisualizerMaterialSetting
-{
-    public Renderer renderer;
-    public Material visibleMaterial;
-    public Material translucentMaterial;
 }
 
 public abstract class ActionsVisualizer : MonoBehaviour
@@ -50,7 +41,7 @@ public abstract class ActionsVisualizer : MonoBehaviour
         }
     }
 
-    [SerializeField] protected VisualizerMaterialSetting[] _materials;
+    [SerializeField] protected Renderer[] _renderers;
 
     private void Start()
     {
@@ -115,21 +106,21 @@ public abstract class ActionsVisualizer : MonoBehaviour
 
     private void SetInvisible()
     {
-        _objectWrapper.SetActive(false);
+        foreach (var renderer in _renderers)
+            renderer.material?.SetFloat("_Dither", 0);
+            
     }
 
     private void SetTranslucent()
     {
-        _objectWrapper.SetActive(true);
-        foreach (var material in _materials)
-            material.renderer.material = material.translucentMaterial;
+        foreach (var renderer in _renderers)
+            renderer.material?.SetFloat("_Dither", 1);
     }
 
     private void SetVisible()
     {
-        _objectWrapper.SetActive(true);
-        foreach (var material in _materials)
-            material.renderer.material = material.visibleMaterial;
+        foreach (var renderer in _renderers)
+            renderer.material?.SetFloat("_Dither", 2);
     }
 
     private void OnPokeZoneEnter(UIHoverEventArgs args) => WarnAboutPoke(true);

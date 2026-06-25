@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -17,6 +18,12 @@ public class MainScene : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(Wait());
+    }
+
+    private IEnumerator Wait()
+    {
+        yield return null;
         foreach (var visualizer in _visualizers)
             visualizer.WarnAboutPause(true);
     }

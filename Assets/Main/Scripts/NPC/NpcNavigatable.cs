@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class NpcNavigatable : NpcContoller, INavigatable
@@ -9,6 +10,8 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
     [SerializeField] protected Transform _playerWarpPosition;
     [SerializeField] protected float _itemDistanceToStop = 0.3f;
     [SerializeField] protected float _playerDistanceToStop = 1.5f;
+
+    public UnityEvent startAction;
 
     public NavMeshAgent Agent { get; private set; }
     protected NpcNavStateMachine _stateMachine;
@@ -24,6 +27,12 @@ public abstract class NpcNavigatable : NpcContoller, INavigatable
         _stateMachine = new NpcNavStateMachine(this, transform);
         _savedState = _stateMachine.IdleState;
         _savedTarget = transform;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        startAction?.Invoke();
     }
 
     protected override void Update()

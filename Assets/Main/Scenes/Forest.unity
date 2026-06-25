@@ -4462,6 +4462,9 @@ MonoBehaviour:
   _playerWarpPosition: {fileID: 918781742}
   _itemDistanceToStop: 0.3
   _playerDistanceToStop: 2
+  startAction:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &221373038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22815,7 +22818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8402865212894405085, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 36
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8402865212894405085, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -22823,7 +22826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8402865212894405085, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -74.82
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8554271110859600976, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_Mesh
@@ -34094,6 +34097,9 @@ MonoBehaviour:
   _playerWarpPosition: {fileID: 918781742}
   _itemDistanceToStop: 0.5
   _playerDistanceToStop: 1.5
+  startAction:
+    m_PersistentCalls:
+      m_Calls: []
   _objectToEat: {fileID: 1834748924}
   _eatEffect: {fileID: 1520023608}
   _purr: {fileID: 11400000, guid: f009bbc14453f074b97df4d18a782e04, type: 2}
@@ -49117,7 +49123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3869827718488026924, guid: d613136613859fa4384680185f549687, type: 3}
       propertyPath: onFirstEnter.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3869827718488026924, guid: d613136613859fa4384680185f549687, type: 3}
       propertyPath: '_startCutscenes.Array.data[0]._words.Array.data[0]'
@@ -49887,6 +49893,34 @@ PrefabInstance:
       propertyPath: <PlayerCamera>k__BackingField
       value: 
       objectReference: {fileID: 918781741}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1818236371}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LookAtPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Darenka, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667995825637416395, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
+      propertyPath: startAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2101600751588010324, guid: 79dc4de1c50998e488a919fb9b6c13aa, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.625
