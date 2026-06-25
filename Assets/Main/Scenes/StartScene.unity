@@ -5,7 +5,7 @@ OcclusionCullingSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_OcclusionBakeSettings:
-    smallestOccluder: 5
+    smallestOccluder: 3
     smallestHole: 0.25
     backfaceThreshold: 100
   m_SceneGUID: 00000000000000000000000000000000
@@ -2042,6 +2042,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 1944158377517740664, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2261292011744306215, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2086,6 +2090,10 @@ PrefabInstance:
       propertyPath: _activateOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5395913933080790052, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5838444841627048150, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2098,6 +2106,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 801764687}
+    - target: {fileID: 7528927458943010926, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8680147744654628255, guid: 37aea8ad21a4f4241aeca920beff5f18, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
