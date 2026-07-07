@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
+/// <summary>
+/// Checks for teleportation tutorial quest completion.
+/// </summary>
 public class TeleportTutorialQuest : TutorialQuest
 {
     [SerializeField] private BaseTeleportationInteractable _targetTeleportZone;
@@ -10,6 +13,10 @@ public class TeleportTutorialQuest : TutorialQuest
         _targetTeleportZone.teleporting.AddListener(OnTargetTeleport);
     }
 
+    /// <summary>
+    /// Cheks if the player teleported to target zone.
+    /// </summary>
+    /// <param name="args"></param>
     private void OnTargetTeleport(TeleportingEventArgs args)
     {
         Check();

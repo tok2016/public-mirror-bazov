@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
+/// <summary>
+/// Checks for gem searching quest to be completed.
+/// </summary>
 public class GemQuest : Quest
 {
     [Header("Check")]
@@ -14,11 +17,10 @@ public class GemQuest : Quest
         _correctItemSocket.selectEntered.AddListener(CheckGem);
     }
 
-    private void ActivateSocket()
-    {
-        _correctItemSocket.gameObject.SetActive(true);
-    }
-
+    /// <summary>
+    /// Compares socketed item with the correct gem.
+    /// </summary>
+    /// <param name="args"></param>
     private void CheckGem(SelectEnterEventArgs args)
     {
         if (args.interactableObject.transform.GetInstanceID() == _correctGem.transform.GetInstanceID())
@@ -48,7 +50,7 @@ public class GemQuest : Quest
 
     protected override void Activate()
     {
-        ActivateSocket();
+        _correctItemSocket.gameObject.SetActive(true);
     }
 
     protected override void Stop()

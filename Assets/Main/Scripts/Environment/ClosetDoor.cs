@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Plays effects of closet door rotation.
+/// </summary>
 [RequireComponent(typeof(RandomizedAudioSource))]
 public class ClosetDoor : MonoBehaviour
 {

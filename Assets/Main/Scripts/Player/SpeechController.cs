@@ -1,6 +1,5 @@
 using DotNetEnv;
 using eToile;
-using FuzzySharp;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -12,24 +11,25 @@ using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// API response data type.
+/// </summary>
 class TranscribeData
 {
     public string result;
 }
 
+/// <summary>
+/// Handles voice input from microphone and transcribes it.
+/// </summary>
 [RequireComponent(typeof(SpeecControllerhHint))]
 public class SpeechController : MonoBehaviour, IPausable
 {
     [Header("Recording")]
     [SerializeField] private InputActionReference _recordAction;
-    [SerializeField] private int _scoreTreshold = 33;
     [SerializeField] private int _recordingTime = 5;
     public event Action onRecordingStart, onRecordingStop;
-    public event Action<IGrabbable> onItemFound;
-
-    [Header("Items Controll")]
-    [SerializeField] private List<GrabbableObject> _items;
-    [SerializeField] Transform _itemAttachPoint;
+    public event Action<string> onTranscribed;
 
     private int _frequency = 48000;
 
@@ -68,6 +68,11 @@ public class SpeechController : MonoBehaviour, IPausable
         StartCoroutine(RequestPermission());
     }
 
+    /// <summary>
+    /// Handles voice input. Uses microphone to record player's voice while they're holding the recording button.
+    /// If recording lasts more than maximum recording time, this method deletes it and cancels transcription.
+    /// When player releases button and recording time is less then its maximum value, sends the recording to transcription.
+    /// </summary>
     public void CheckItemSpeech()
     {
         if (IsUnableToRecord()) return;
@@ -119,11 +124,20 @@ public class SpeechController : MonoBehaviour, IPausable
         }
     }
 
+    /// <summary>
+    /// Checks if recording is unable to start.
+    /// It allows recording only if the game isn't paused, no request is pending and the microphone is available.
+    /// </summary>
+    /// <returns>True if the recording is unabled or forbidden.</returns>
     private bool IsUnableToRecord() => Pause.IsPaused || _isLoading 
         || !Permission.HasUserAuthorizedPermission(Permission.Microphone)
         || _deviceName == null || _deviceName == "";
 
-    private System.Collections.IEnumerator RequestPermission()
+    /// <summary>
+    /// Requests player's microphone recording premission. 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RequestPermission()
     {
         if(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
             Permission.RequestUserPermission(Permission.Microphone);
@@ -132,6 +146,11 @@ public class SpeechController : MonoBehaviour, IPausable
             yield return 0;
     }
 
+    /// <summary>
+    /// Converts audio clip to wav and sends it to API for transcription.
+    /// If audio was transcribed successfully, matches the result text.
+    /// </summary>
+    /// <exception cref="Exception">Thrown when request was failed or no result was given.</exception>
     private async void TranscribeRecord()
     {
         if (!_audioClip || _audioClip.loadState != AudioDataLoadState.Loaded)
@@ -161,6 +180,8 @@ public class SpeechController : MonoBehaviour, IPausable
         try
         {
             var response = await _httpClient.PostAsync(uri.ToString(), content);
+            response.EnsureSuccessStatusCode();
+
             var strData = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<TranscribeData>(strData);
 
@@ -169,15 +190,19 @@ public class SpeechController : MonoBehaviour, IPausable
             else
                 throw new Exception("No results");
         }
-        catch
+        catch(Exception ex)
         {
-            StartCoroutine(ThrowError("Request error"));
+            StartCoroutine(ThrowError(ex));
         }
 
         _isLoading = false;
     }
 
-    private IEnumerator<WaitForSeconds> TestTranscribe()
+    /// <summary>
+    /// Displays loading and result effects to test them without sending request to API.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator TestTranscribe()
     {
         _isLoading = true;
         Debug.Log("Transcribing");
@@ -189,68 +214,65 @@ public class SpeechController : MonoBehaviour, IPausable
         else
         {
             _controllerHint.ShowResponse();
-            _items[0].RestoreSocketedItem(_itemAttachPoint);
+            onTranscribed?.Invoke("блёнда");
         }
 
         _isLoading = false;
     }
 
-    private IEnumerator ThrowError(string message)
+    /// <summary>
+    /// Handles transcription and text matching errors. 
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    private IEnumerator ThrowError(Exception exception)
     {
+        Debug.LogException(exception);
+
         while (Pause.IsPaused)
             yield return null;
 
         _controllerHint.ShowError();
-        //throw new Exception(message);
     }
 
+    /// <summary>
+    /// Informs about result text and shows response.
+    /// </summary>
+    /// <param name="transcribed"></param>
+    /// <returns></returns>
     private IEnumerator MatchWord(string transcribed)
     {
         while(Pause.IsPaused)
             yield return null;
 
-        var words = _items
-            .Where(item => item.Data.DialogueLine && item.Data.DialogueLine.Word)
-            .Select(item => item.Data.DialogueLine.Word.Title.ToLower().Replace('ё', 'е'))
-            .ToArray();
+        Exception exception = null;
 
-        if (words.Length == 0)
+        try
         {
-            yield return ThrowError("no words");
-            yield break;
+            onTranscribed?.Invoke(transcribed);
+            _controllerHint.ShowResponse();
+        }
+        catch(Exception ex)
+        {
+            exception = ex;
         }
 
-        var result = Process.ExtractOne(transcribed, words, (s) => s);
-
-        Debug.Log(transcribed);
-        Debug.Log($"{result.Value}: {result.Score}");
-
-        if (result.Score >= _scoreTreshold && result.Index >= 0 && result.Index < _items.Count)
-        {
-            _items[result.Index].RestoreSocketedItem(_itemAttachPoint);
-            _controllerHint.ShowResponse();
-            onItemFound?.Invoke(_items[result.Index]);
-        }  
-        else
-            Debug.Log("Ничего нет. Может, повторишь снова?");
+        if(exception != null)
+            yield return ThrowError(exception);
     }
 
-    public void AddItem(GrabbableObject item)
-    {
-        _items.Add(item);
-    }
-
-    public void RemoveItem(GrabbableObject item)
-    {
-        _items.Remove(item);
-    }
-
+    /// <summary>
+    /// Makes recording unavailable on game pause.
+    /// </summary>
     public void Freeze()
     {
         _isLoading = true;
         _controllerHint.Freeze();
     }
 
+    /// <summary>
+    /// Makes recording available on game continue.
+    /// </summary>
     public void Unfreeze()
     {
         _isLoading = false;

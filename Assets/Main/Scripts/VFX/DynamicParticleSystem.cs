@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Wraps up <c>ParticleSystem</c> to dynamicly change its properties.
+/// </summary>
 public class DynamicParticleSystem : MonoBehaviour
 {
     private ParticleSystem _particleSystem;

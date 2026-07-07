@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents Bazhov character.
+/// </summary>
 public class Bazhov : NpcNavigatable
 {
     protected override void Update()

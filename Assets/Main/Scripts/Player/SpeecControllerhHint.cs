@@ -1,6 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Controlls hint system and visualization of recording.
+/// </summary>
 public class SpeecControllerhHint : MonoBehaviour, IPausable
 {
     [SerializeField] private ActionsVisualizer _controller, _hand;
@@ -15,6 +18,13 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
     private bool _wasActive;
     private Coroutine _cancelCoroutine;
 
+    /// <summary>
+    /// Enables or disables hint system.
+    /// </summary>
+    /// <remarks>
+    /// Makes controller model translucent.
+    /// </remarks>
+    /// <param name="enable">Whether to enable or disable hint system.</param>
     public void ToggleHint(bool enable)
     {
         _hintAnimator.gameObject.SetActive(enable);
@@ -28,6 +38,9 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         _hand.WarnAboutRecording(enable);
     }
 
+    /// <summary>
+    /// Starts recording effects and animation.
+    /// </summary>
     public void ShowRecording()
     {
         _isWarning = false;
@@ -36,6 +49,9 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         _recordingEffect.Play();
     }
 
+    /// <summary>
+    /// Starts loading effects and animation. Stops recording and pulsatile warning animation.
+    /// </summary>
     public void HideRecording()
     {
         _hintAnimator.SetTrigger("Send");
@@ -49,15 +65,25 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         _loadingEffect.Play();
 
         if (_cancelCoroutine != null)
+        {
             StopCoroutine(_cancelCoroutine);
+            _cancelCoroutine = null;
+        }
     }
 
+    /// <summary>
+    /// Stops recordging effects and animation.
+    /// </summary>
     public void CancelRecording()
     {
         _hintAnimator.SetTrigger("Stop");
         _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
+    /// <summary>
+    /// Starts pulsatile animation that warn about running out of recording time. 
+    /// </summary>
+    /// <param name="timer">Current recording time in seconds.</param>
     public void WarnRecording(float timer)
     {
         if(timer <= _warningStartTime && !_isWarning)
@@ -68,6 +94,9 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         }
     }
 
+    /// <summary>
+    /// Starts successs animation and throws loading particles.
+    /// </summary>
     public void ShowResponse()
     {
         _hintAnimator.SetTrigger("Response");
@@ -76,6 +105,9 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         _itemAppearanceEffect.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Starts error animation and makes loading particles fall down.
+    /// </summary>
     public void ShowError()
     {
         _hintAnimator.SetTrigger("Error");
@@ -87,12 +119,20 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         _loadingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
+    /// <summary>
+    /// Stops recording effects and animation after delay.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StopRecording()
     {
         yield return new WaitForSeconds(_warningStartTime);
         _recordingEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        _cancelCoroutine = null;
     }
 
+    /// <summary>
+    /// Freezes hint animation.
+    /// </summary>
     public void Freeze()
     {
         _hintAnimator.speed = 0;
@@ -100,6 +140,9 @@ public class SpeecControllerhHint : MonoBehaviour, IPausable
         ToggleHint(false);
     }
 
+    /// <summary>
+    /// Continues hint animation.
+    /// </summary>
     public void Unfreeze()
     {
         _hintAnimator.speed = 1;

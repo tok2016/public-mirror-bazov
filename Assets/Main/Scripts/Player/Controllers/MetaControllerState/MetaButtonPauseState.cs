@@ -1,10 +1,16 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents button's behaviour when the game is paused.
+/// </summary>
 public class MetaButtonPauseState : MetaState
 {
     public MetaButtonPauseState(MetaButton metaButton, Color color, MetaStateMachine stateMachine) 
         : base(metaButton, color, stateMachine) { }
 
+    /// <summary>
+    /// Changes state to disabled or warned. Returns to default if button is no more paused.
+    /// </summary>
     public override void Update()
     {
         if (_stateMachine.IsDisabled)

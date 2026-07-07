@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Highlights <c>MonoBehavior</c> object.
+/// </summary>
 public class HintObject : MonoBehaviour
 {
     protected MeshRenderer _renderer;
@@ -18,17 +21,20 @@ public class HintObject : MonoBehaviour
         _defaultMaterial = _renderer?.material;
     }
 
-    protected virtual void Start()
-    {
-        
-    }
-
+    /// <summary>
+    /// Displays or hides outline. If outline toggle is forbidden, the method does nothing. 
+    /// </summary>
+    /// <param name="enable">Whether to display or hide outline.</param>
     public void ToggleOutline(bool enable)
     {
         if (_enableOutline && _renderer)
             _renderer.gameObject.layer = enable ? _hintLayer : _defaultLayerMask;
     }
 
+    /// <summary>
+    /// Changes object material to highlighted one, if it was set, or resets it.
+    /// </summary>
+    /// <param name="enable">Whether to change material or reset it.</param>
     public virtual void ToggleMaterial(bool enable)
     {
         if (_hintMaterial && _defaultMaterial && _renderer)

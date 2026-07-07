@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents Kokovanya character.
+/// </summary>
 public class Kokovanya : NpcNavigatable
 {
     protected override void Update()

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents Murenka character.
+/// </summary>
 public class Murenka : NpcNavigatable
 {
     [Header("Murenka")]
@@ -13,6 +16,11 @@ public class Murenka : NpcNavigatable
         MoveAnimator(Agent.velocity);
     }
 
+    /// <summary>
+    /// Immitates eating by playing particles effect.
+    /// </summary>
+    /// <param name="grabbable"></param>
+    /// <param name="socket"></param>
     public void Eat(NpcGrabbable grabbable, NpcSocket socket) 
     {
         if(grabbable == _objectToEat)

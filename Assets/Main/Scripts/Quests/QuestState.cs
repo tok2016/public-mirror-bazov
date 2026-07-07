@@ -1,3 +1,6 @@
+/// <summary>
+/// State of quest life cycle.
+/// </summary>
 public enum QuestState
 {
     Locked = 0,

@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Checks for items collecting quest completion.
+/// </summary>
 public class CollectingQuest : Quest
 {
     [Header("Collecting")]
@@ -39,6 +42,10 @@ public class CollectingQuest : Quest
             StopCoroutine(_commentCoroutine);
     }
 
+    /// <summary>
+    /// Enables or disables hint zones and hint objects.
+    /// </summary>
+    /// <param name="enable">Whether to enable the hints or not</param>
     public void ToggleHints(bool enable)
     {
         _bag.ToggleBag(enable);

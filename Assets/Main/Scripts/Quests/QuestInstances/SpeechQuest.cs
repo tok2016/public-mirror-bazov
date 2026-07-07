@@ -2,10 +2,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Checks for item call quest completion. 
+/// </summary>
 public class SpeechQuest : Quest
 {
     [Header("Item Check")]
     [SerializeField] protected GrabbableObject _correctItem;
+    [SerializeField] protected Bag _bag;
     public UnityEvent OnCorrectItemGrab;
     public UnityEvent OnCorrectItemRelease;
 
@@ -25,26 +29,46 @@ public class SpeechQuest : Quest
         _correctItem.Interactable.selectEntered.AddListener(CheckItem);
     }
 
+    /// <summary>
+    /// Adds handlers to all necessary events.
+    /// </summary>
     protected void EnableMainEvents()
     {
         onReturn.AddListener(EnableHints);
     }
 
+    /// <summary>
+    /// Removes handlers from all necessary events.
+    /// </summary>
     protected void DisableMainEvents()
     {
         onReturn.RemoveListener(EnableHints);
     }
 
+    /// <summary>
+    /// Enables speech controller hints.
+    /// </summary>
     protected void EnableHints()
     {
         _controllerHint.ToggleHint(true);
     }
+
+    /// <summary>
+    /// Disables speech controller hints.
+    /// </summary>
     protected void DisableHints()
     {
         _controllerHint.ToggleHint(false);
     }
 
-    private void CheckItem(SelectEnterEventArgs args) => Check();
+    /// <summary>
+    /// Compares grabbed item with correct one.
+    /// </summary>
+    private void CheckItem(SelectEnterEventArgs args)
+    {
+        if (args.interactableObject.transform.GetEntityId() == _correctItem.GetEntityId())
+            Check();
+    }
 
     protected override void Check()
     {
@@ -58,19 +82,17 @@ public class SpeechQuest : Quest
         var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
         if (item && item.GetEntityId() == _correctItem.GetEntityId())
         {
-            _controller.RemoveItem(item);
+            _bag.RemoveItem(item);
             OnCorrectItemGrab.Invoke();
         }
     }
 
     internal override void OnItemLettingGo(SelectExitEventArgs args)
     {
-        if (State != QuestState.InProgress) return;
-
         var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
         if (item)
         {
-            _controller.AddItem(item);
+            _bag.AddItem(item);
             if(item.GetEntityId() == _correctItem.GetEntityId())
                 OnCorrectItemRelease.Invoke();
         }

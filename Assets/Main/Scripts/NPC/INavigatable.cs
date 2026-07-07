@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Declares behavior for object that's able to navigate and move.
+/// </summary>
 public interface INavigatable
 {
     public void Chase(Transform target);

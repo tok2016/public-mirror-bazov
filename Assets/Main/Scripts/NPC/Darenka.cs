@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents Darenka character.
+/// </summary>
 public class Darenka : NpcNavigatable
 {
     protected override void Update()

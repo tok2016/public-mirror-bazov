@@ -1,6 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represent the door objects. Manages their rotation around the selected axes.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class Door : MonoBehaviour
 {
@@ -24,6 +27,10 @@ public class Door : MonoBehaviour
         _startRotation = transform.rotation;
     }
 
+    /// <summary>
+    /// Opens (rotates to defined angle) or closes (return to initial rotation) the door.
+    /// </summary>
+    /// <param name="open">Whether to open or close the door.</param>
     public void Toggle(bool open)
     {
         StopAllCoroutines();
@@ -31,6 +38,11 @@ public class Door : MonoBehaviour
         StartCoroutine(Rotate(open));
     }
 
+    /// <summary>
+    /// Smoothly rotates the door to target angle.
+    /// </summary>
+    /// <param name="open">If true, the target is the defined angle or initial one otherwise.</param>
+    /// <returns></returns>
     private IEnumerator Rotate(bool open)
     {
         var angleDiff = _rotationAngle * (open ? 1 : 0);

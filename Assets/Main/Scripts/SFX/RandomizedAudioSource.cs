@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Wraps up <c>AudioSource</c> to randomize its play.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class RandomizedAudioSource : MonoBehaviour
 {
@@ -10,6 +13,12 @@ public class RandomizedAudioSource : MonoBehaviour
 
     public bool IsPlaying => _audioSource.isPlaying;
 
+    /// <summary>
+    /// Stops previous clip and replaces it with given one.
+    /// </summary>
+    /// <value>
+    /// Currently playing audio clip.
+    /// </value>
     public AudioClip Clip
     {
         get => _audioSource.clip;
@@ -27,6 +36,9 @@ public class RandomizedAudioSource : MonoBehaviour
         _defaultVolume = _audioSource.volume;
     }
 
+    /// <summary>
+    /// Plays current audio clip with random volume and pitch.
+    /// </summary>
     public void Play()
     {
         _audioSource.Stop();
@@ -35,6 +47,10 @@ public class RandomizedAudioSource : MonoBehaviour
         _audioSource.Play();
     }
 
+    /// <summary>
+    /// Changes audio clip to given one and plays it.
+    /// </summary>
+    /// <param name="clip"></param>
     public void Play(AudioClip clip)
     {
         _audioSource.Stop();
@@ -42,6 +58,9 @@ public class RandomizedAudioSource : MonoBehaviour
         Play();
     }
 
+    /// <summary>
+    /// Stops audio source.
+    /// </summary>
     public void Stop()
     {
         _audioSource.Stop();

@@ -9,6 +9,9 @@ public struct TestItemCallOption
     public InputActionReference action;
 }
 
+/// <summary>
+/// Instantly makes collected items available by button press to get them with no need ti call them in mictophone.
+/// </summary>
 public class TestItemCall : MonoBehaviour
 {
     public static TestItemCall Instance { get; private set; }
@@ -31,6 +34,9 @@ public class TestItemCall : MonoBehaviour
         CheckCallInput();
     }
 
+    /// <summary>
+    /// Checks if any button was pressed and makes corresponding item accessible.
+    /// </summary>
     public void CheckCallInput()
     {
         foreach(var option in _itemsCallOptions)

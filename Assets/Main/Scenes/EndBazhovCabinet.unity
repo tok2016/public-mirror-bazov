@@ -4083,6 +4083,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 115486282}
+    - target: {fileID: 1040040211540761816, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _defaultClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1e4769487c4c15d4fa8048c29b4780b4, type: 3}
     - target: {fileID: 1074940901903350795, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4211,6 +4215,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1841875477}
+    - target: {fileID: 2111714852440420840, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
+      propertyPath: _defaultClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 3c56fce4f3e1a7444affa8681218499c, type: 3}
     - target: {fileID: 2174770658022623351, guid: 3e7ff7625015b3249b0b2bb58165b243, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
