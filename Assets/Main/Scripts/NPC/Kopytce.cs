@@ -1,6 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represents Kopytce character. Manages gems appearance.
+/// </summary>
 public class Kopytce : NpcContoller
 {
     [Header("Animation")]
@@ -49,6 +52,11 @@ public class Kopytce : NpcContoller
         }
     }
 
+    /// <summary>
+    /// Generates gems throw positions relative to the hoof.
+    /// </summary>
+    /// <param name="positionsCount">Amount of positions to generate for one stomp.</param>
+    /// <returns>Array of throw positions for one stomp.</returns>
     private Vector3[] FormThrowOffsets(int positionsCount)
     {
         var throwPositions = new Vector3[positionsCount];
@@ -59,6 +67,12 @@ public class Kopytce : NpcContoller
         return throwPositions;
     }
 
+    /// <summary>
+    /// Calculates next position relative to given point with given angle shift.
+    /// </summary>
+    /// <param name="origin">Center position that the new position will be calculated relative to.</param>
+    /// <param name="angleStep">Shift in degrees.</param>
+    /// <returns>Gem throw position.</returns>
     private Vector3 GetThrowOffset(Vector3 origin, float angleStep)
     {
         var angle = Mathf.Atan2(origin.z, origin.x);
@@ -68,24 +82,38 @@ public class Kopytce : NpcContoller
         return new Vector3(x, 0, z);
     }
 
+    /// <summary>
+    /// Enables or disables alert animation.
+    /// </summary>
+    /// <param name="alert">If true, enables alert animation.</param>
     public void ToggleAlert(bool alert)
     {
-        if(alert)
-            _animator.SetTrigger("Stop");
-
         StopRandomAnimation();
         _animator.SetBool("IsAlerted", alert);
 
         if (_idleAnimationCoroutine != null)
+        {
             StopCoroutine(_idleAnimationCoroutine);
+            _idleAnimationCoroutine = null;
+        }
     }
 
+    /// <summary>
+    /// Alerts NPC and starts gems generation and throwing.
+    /// </summary>
     public void StartStomping()
     {
         ToggleAlert(true);
         StartCoroutine(Stomp());
     }
 
+    /// <summary>
+    /// Triggers stomp animation and throw some gems.
+    /// </summary>
+    /// <remarks>
+    /// If random idle animation is playing, waits for it's end.
+    /// </remarks>
+    /// <returns></returns>
     private IEnumerator Stomp()
     {
         for (int i = 0; i < _stompsCount; i++)
@@ -109,6 +137,9 @@ public class Kopytce : NpcContoller
         _currentGem = 0;
     }
 
+    /// <summary>
+    /// Throw gems in one stomp. After every throwing shifts positions by calculated angle.
+    /// </summary>
     private void ThrowGems()
     {
         var angleOffset = Mathf.PI * 2 / (_gemsPerStomp * _stompsCount);
@@ -129,12 +160,19 @@ public class Kopytce : NpcContoller
         _currentGem += gemsToThrow;
     }
 
+    /// <summary>
+    /// Triggers bark animation.
+    /// </summary>
     public void Bark()
     {
         ToggleAlert(true);
         _animator.SetTrigger("Bark");
     }
 
+    /// <summary>
+    /// Randomly chooses and triggers one of idle animation clips.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator RandomizeAnimation()
     {
         _isVoid = false;
@@ -146,14 +184,21 @@ public class Kopytce : NpcContoller
             yield return new WaitForSeconds(currentClip.length);
 
         StopRandomAnimation();
+        _idleAnimationCoroutine = null;
     }
 
+    /// <summary>
+    /// Stops idle animation and calculates time between animation triggers.
+    /// </summary>
     private void StopRandomAnimation()
     {
         _isVoid = true;
         _animationBreakTimer = Mathf.Round(Random.Range(_minAnimationBreak, _maxAnimationBreak));
     }
 
+    /// <summary>
+    /// Randomly shuffles gems collection.
+    /// </summary>
     private void ShuffleGems()
     {
         for (int i = _gems.Length - 1; i > 0; i--)

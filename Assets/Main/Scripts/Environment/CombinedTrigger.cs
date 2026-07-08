@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Combines several intercepting trigger colliders in one enitre zone.
+/// Ignores static objects and trigger colliders.
+/// </summary>
 public class CombinedTrigger : MonoBehaviour
 {
     private Dictionary<Collider, int> _touchingColliders;
     public event Action<Collider> OnTriggerGroupEnter, OnTriggerGroupExit;
+
+    /// <summary>
+    /// All trigger colliders of object that were combined.
+    /// </summary>
     public Collider[] Triggers { get; private set; }
     private int _maxCoroutinesCount = 3;
     private int _coroutineCount = 0;
@@ -19,6 +27,10 @@ public class CombinedTrigger : MonoBehaviour
             .ToArray();
     }
 
+    /// <summary>
+    /// Triggers enter event.
+    /// </summary>
+    /// <param name="other">Collider that entered the combined trigger.</param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.isStatic || other.isTrigger) return;
@@ -38,6 +50,11 @@ public class CombinedTrigger : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Triggers exit event in the next frame. Handling player exit has the highest priority.
+    /// If the coroutines count is higher than its max value, triggers event immediatly.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
         if(other.gameObject.isStatic || other.isTrigger) return;
@@ -60,6 +77,11 @@ public class CombinedTrigger : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Waits for the next frame to exit the trigger.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     private IEnumerator<int> DelayExitTrigger(Collider other)
     {
         yield return 0;
@@ -68,6 +90,10 @@ public class CombinedTrigger : MonoBehaviour
         _coroutineCount--;
     }
 
+    /// <summary>
+    /// Handles exit event.
+    /// </summary>
+    /// <param name="other"></param>
     private void ExitTrigger(Collider other)
     {
         _touchingColliders[other]--;

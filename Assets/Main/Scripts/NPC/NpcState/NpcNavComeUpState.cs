@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents NPC coming up state. Builds navigation graph to target only on entrance.
+/// </summary>
 public class NpcNavComeUpState : NpcNavState
 {
     public NpcNavComeUpState(NpcNavigatable character) : base(character) { }

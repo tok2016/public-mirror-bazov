@@ -50,6 +50,9 @@ public class MetaButtonMovement : MonoBehaviour
         MovePadButton(_homeMenuButton, _homeMenuAction, _homeMenuPositionYBoundaries);
     }
 
+    /// <summary>
+    /// Pushes and pulls grip button.
+    /// </summary>
     private void MoveGripButton()
     {
         if (_gripAction.action.IsPressed() || _gripAction.action.WasReleasedThisFrame())
@@ -63,6 +66,9 @@ public class MetaButtonMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Pushes and pulls trigger button.
+    /// </summary>
     private void MoveTriggerButton()
     {
         if(_triggerAction.action.IsPressed() || _triggerAction.action.WasReleasedThisFrame())
@@ -76,6 +82,9 @@ public class MetaButtonMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotates thumbstick around X and Z axes.
+    /// </summary>
     private void MoveStick()
     {
         if (_stickAction.action.IsPressed() || _stickAction.action.WasReleasedThisFrame())
@@ -90,6 +99,12 @@ public class MetaButtonMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Pushes and pulls button on controller's pad.
+    /// </summary>
+    /// <param name="button">Button to move.</param>
+    /// <param name="actionRef">Input action that moves button.</param>
+    /// <param name="yPosBoundaries">Min and max positions on Y axis.</param>
     private void MovePadButton(Transform button, InputActionReference actionRef, Vector2 yPosBoundaries)
     {
         if(actionRef.action.IsPressed() || actionRef.action.WasReleasedThisFrame())

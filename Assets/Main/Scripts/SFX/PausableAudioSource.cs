@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Wraps up <c>AudioSource</c> to freeze it on pause.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class PausableAudioSource : MonoBehaviour, IPausable
 {
@@ -16,11 +19,17 @@ public class PausableAudioSource : MonoBehaviour, IPausable
         Pause.onContinue += Unfreeze;
     }
 
+    /// <summary>
+    /// Pauses audio source.
+    /// </summary>
     public void Freeze()
     {
         _audioSource.Pause();
     }
 
+    /// <summary>
+    /// Resumes audio source.
+    /// </summary>
     public void Unfreeze()
     {
         _audioSource.UnPause();

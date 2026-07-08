@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents NPC looking state. Rotates NPC towards target every frame.
+/// </summary>
 public class NpcNavLookState : NpcNavState
 {
     public NpcNavLookState(NpcNavigatable character) : base(character) { }

@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 
+/// <summary>
+/// Manages behaviour of pad for teleportation.
+/// </summary>
 public class TeleportPad : MonoBehaviour
 {
     [SerializeField] private bool _activateOnAwake;
@@ -9,6 +12,10 @@ public class TeleportPad : MonoBehaviour
     [SerializeField] private Material _activated, _deactivated;
     [SerializeField] private Collider _snapVolume;
     [SerializeField] private GameObject _godrays;
+
+    /// <value>
+    /// Teleportation destination
+    /// </value>
     [field: SerializeField] public TeleportationAnchor Anchor {  get; private set; }
 
     private MeshRenderer _renderer;
@@ -24,6 +31,9 @@ public class TeleportPad : MonoBehaviour
         else Deactivate();
     }
 
+    /// <summary>
+    /// Makes pad available for teleportation.
+    /// </summary>
     public void Activate()
     {
         _isActive = true;
@@ -32,6 +42,9 @@ public class TeleportPad : MonoBehaviour
         _snapVolume.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Makes pad unavailable for teleportation.
+    /// </summary>
     public void Deactivate()
     {
         _isActive = false;
@@ -40,6 +53,9 @@ public class TeleportPad : MonoBehaviour
         _snapVolume.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Activates next pad and disables current to make it unavailable for teleportation repeat.
+    /// </summary>
     public void EnterThePad()
     {
         if (_isActive)
@@ -51,6 +67,9 @@ public class TeleportPad : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables current pad so the player can teleport to it again.
+    /// </summary>
     public void ExitThePad()
     {
         if (_isActive)

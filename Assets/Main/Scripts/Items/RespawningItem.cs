@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
+/// <summary>
+/// Controlls item to be in accessible zone.
+/// </summary>
 [RequireComponent(typeof(XRGrabInteractable))]
 public class RespawningItem : MonoBehaviour
 {
@@ -24,20 +27,33 @@ public class RespawningItem : MonoBehaviour
         _defaultRotation = transform.rotation;
     }
 
+    /// <summary>
+    /// Removes active zone.
+    /// If item has exited the zone but it's still selected by interactor, method waits for its release.
+    /// </summary>
     public void RemoveItemZone()
     {
+        _itemZonesTouching--;
         if (_interactable.isSelected)
             _interactable.selectExited.AddListener(OnItemLetGo);
         else if(_itemZonesTouching == 0)
             ReturnToZone();
     }
 
+    /// <summary>
+    /// Waits for exited item release.
+    /// </summary>
+    /// <param name="args"></param>
     private void OnItemLetGo(SelectExitEventArgs args)
     {
         ReturnToZone();
         _interactable.selectExited.RemoveListener(OnItemLetGo);
     }
 
+
+    /// <summary>
+    /// Respawns item that has exited all active zones and stops its movement.
+    /// </summary>
     private void ReturnToZone()
     {
         if (!_exitedZone || _itemZonesTouching > 0) return;
@@ -51,6 +67,10 @@ public class RespawningItem : MonoBehaviour
         _rigidbody.angularVelocity = Vector3.zero;
     }
 
+    /// <summary>
+    /// Adds active zone when item enters the active zone.
+    /// </summary>
+    /// <param name="other">Trigger zone that this item has entered.</param>
     private void OnTriggerEnter(Collider other)
     {
         var itemZone = other.GetComponent<ItemActiveZone>();
@@ -61,6 +81,10 @@ public class RespawningItem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes active zone when item exits the active zone.
+    /// </summary>
+    /// <param name="other">Trigger zone that this item has exited.</param>
     private void OnTriggerExit(Collider other)
     {
         var itemZone = other.GetComponent<ItemActiveZone>();
@@ -73,12 +97,21 @@ public class RespawningItem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes active zone in the next frame. 
+    /// </summary>
+    /// <param name="itemZone">Active zone that item has exited.</param>
+    /// <returns></returns>
     private IEnumerator WaitBeforeExit(ItemActiveZone itemZone)
     {
         yield return null;
-        _itemZonesTouching--;
         _exitedZone = itemZone;
         RemoveItemZone();
         _exitCoroutine = null;
+    }
+
+    private void OnDisable()
+    {
+        _itemZonesTouching = 0;
     }
 }

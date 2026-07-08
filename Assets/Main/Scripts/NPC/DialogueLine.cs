@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Characters list.
+/// </summary>
 public enum Character
 {
     Darenka = 0,
@@ -10,6 +13,9 @@ public enum Character
     Bazhov = 4
 }
 
+/// <summary>
+/// Sound or line priority.
+/// </summary>
 public enum AudioPriority
 {
     Low = 0,
@@ -17,6 +23,10 @@ public enum AudioPriority
     High = 2
 }
 
+/// <summary>
+/// Contains line data and word that needs to be written in dictionary.
+/// Defines the character whose the line belongs to.
+/// </summary>
 [CreateAssetMenu(fileName = "DialogueLine", menuName = "Scriptable Objects/DialogueLine")]
 public class DialogueLine : ScriptableObject
 {

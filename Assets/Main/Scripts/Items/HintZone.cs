@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Comments hint when entering the area.
+/// </summary>
 [RequireComponent(typeof(BoxCollider))]
 public class HintZone : MonoBehaviour
 {
@@ -12,6 +15,9 @@ public class HintZone : MonoBehaviour
         Items = new Dictionary<Collider, IGrabbable>();
     }
 
+    /// <summary>
+    /// Plays hint line.
+    /// </summary>
     public void CommentHint()
     {
         if (_hint != null)

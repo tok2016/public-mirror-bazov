@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages main starting scene.
+/// </summary>
 public class MainScene : MonoBehaviour
 {
     [SerializeField] private TeleportPad _padToActivate;
@@ -21,6 +24,10 @@ public class MainScene : MonoBehaviour
         StartCoroutine(Wait());
     }
 
+    /// <summary>
+    /// Shows information about buttons as in a pause in the next frame.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Wait()
     {
         yield return null;
@@ -28,12 +35,19 @@ public class MainScene : MonoBehaviour
             visualizer.WarnAboutPause(true);
     }
 
+    /// <summary>
+    /// Activates portal to the first scene of quest.
+    /// </summary>
+    /// <param name="context"></param>
     public void StartQuest(InputAction.CallbackContext context)
     {
         _padToActivate.Activate();
         _padToActivate.EnterThePad();
     }
 
+    /// <summary>
+    /// Closes application.
+    /// </summary>
     public void Quit()
     {
         Application.Quit();

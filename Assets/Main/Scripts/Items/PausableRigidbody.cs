@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Freezes object's movement ruled by rigidbody.
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class PausableRigidbody : MonoBehaviour, IPausable
 {
@@ -19,6 +22,9 @@ public class PausableRigidbody : MonoBehaviour, IPausable
         Pause.onContinue += Unfreeze;
     }
 
+    /// <summary>
+    /// Saves rigidbody's current velocity and makes it kinematic.
+    /// </summary>
     public void Freeze()
     {
         _linearVelocity = _rigidbody.linearVelocity;
@@ -30,6 +36,9 @@ public class PausableRigidbody : MonoBehaviour, IPausable
         _rigidbody.isKinematic = true;
     }
 
+    /// <summary>
+    /// Returns rigidbody values before freeze.
+    /// </summary>
     public void Unfreeze()
     {
         _rigidbody.linearVelocity = _linearVelocity;

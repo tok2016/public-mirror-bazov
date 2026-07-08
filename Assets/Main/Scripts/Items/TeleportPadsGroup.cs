@@ -2,6 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Groups several pads making it as a holistic zone.
+/// </summary>
 public class TeleportPadsGroup : MonoBehaviour
 {
     [SerializeField] private TeleportPad[] _pads;
@@ -21,6 +24,9 @@ public class TeleportPadsGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activates all pads except current one.
+    /// </summary>
     public void ActivateAllPads()
     {
         foreach(var pad in _pads)
@@ -30,6 +36,9 @@ public class TeleportPadsGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Deactivates all pads except current one.
+    /// </summary>
     public void DeactivateAllPads()
     {
         foreach (var pad in _pads)
@@ -39,6 +48,10 @@ public class TeleportPadsGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles a teleportation to the first or last pad in group.
+    /// </summary>
+    /// <param name="pad">Pad the player has teleported to.</param>
     private void EnterPadsGroup(TeleportPad pad)
     {
         if (_current == null)
@@ -46,14 +59,26 @@ public class TeleportPadsGroup : MonoBehaviour
         _current = pad;
     }
 
+    /// <summary>
+    /// Handles a teleportation from the last or first pad in group.
+    /// </summary>
+    /// <param name="pad">Pad the player has teleported from.</param>
     private void ExitPadsGrpup(TeleportPad pad)
     {
         if (_exitCoroutine != null)
+        {
             StopCoroutine(_exitCoroutine);
+            _exitCoroutine = null;
+        }
 
         _exitCoroutine = StartCoroutine(WaitBeforeExit(pad));
     }
 
+    /// <summary>
+    /// Exits the group in the next frame.
+    /// </summary>
+    /// <param name="pad">Pad the player has teleported from.</param>
+    /// <returns></returns>
     private IEnumerator WaitBeforeExit(TeleportPad pad)
     {
         yield return null;
@@ -62,5 +87,7 @@ public class TeleportPadsGroup : MonoBehaviour
             OnPadGroupExit.Invoke();
             _current = null;
         }
+
+        _exitCoroutine = null;
     }
 }

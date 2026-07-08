@@ -1,9 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represent page of dictionary book and manages it physical behaviour. Has two sides.
+/// </summary>
 public class DictionaryPage : MonoBehaviour
 {
+    /// <value>
+    /// Front / odd side of the page.
+    /// </value>
     [field: SerializeField] public DictionaryPageSide Front {  get; private set; }
+
+    /// <summary>
+    /// Back / even side of the page.
+    /// </summary>
     [field: SerializeField] public DictionaryPageSide Back { get; private set; }
     private float _rotationSpeed = 500f;
     private bool _isFront = true;
@@ -15,11 +25,17 @@ public class DictionaryPage : MonoBehaviour
         transform.localRotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Starts page turning.
+    /// </summary>
     public void Turn()
     {
         StartCoroutine(Rotate());
     }
 
+    /// <summary>
+    /// Resets rotation and activates front side.
+    /// </summary>
     public void Close()
     {
         transform.SetAsLastSibling();
@@ -29,6 +45,10 @@ public class DictionaryPage : MonoBehaviour
         Back.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Smoothly rotates the page to the counter side.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Rotate()
     {
         transform.SetAsLastSibling();

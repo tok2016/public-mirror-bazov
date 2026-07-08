@@ -980,7 +980,7 @@ GameObject:
   - component: {fileID: 8118706352816425974}
   - component: {fileID: 8780178482638988416}
   - component: {fileID: 2970867871818088828}
-  - component: {fileID: 4768486388196431489}
+  - component: {fileID: 7338807444026648028}
   m_Layer: 0
   m_Name: Steps
   m_TagString: Untagged
@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomizedAudioSource
   _pitchDifferance: 0.2
   _volumeDifferance: 0.1
---- !u!114 &4768486388196431489
+--- !u!114 &7338807444026648028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1123,9 +1123,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4665519219741449505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5ca6febd2265d4dbce509e238c0d1e, type: 3}
+  m_Script: {fileID: 11500000, guid: 726624616fb0ec440aca2bf68656f961, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PausableAudioSource
+  m_EditorClassIdentifier: Assembly-CSharp::StepAudioSource
+  _zones: []
+  _defaultClip: {fileID: 8300000, guid: 09cb9746120af614d97b76a0686b1fdc, type: 3}
+  _teleportationProvider: {fileID: 5255080037288204716}
 --- !u!1 &4965045562384884101
 GameObject:
   m_ObjectHideFlags: 0
@@ -33241,6 +33244,17 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.78, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &5255080037288204716 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1748222016861356527, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 5813907266071861315}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f69dc1cb084aa42b2f2f8cd87bc770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5372150265929144328 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1883230248363655243, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}

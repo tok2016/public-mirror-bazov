@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Triggers pad entrance and exit when player interacts with the zone.
+/// </summary>
 public class TeleportPadZone : MonoBehaviour
 {
     [SerializeField] private TeleportPad _pad;

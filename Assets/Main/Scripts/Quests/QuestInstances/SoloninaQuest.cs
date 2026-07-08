@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
+/// <summary>
+/// Checks for item call quest connected to socket to be completed.
+/// </summary>
 public class SoloninaQuest : SpeechQuest
 {
     [Header("Socket")]
@@ -15,6 +18,10 @@ public class SoloninaQuest : SpeechQuest
         _correctItemSocket.selectEntered.AddListener(CheckItem);
     }
 
+    /// <summary>
+    /// Compares socketed item with the correct one and transforms it to be interactable with NPC.
+    /// </summary>
+    /// <param name="args"></param>
     private void CheckItem(SelectEnterEventArgs args)
     {
         var item = args.interactableObject.transform.GetComponent<GrabbableObject>();
@@ -29,7 +36,7 @@ public class SoloninaQuest : SpeechQuest
             item.transform.position = _correctItemSocket.attachTransform.position;
             _successEffect.SetActive(true);
 
-            _controller.RemoveItem(item);
+            _bag.RemoveItem(item);
             Check();
         }
     }

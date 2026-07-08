@@ -5,21 +5,43 @@ using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
+/// <summary>
+/// Manages dictionary as a physical book. Its pages display on UI canvas.
+/// </summary>
 public class DictionaryBook : MonoBehaviour
 {
     [Header("Book")]
     [SerializeField] private WordData[] _words;
+
+    /// <value>
+    /// Transform of the front binding of book.
+    /// </value>
     [field: SerializeField] public Transform FrontBinding { get; private set; }
     private DictionaryStateMachine _stateMachine;
 
     [Header("Transform")]
     [SerializeField] private Transform _attachPoint;
+
+    /// <value>
+    /// Parent for all inner book elements to scale.
+    /// </value>
     [field: SerializeField] public Transform ScaleWrapper {  get; private set; }
+
+    /// <value>
+    /// Scale multiplier when book is opened.
+    /// </value>
     [field: SerializeField] public float OpenedScale { get; private set; } = 1f;
+
+    /// <value>
+    /// Camera transform to track book visibility.
+    /// </value>
     [field: SerializeField] public Transform Camera { get; private set; }
     [SerializeField] private float _minDistanceToOpen = 1;
     [SerializeField] private Renderer _renderer;
 
+    /// <value>
+    /// Start scale of the book wrapper.
+    /// </value>
     public Vector3 DefaultScale { get; private set; }
     private Coroutine _returning;
     private float _returingMoveSpeed = 10;
@@ -56,6 +78,10 @@ public class DictionaryBook : MonoBehaviour
         DictionaryManager.OnWordWrite += AddWord;
     }
 
+    /// <summary>
+    /// Fills dictionary book with pages with words.
+    /// Each page has two sides with only one word and description on each one.
+    /// </summary>
     void Start()
     {
         DefaultScale = ScaleWrapper.localScale;
@@ -64,7 +90,7 @@ public class DictionaryBook : MonoBehaviour
         for (int i = _words.Length - 1; i >= 0; i--)
         {
             var pageIndex = (int)round((_words.Length - i - 1) / 2f);
-            var page = pageIndex >= _pages.Count ? CreateWord() : _pages[pageIndex];
+            var page = pageIndex >= _pages.Count ? CreatePage() : _pages[pageIndex];
             page.gameObject.SetActive(true);
 
             var side = i % 2 == 0 ? page.Front : page.Back;
@@ -88,13 +114,21 @@ public class DictionaryBook : MonoBehaviour
         _stateMachine.Update();
     }
 
-    private DictionaryPage CreateWord()
+    /// <summary>
+    /// Instantiates new page as the last child.
+    /// </summary>
+    /// <returns>Instantiated empty page of dictionary book.</returns>
+    private DictionaryPage CreatePage()
     {
         var newPage = Instantiate(_page, _pagesGroup);
         _pages.Add(newPage);
         return newPage;
     }
 
+    /// <summary>
+    /// Fills word title on its own page and side.
+    /// </summary>
+    /// <param name="word">Word to fill the page with.</param>
     public void AddWord(WordData word)
     {
         if (_pagesSides.ContainsKey(word))
@@ -104,6 +138,10 @@ public class DictionaryBook : MonoBehaviour
         } 
     }
 
+    /// <summary>
+    /// Turns one of the opened pages.
+    /// </summary>
+    /// <param name="left">If true, turns the left page.</param>
     public void TurnThePage(bool left = false)
     {
         var pageToTurn = _currentPage + (left ? -1 : 0);
@@ -120,6 +158,10 @@ public class DictionaryBook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables or disables book canvas. Turns all pages to the first one.
+    /// </summary>
+    /// <param name="enable">Whether to enable or disable canvas.</param>
     public void EnableCanvas(bool enable)
     {
         _pagesCanvas.gameObject.SetActive(enable);
@@ -133,11 +175,18 @@ public class DictionaryBook : MonoBehaviour
         }    
     }
 
+    /// <summary>
+    /// Closes book on release.
+    /// </summary>
+    /// <param name="args"></param>
     public void Close(SelectExitEventArgs args)
     {
         Close();
     }
 
+    /// <summary>
+    /// Closes book and returns it to attach position.
+    /// </summary>
     public void Close()
     {
         if (_stateMachine.Current != _stateMachine.OpenState)
@@ -146,6 +195,10 @@ public class DictionaryBook : MonoBehaviour
         _stateMachine.ChangeState(_stateMachine.CloseState);
     }
 
+    /// <summary>
+    /// Smoothly moves and rotates book to attach point.
+    /// </summary>
+    /// <returns></returns>
     private System.Collections.IEnumerator ReturnToAttach()
     {
         var distance = 1f;
@@ -169,12 +222,18 @@ public class DictionaryBook : MonoBehaviour
         FinishTransform();
     }
 
+    /// <summary>
+    /// Returns book to attach position.
+    /// </summary>
     public void StartReturing()
     {
         transform.SetParent(_attachPoint);
         _returning = StartCoroutine(ReturnToAttach());
     }
 
+    /// <summary>
+    /// Stops book returning.
+    /// </summary>
     public void StopReturing()
     {
         if(_returning != null)
@@ -184,22 +243,37 @@ public class DictionaryBook : MonoBehaviour
         }    
     }
 
+    /// <summary>
+    /// Instantly sets book transform to initial values.
+    /// </summary>
     private void FinishTransform()
     {
         transform.localRotation = Quaternion.identity;
+        _returning = null;
     }
 
+    /// <summary>
+    /// Sets book state to grabbed on grab. Book opens only when it's grabbed by the player.
+    /// </summary>
+    /// <param name="args"></param>
     public void Open(SelectEnterEventArgs args)
     {
         if (args.interactorObject.GetType() == typeof(NearFarInteractor))
             _stateMachine.ChangeState(_stateMachine.GrabState);
     }
 
+    /// <summary>
+    /// Plays given sound.
+    /// </summary>
+    /// <param name="clip">Sound to play.</param>
     public void PlaySound(AudioClip clip)
     {
         _audioSource.Play(clip);
     }
 
+    /// <summary>
+    /// Plays book opening/closing sound.
+    /// </summary>
     public void PlayOpeningSound()
     {
         PlaySound(_openingSound);
@@ -210,6 +284,10 @@ public class DictionaryBook : MonoBehaviour
         DictionaryManager.OnWordWrite -= AddWord;
     }
 
+    /// <summary>
+    /// Checks if the book is in camera visibility zone and is further than defined distance to open.
+    /// </summary>
+    /// <returns></returns>
     public bool IsInFrontOfCamera() => 
         (Camera.position - transform.position).magnitude >= _minDistanceToOpen && _renderer.isVisible;
 }

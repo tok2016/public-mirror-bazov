@@ -1,13 +1,18 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Manages behaviour of NPC common for every of them.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class NpcContoller : MonoBehaviour, IPausable
 {
     [Header("NPC Base")]
     [SerializeField] protected Character _characterName;
     [SerializeField] protected Animator _animator;
+
+    /// <value>
+    /// Audio source used to make sounds from NPC.
+    /// </value>
     public AudioSource NpcAudioSource { get; private set; }
     protected DialogueLine _currentLine;
 
@@ -34,13 +39,25 @@ public class NpcContoller : MonoBehaviour, IPausable
         
     }
 
+    /// <summary>
+    /// Plays given sound.
+    /// </summary>
+    /// <param name="sound">Sound to play.</param>
     public virtual void PlaySound(AudioClip sound)
     {
+        _currentLine = null;
         NpcAudioSource.Stop();
         NpcAudioSource.clip = sound;
         NpcAudioSource.Play();
     }
 
+    /// <summary>
+    /// Plays given dialogue line.
+    /// </summary>
+    /// <remarks>
+    /// If the line had lower priority than currently playing one, it's ignored.
+    /// </remarks>
+    /// <param name="line">Dialogue line to play.</param>
     public virtual void PlayLine(DialogueLine line)
     {
         if (NpcAudioSource.isPlaying && _currentLine && line.Priority < _currentLine.Priority)
@@ -52,12 +69,19 @@ public class NpcContoller : MonoBehaviour, IPausable
         NpcAudioSource.Play();
     }
 
+    /// <summary>
+    /// Stops playing given line if it's currently beeing played.
+    /// </summary>
+    /// <param name="line">Dialogue line to stop.</param>
     public virtual void StopLine(DialogueLine line)
     {
         if (_currentLine == line)
             StopLine();
     }
 
+    /// <summary>
+    /// Stops every sound or line.
+    /// </summary>
     public virtual void StopLine()
     {
         _currentLine = null;
@@ -70,12 +94,18 @@ public class NpcContoller : MonoBehaviour, IPausable
         DialogueManager.RemoveCharacter(_characterName);
     }
 
+    /// <summary>
+    /// Pauses playing sound or line.
+    /// </summary>
     public virtual void Freeze()
     {
         _animator.speed = 0;
         NpcAudioSource.Pause();
     }
 
+    /// <summary>
+    /// Continues playing sound or line.
+    /// </summary>
     public virtual void Unfreeze()
     {
         _animator.speed = 1;

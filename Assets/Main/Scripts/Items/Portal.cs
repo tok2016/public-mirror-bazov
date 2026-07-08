@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Activates scene loading when player steps on it.
+/// </summary>
 public class Portal : MonoBehaviour
 {
     [SerializeField] private SceneBootstrapManager _bootstrapManager;
@@ -11,9 +14,12 @@ public class Portal : MonoBehaviour
         _pad.onPadEnter.AddListener(TeleportToScene);
     }
 
+    /// <summary>
+    /// Calls scene loading when player steps on pad.
+    /// </summary>
+    /// <param name="pad">Pad where player teleported at.</param>
     private void TeleportToScene(TeleportPad pad)
     {
-        Debug.Log(pad);
         _bootstrapManager.LoadScene(_sceneToPort);
     }
 

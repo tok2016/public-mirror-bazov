@@ -1,10 +1,16 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents button's behaviour when it's pressed.
+/// </summary>
 public class MetaButtonPressState : MetaState
 {
     public MetaButtonPressState(MetaButton metaButton, Color color, MetaStateMachine stateMachine) 
         : base(metaButton, color, stateMachine) { }
 
+    /// <summary>
+    /// Changes state to disabled or paused. Returns to warned or default if button is no more pressed.
+    /// </summary>
     public override void Update()
     {
         if (_stateMachine.IsDisabled)

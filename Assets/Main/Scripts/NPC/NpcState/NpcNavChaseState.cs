@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents NPC chasing state. Updates navigation graph to target every frame.
+/// </summary>
 public class NpcNavChaseState : NpcNavState
 {
     private float _distanceToTarget;

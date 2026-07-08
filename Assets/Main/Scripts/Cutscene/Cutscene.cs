@@ -3,12 +3,19 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 
+/// <summary>
+/// Manages dialogue line and timeline as united cutscene. 
+/// </summary>
 [Serializable]
 public class Cutscene
 {
     [SerializeField] private DialogueLine _phrase;
     [SerializeField] private TimelineCutscene _timelineCutscene;
 
+    /// <summary>
+    /// Plays cutscene content and waits for its end.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator Play()
     {
         while(Pause.IsPaused)
@@ -28,6 +35,9 @@ public class Cutscene
         }
     }
 
+    /// <summary>
+    /// Stops cutscene content.
+    /// </summary>
     public void Stop()
     {
         if (_phrase)
@@ -36,6 +46,9 @@ public class Cutscene
             _timelineCutscene.Stop();
     }
 
+    /// <summary>
+    /// Skips all cutscene content.
+    /// </summary>
     public void Skip()
     {
         if (_phrase)

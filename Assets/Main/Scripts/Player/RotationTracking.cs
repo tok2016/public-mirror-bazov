@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Rotates object with the player along selected axes.
+/// </summary>
 public class RotationTracking : MonoBehaviour
 {
     [SerializeField] private InputActionReference _rotationAction;
